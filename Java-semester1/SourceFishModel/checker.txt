@@ -1,0 +1,1 @@
+checker is gewoon test klasse om in console uit te testen
