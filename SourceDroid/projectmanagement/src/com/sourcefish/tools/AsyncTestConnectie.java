@@ -9,8 +9,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import android.os.AsyncTask;
+import android.webkit.WebView.FindListener;
 
 public class AsyncTestConnectie extends AsyncTask<String, Integer, Boolean>{
 
@@ -80,6 +82,7 @@ public class AsyncTestConnectie extends AsyncTask<String, Integer, Boolean>{
 			   }
 			return test;
 		}
+	
 	
 	
 }
