@@ -1,5 +1,35 @@
 package com.sourcefish.tools;
 
-public class ConnectionManager {
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
+public class ConnectionManager {
+	
+	Context context=null;
+	static ConnectionManager currentInstance=null;
+	
+	private ConnectionManager(Context context)
+	{
+		this.context=context;
+	}
+	
+	public static ConnectionManager getInstance(Context context)
+	{
+		if(currentInstance==null)
+		{
+			currentInstance=new ConnectionManager(context);
+		}
+		
+		return currentInstance;
+	}
+	
+	public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }
 }
