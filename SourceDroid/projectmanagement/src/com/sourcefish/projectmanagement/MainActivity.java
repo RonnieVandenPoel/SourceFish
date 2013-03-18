@@ -5,7 +5,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import android.os.Bundle;
 
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends SherlockActivity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
