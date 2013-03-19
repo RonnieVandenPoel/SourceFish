@@ -65,7 +65,7 @@ public class MainActivity extends SherlockActivity{
 	
 	private void firstRun()
 	{
-		Intent i = new Intent(this, SourceFishAuthenticatorActivity.class);
+		Intent i = new Intent(getApplicationContext(), SourceFishAuthenticatorActivity.class);
 		startActivity(i);
 	}
 }
