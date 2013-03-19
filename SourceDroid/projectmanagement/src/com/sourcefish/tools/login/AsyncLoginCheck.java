@@ -18,6 +18,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sourcefish.tools.HttpClient;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -37,12 +39,12 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 		boolean test = false;
 		try
 		{
-			DefaultHttpClient client=new DefaultHttpClient();
-			Credentials cred=new UsernamePasswordCredentials(username,password);
-			client.getCredentialsProvider().setCredentials(AuthScope.ANY, cred);
+			DefaultHttpClient client= HttpClient.getClient(username, password);
+			//Credentials cred=new UsernamePasswordCredentials(username,password);
+			//client.getCredentialsProvider().setCredentials(AuthScope.ANY, cred);
 			//List<String> authprefs=new ArrayList<String>(1);
 			//authprefs.add(AuthPolicy.DIGEST);
-			client.getParams().setParameter(AuthPNames.CREDENTIAL_CHARSET, AuthPolicy.DIGEST);
+			//client.getParams().setParameter(AuthPNames.CREDENTIAL_CHARSET, AuthPolicy.DIGEST);
 			
 			//Do not use localhost, because that would be the localhost of your phone. Use your IP!
 			HttpGet httpget = new HttpGet("http://projecten3.eu5.org/webservice/tryLogin");
