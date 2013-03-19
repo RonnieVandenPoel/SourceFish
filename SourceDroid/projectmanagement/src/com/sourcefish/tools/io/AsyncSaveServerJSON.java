@@ -24,7 +24,7 @@ public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putString("json", json);
 
-	      // Commit the edits! f
+	      // Commit the edits! 
 	      editor.commit();
 		
 		return true;
