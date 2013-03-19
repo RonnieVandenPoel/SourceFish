@@ -10,7 +10,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,9 +22,11 @@ public class MainActivity extends SherlockActivity{
         setTheme(SourceFishConfig.MAINTHEME); //Used for theme switching in samples
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		SharedPreferences prefs = getSharedPreferences(SourceFishConfig.PREFFILE, 0);
+
+		AccountManager am = AccountManager.get(getApplicationContext());
+		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
-		boolean hasLoggedIn = prefs.getBoolean("loggedin", false);
+		boolean hasLoggedIn = (accounts.length > 0);
 		
 		//TODO read json file from tha webz
 		if(isOnline())
@@ -38,11 +39,8 @@ public class MainActivity extends SherlockActivity{
 			// user has logged in before, get current projects.
 			else
 			{
-				AccountManager am = AccountManager.get(getApplicationContext());
-				
-			    Account[] aca = am.getAccountsByType("com.sourcefish.authenticator");
-			    String user = aca[0].name;
-				String pass = am.getPassword(aca[0]);
+			    String user = accounts[0].name;
+				String pass = am.getPassword(accounts[0]);
 				
 				AsyncDataLoad load = new AsyncDataLoad(user, pass, getApplicationContext());
 				load.execute("");
