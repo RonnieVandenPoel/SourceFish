@@ -14,13 +14,14 @@ import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 	private String username, password;
 	private Context context;
 	
-	public AsyncDataLoad(String username,String password, Context context) {
+	public AsyncDataLoad(String username, String password, Context context) {
 		this.username = username;
 		this.password = password;
 		this.context = context;
@@ -48,6 +49,7 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		System.out.println(resp.getStatusLine());
 		
 			while ((output = br.readLine()) != null) {	
+				Log.i("jsoin", output);
 				System.out.println(output);
 				AsyncSaveServerJSON saving = new AsyncSaveServerJSON(context);
 				saving.execute(output);

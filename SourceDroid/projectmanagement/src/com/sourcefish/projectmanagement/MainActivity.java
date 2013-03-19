@@ -3,8 +3,11 @@ package com.sourcefish.projectmanagement;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.login.SourceFishAuthenticatorActivity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,7 +38,14 @@ public class MainActivity extends SherlockActivity{
 			// user has logged in before, get current projects.
 			else
 			{
+				AccountManager am = AccountManager.get(getApplicationContext());
 				
+			    Account[] aca = am.getAccountsByType("com.sourcefish.authenticator");
+			    String user = aca[0].name;
+				String pass = am.getPassword(aca[0]);
+				
+				AsyncDataLoad load = new AsyncDataLoad(user, pass, getApplicationContext());
+				load.execute("");
 			}
 		}
 		else
