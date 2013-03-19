@@ -53,9 +53,11 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 				System.out.println(output);
 				AsyncSaveServerJSON saving = new AsyncSaveServerJSON(context);
 				saving.execute(output);
+				Toast meg = Toast.makeText(context, "json naar log ok", Toast.LENGTH_LONG);
+				meg.show();
 				if (saving.get()) {
-					Toast meg = Toast.makeText(context, "yes saving ok", Toast.LENGTH_LONG);
-					meg.show();
+					Toast i = Toast.makeText(context, "yes saving ok", Toast.LENGTH_LONG);
+					i.show();
 				}
 			}
 		} catch (Exception e) {
