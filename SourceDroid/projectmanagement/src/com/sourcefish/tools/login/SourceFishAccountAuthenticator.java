@@ -5,14 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.auth.params.AuthPNames;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.sourcefish.tools.SourceFishHttpClient;

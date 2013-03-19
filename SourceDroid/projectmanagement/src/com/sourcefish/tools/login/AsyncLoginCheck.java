@@ -69,8 +69,6 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 			
 			if(test)
 			{
-				editor.putBoolean("loggedin", true);
-				editor.commit();
 				Log.i("", "succes");
 			}
 			else
