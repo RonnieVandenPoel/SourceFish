@@ -28,6 +28,7 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 	}
 	@Override
 	protected Boolean doInBackground(String... params) {
+		Boolean test = false;
 		DefaultHttpClient client = SourceFishHttpClient.getClient(username, password);
 		
 		HttpGet getRequest = new HttpGet(
@@ -53,11 +54,9 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 				System.out.println(output);
 				AsyncSaveServerJSON saving = new AsyncSaveServerJSON(context);
 				saving.execute(output);
-				Toast meg = Toast.makeText(context, "json naar log ok", Toast.LENGTH_LONG);
-				meg.show();
+				
 				if (saving.get()) {
-					Toast i = Toast.makeText(context, "yes saving ok", Toast.LENGTH_LONG);
-					i.show();
+					test = true;
 				}
 			}
 		} catch (Exception e) {
@@ -69,7 +68,17 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		    }
 		
 		
-		return null;
+		return test;
 	}
+	
+	protected void onPostExecute(Boolean result) {
+		if (result) {
+			Toast toast = Toast.makeText(context, "JA HET WERKT", Toast.LENGTH_LONG);
+		}
+		else {
+			Toast toast = Toast.makeText(context, "NEE I FUCKED UP", Toast.LENGTH_LONG);
+		}
+        
+    }
 
 }
