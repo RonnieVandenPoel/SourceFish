@@ -8,5 +8,8 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
+    <string name="login_btn">Log in</string>
+    <string name="cancel">cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

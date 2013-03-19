@@ -32,4 +32,11 @@
         android:ems="10"
         android:inputType="textPassword" />
 
+    <Button
+        android:id="@+id/loginbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_btn" 
+        android:onClick="onLogInAttempt" />
+
 </LinearLayout>
