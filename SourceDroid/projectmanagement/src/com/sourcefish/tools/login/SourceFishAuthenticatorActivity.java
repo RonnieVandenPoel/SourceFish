@@ -71,30 +71,9 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		username = tvUsername.getText().toString();
 		password = tvPassword.getText().toString();
 
-		DefaultHttpClient client=new DefaultHttpClient();
-		Credentials cred=new UsernamePasswordCredentials(username,password);
-		client.getCredentialsProvider().setCredentials(AuthScope.ANY, cred);
-		List<String> authprefs=new ArrayList<String>(1);
-		authprefs.add(AuthPolicy.DIGEST);
-		client.getParams().setParameter(AuthPNames.CREDENTIAL_CHARSET, authprefs);
-		
-		//Do not use localhost, because that would be the localhost of your phone. Use your IP!
-		HttpGet httpget = new HttpGet("http://projecten3.eu5.org/webservice/trylogin");
-		try
-		{
-			// Execute HTTP Post Request
-			HttpResponse response = client.execute(httpget);
-			Log.i("Auth5000", response.toString());
-		}
-		catch (ClientProtocolException e)
-		{
-			Log.i("Auth5000", "error "+e);
-		}
-		catch (IOException e)
-		{
-			Log.i("Auth5000", "error "+e);
-		}
+		new AsyncLoginCheck(username, password).execute();
 
+		
 		// finished
 
 		String accountType = this.getIntent().getStringExtra(PARAM_AUTHTOKEN_TYPE);
@@ -125,5 +104,6 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 			this.setResult(RESULT_OK, intent);
 			this.finish();
 		}
+		
 	}
 }
