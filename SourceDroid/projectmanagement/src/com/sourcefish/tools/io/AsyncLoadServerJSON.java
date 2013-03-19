@@ -22,7 +22,7 @@ public class AsyncLoadServerJSON extends AsyncTask<String, Integer, String>{
 		
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		// then you use
-		return prefs.getString("json", "");
+		return prefs.getString("json", ""); //gebrbuik .get om dit resultaat te gebruiken
 	    
 	}
 
