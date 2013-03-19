@@ -71,8 +71,7 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		username = tvUsername.getText().toString();
 		password = tvPassword.getText().toString();
 
-		new AsyncLoginCheck(username, password).execute();
-
+		new AsyncLoginCheck(username, password, getApplicationContext()).execute();
 		
 		// finished
 

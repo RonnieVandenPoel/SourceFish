@@ -7,7 +7,7 @@ import org.apache.http.auth.params.AuthPNames;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class HttpClient {
+public class SourceFishHttpClient {
 	static public DefaultHttpClient getClient(String username, String password) {
 		DefaultHttpClient client = new DefaultHttpClient();
 		Credentials cred=new UsernamePasswordCredentials(username,password);

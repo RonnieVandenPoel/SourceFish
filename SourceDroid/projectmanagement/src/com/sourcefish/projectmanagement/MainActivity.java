@@ -20,16 +20,17 @@ public class MainActivity extends SherlockActivity{
         setTheme(SourceFishConfig.MAINTHEME); //Used for theme switching in samples
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		SharedPreferences prefs = getSharedPreferences(SourceFishConfig.PREFFILE, 0);
+		
+		boolean hasLoggedIn = prefs.getBoolean("loggedin", false);
 		
 		//TODO read json file from tha webz
 		if(isOnline())
 		{			
 			// check for First time use
-			SharedPreferences prefs = getSharedPreferences(SourceFishConfig.PREFFILE, 0);
-			if(prefs.getBoolean("my_first_time", true))
+			if(! hasLoggedIn)
 			{
 				firstRun();
-				prefs.edit().putBoolean("my_first_time", false);
 			}
 			// user has logged in before, get current projects.
 			else
@@ -39,8 +40,16 @@ public class MainActivity extends SherlockActivity{
 		}
 		else
 		{
-			Toast toast = Toast.makeText(getApplicationContext(), "offline mode", Toast.LENGTH_SHORT);
-			toast.show();
+			if(hasLoggedIn)
+			{
+				Toast toast = Toast.makeText(getApplicationContext(), "offline mode", Toast.LENGTH_LONG);
+				toast.show();
+			}
+			else
+			{
+				Toast toast = Toast.makeText(getApplicationContext(), "You are not logged in and can't save your projects to the cloud! please update your settings", Toast.LENGTH_LONG);
+				toast.show();
+			}
 		}
 	}
 	

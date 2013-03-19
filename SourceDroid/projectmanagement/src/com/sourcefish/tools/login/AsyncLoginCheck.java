@@ -18,8 +18,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sourcefish.tools.HttpClient;
+import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.SourceFishHttpClient;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -27,24 +30,22 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 
 	private String username;
 	private String password;
-	public boolean loggedIn = false;
+	private Context ctx;
 	
-	public AsyncLoginCheck(String username, String password) {
+	public AsyncLoginCheck(String username, String password, Context ctx) {
 		this.username = username;
 		this.password = password;
+		this.ctx = ctx;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		boolean test = false;
+		SharedPreferences prefs = ctx.getSharedPreferences(SourceFishConfig.PREFFILE, 0);
+		SharedPreferences.Editor editor = prefs.edit();
 		try
 		{
-			DefaultHttpClient client= HttpClient.getClient(username, password);
-			//Credentials cred=new UsernamePasswordCredentials(username,password);
-			//client.getCredentialsProvider().setCredentials(AuthScope.ANY, cred);
-			//List<String> authprefs=new ArrayList<String>(1);
-			//authprefs.add(AuthPolicy.DIGEST);
-			//client.getParams().setParameter(AuthPNames.CREDENTIAL_CHARSET, AuthPolicy.DIGEST);
+			DefaultHttpClient client= SourceFishHttpClient.getClient(username, password);
 			
 			//Do not use localhost, because that would be the localhost of your phone. Use your IP!
 			HttpGet httpget = new HttpGet("http://projecten3.eu5.org/webservice/tryLogin");
@@ -68,7 +69,8 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 			
 			if(test)
 			{
-				Log.i("succes", "succes");
+				editor.putBoolean("loggedin", false);
+				editor.commit();
 			}
 			else
 			{
