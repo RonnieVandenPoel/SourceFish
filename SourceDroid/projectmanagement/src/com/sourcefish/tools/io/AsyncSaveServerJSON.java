@@ -3,6 +3,7 @@ package com.sourcefish.tools.io;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
@@ -22,6 +23,7 @@ public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
 	    // All objects are from android.context.Context
 	    SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);
 	    SharedPreferences.Editor editor = settings.edit();
+	    
 	    editor.putString("json", json);
 
 	      // Commit the edits! 

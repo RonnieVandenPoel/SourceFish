@@ -13,11 +13,13 @@ import org.json.JSONObject;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
 public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
+	private static final String PREFS_NAME = "data";
 	private String username, password;
 	private Context context;
 	
@@ -51,13 +53,27 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		
 			while ((output = br.readLine()) != null) {	
 				Log.i("jsoin", output);
-				System.out.println(output);
+				
 				AsyncSaveServerJSON saving = new AsyncSaveServerJSON(context);
 				saving.execute(output);
 				
-				if (saving.get()) {
-					test = true;
+				/*
+				//saving data
+				SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);
+			    SharedPreferences.Editor editor = settings.edit();			    
+			    editor.putString("json", output);		    
+			    editor.commit();
+			    //end save data
+			    */
+				
+			    //load data voor check
+			    SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);				
+				String log = prefs.getString("json", "");
+				if (log.equals(output)) {
+					Log.i("","succes");
 				}
+				
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,14 +87,8 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		return test;
 	}
 	
-	protected void onPostExecute(Boolean result) {
-		if (result) {
-			Toast toast = Toast.makeText(context, "JA HET WERKT", Toast.LENGTH_LONG);
-		}
-		else {
-			Toast toast = Toast.makeText(context, "NEE I FUCKED UP", Toast.LENGTH_LONG);
-		}
-        
+	protected void onPostExecute(Boolean result) {		
+        Log.i("AsyncDataLoad", "post execute gestart");
     }
 
 }
