@@ -22,7 +22,7 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 		 
 		 //view tab
 		 ActionBar.Tab tab = getSupportActionBar().newTab();
-		 tab.setTabListener(this);
+		 tab.setTabListener(this);		 
 		 tab.setText("View");
 		 getSupportActionBar().addTab(tab);
 		 
@@ -42,7 +42,29 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
+		String tabnaam = tab.getText().toString();
+		int tabInt;
+		if (tabnaam.equals("View")) {
+			tabInt = 0;
+		}
+		else if (tabnaam.equals("Edit")) {
+			tabInt = 1;
+		}
+		else {
+			tabInt = 2;
+		}
+		
+		switch (tabInt) {
+		case 0:
+			setContentView(R.layout.projectview);
+			break;
+		case 1:
+			//setContentView(R.layout.projectview);
+			break;
+		case 2:
+			//setContentView(R.layout.projectview);
+			break;
+		}
 		
 	}
 

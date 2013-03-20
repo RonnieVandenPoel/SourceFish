@@ -46,6 +46,15 @@
             android:name="com.sourcefish.tools.login.SourceFishAuthenticatorActivity"
             android:label="@string/title_activity_login" >   
         </activity>
+        <activity 
+            android:name="com.sourcefish.projectmanagement.ProjectActivity"
+            android:label="@string/title_activity_project" >   
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
