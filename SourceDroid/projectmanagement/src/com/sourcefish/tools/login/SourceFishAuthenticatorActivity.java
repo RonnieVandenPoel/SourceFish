@@ -1,9 +1,5 @@
 package com.sourcefish.tools.login;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import com.sourcefish.projectmanagement.R;
 
 import android.accounts.Account;
@@ -14,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivity {
 	public static final String PARAM_AUTHTOKEN_TYPE = "com.sourcefish.authenticator";
@@ -31,11 +28,19 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 
 	public static final int RESP_CODE_CANCEL = 2;
 
+	boolean hasErrors = false;
+	String username = "";
+	String password = "";
+
 	@Override
 	protected void onCreate(Bundle icicle) {
-		// TODO Auto-generated method stub
 		super.onCreate(icicle);
 		this.setContentView(R.layout.user_credentials);
+	}
+	
+	public void setError()
+	{
+		hasErrors = true;
 	}
 
 	public void onCancelClick(View v) {
@@ -45,10 +50,6 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 	public void onSaveClick(View v) {
 		TextView tvUsername;
 		TextView tvPassword;
-		String username;
-		String password;
-
-		boolean hasErrors = false;
 
 		tvUsername = (TextView) this.findViewById(R.id.uc_txt_username);
 		tvPassword = (TextView) this.findViewById(R.id.uc_txt_password);
@@ -61,8 +62,11 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 
 		new AsyncLoginCheck(username, password, getApplicationContext(), this).execute();
 		
-		// finished
-
+		// finished		
+	}
+	
+	public void logUsername()
+	{
 		String accountType = this.getIntent().getStringExtra(PARAM_AUTHTOKEN_TYPE);
 		if (accountType == null)
 		{ 
@@ -72,7 +76,12 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		AccountManager accMgr = AccountManager.get(this);
 
 		if (hasErrors) {
-			// handel errors
+			TextView tv = (TextView) findViewById(R.id.uc_lbl_username);
+			tv.setText("");
+			TextView tv2 = (TextView) findViewById(R.id.uc_lbl_password);
+			tv2.setText("");
+			Toast toast = Toast.makeText(getApplicationContext(), "wrong password or username", Toast.LENGTH_LONG);
+			toast.show();
 		}
 		else
 		{
@@ -90,6 +99,5 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 			this.setAccountAuthenticatorResult(intent.getExtras());
 			this.setResult(RESULT_OK, intent);
 		}
-		
 	}
 }
