@@ -11,11 +11,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 
@@ -47,14 +49,34 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		    }
 		    
 		    Log.i("Resultstring",resultString);
+		    JSONObject obj=new JSONObject(resultString);
+		    if(obj.getString("OK") != null)
+		    {
+		    	return true;
+		    }
 		
 		} catch (Exception e) {
 			Log.e("errorz",e.getStackTrace().toString());
 		}
 		
 		
-		return null;
+		return false;
 	}
 
-	
+	protected void onPostExecute(Boolean result)
+	{
+		Toast toast;
+		if(result)
+		{
+			toast=Toast.makeText(context, "Registering succesful.", Toast.LENGTH_LONG);
+
+			
+		}
+		else
+		{
+			toast=Toast.makeText(context, "Registering not succesful.", Toast.LENGTH_LONG);
+		}
+		
+		toast.show();
+	}
 }
