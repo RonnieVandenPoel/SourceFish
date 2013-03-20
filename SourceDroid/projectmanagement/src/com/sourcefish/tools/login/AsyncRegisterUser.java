@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -69,7 +70,11 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		if(result)
 		{
 			toast=Toast.makeText(context, "Registering succesful.", Toast.LENGTH_LONG);
-
+			Intent i=new Intent(context,SourceFishAuthenticatorActivity.class);
+			i.putExtra("user", username);
+			i.putExtra("pass", password);
+			context.startActivity(i);
+			
 			
 		}
 		else
