@@ -11,27 +11,27 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
 public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 
 	private String username;
 	private String password;
-	private Context ctx;
+	private SourceFishAuthenticatorActivity parent;
 	private ProgressDialog dialog;
 	
-	public AsyncLoginCheck(String username, String password, Context ctx, Activity parent) {
+	public AsyncLoginCheck(String username, String password, Context ctx, SourceFishAuthenticatorActivity parent) {
 		this.username = username;
 		this.password = password;
-		this.ctx = ctx;
+		this.parent = parent;
 		dialog = new ProgressDialog(parent);
 	}
 
@@ -49,8 +49,11 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 		
 		if(! succes)
 		{
-			
+			parent.setError();
 		}
+		
+		// if succesfull the user will be added, else restart login activity
+		parent.logUsername();
 	}
 	
 	@Override
