@@ -13,12 +13,9 @@ import org.json.JSONObject;
 
 import com.sourcefish.tools.SourceFishHttpClient;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
 public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{

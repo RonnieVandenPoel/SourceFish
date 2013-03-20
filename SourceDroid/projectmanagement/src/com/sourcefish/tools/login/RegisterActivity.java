@@ -31,7 +31,7 @@ public class RegisterActivity extends SherlockActivity {
 		{
 			//register
 			AsyncRegisterUser asynRegister=new AsyncRegisterUser();
-			asynRegister.execute(getApplicationContext(),emailField.getText(),passwordField.getText());
+			asynRegister.execute(this,emailField.getText(),passwordField.getText());
 		}
 		else
 		{
@@ -40,5 +40,5 @@ public class RegisterActivity extends SherlockActivity {
 		}
 	}
 	
-	
 }
+

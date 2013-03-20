@@ -11,22 +11,26 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 
-	private Context context;
+	private Activity context;
 	private String username;
 	private String password;
 	
 	
 	@Override
 	protected Boolean doInBackground(Object... params) {
-		context=(Context) params[0];
+		context=(Activity) params[0];
 		username=params[1].toString();
 		password=params[2].toString();
 		
@@ -47,14 +51,38 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		    }
 		    
 		    Log.i("Resultstring",resultString);
+		    JSONObject obj=new JSONObject(resultString);
+		    if(obj.getString("OK") != null)
+		    {
+		    	return true;
+		    }
 		
 		} catch (Exception e) {
 			Log.e("errorz",e.getStackTrace().toString());
 		}
 		
 		
-		return null;
+		return false;
 	}
 
-	
+	protected void onPostExecute(Boolean result)
+	{
+		Toast toast;
+		if(result)
+		{
+			toast=Toast.makeText(context, "Registering succesful.", Toast.LENGTH_LONG);
+			Intent i=new Intent(context,SourceFishAuthenticatorActivity.class);
+			i.putExtra("user", username);
+			i.putExtra("pass", password);
+			context.startActivity(i);
+			
+			context.finish();
+		}
+		else
+		{
+			toast=Toast.makeText(context, "Registering not succesful.", Toast.LENGTH_LONG);
+		}
+		
+		toast.show();
+	}
 }
