@@ -620,7 +620,7 @@ function getUserProfile($uid)
 	
 	if(uidExists($uid))
 	{
-		$sql="SELECT voornaam,achternaam,email FROM tbl_gebruiker where uid='$uid'";
+		$sql="SELECT uname,voornaam,achternaam FROM tbl_gebruiker where uid='$uid'";
 	$con=getConnection();
 		
 	try{
@@ -630,7 +630,7 @@ function getUserProfile($uid)
 		{
 			$user['voornaam']=$row['voornaam'];
 			$user['achternaam']=$row['achternaam'];
-			$user['email']=$row['email'];
+			$user['email']=$row['uname'];
 		}
 		echo json_encode($user);
 		
@@ -654,7 +654,7 @@ function getUser($uid)
 	
 	if(uidExists($uid))
 	{
-		$sql="SELECT uname, voornaam,achternaam,email, count(tr.trid) as totallogs, count(distinct pid) as totalprojects, 
+		$sql="SELECT uname, voornaam,achternaam, count(tr.trid) as totallogs, count(distinct pid) as totalprojects, 
 		(SELECT SUM(UNIX_TIMESTAMP(eind)-UNIX_TIMESTAMP(`begin`)) FROM tbl_tijdregistratie WHERE eind<>'0000-00-00 00:00:00' AND
 		puid IN (SELECT puid FROM tbl_projectgebruiker WHERE  uid='$uid')) as totaltime
 		FROM tbl_gebruiker AS g
@@ -672,7 +672,6 @@ function getUser($uid)
 			$user['uname']=$row['uname'];
 			$user['voornaam']=$row['voornaam'];
 			$user['achternaam']=$row['achternaam'];
-			$user['email']=$row['email'];
 			$user['totallogs']=$row['totallogs'];
 			$user['totalprojects']=$row['totalprojects'];
 			$user['totaltime']=$row['totaltime'];
