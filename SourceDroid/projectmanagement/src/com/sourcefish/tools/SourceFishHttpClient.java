@@ -16,4 +16,12 @@ public class SourceFishHttpClient {
 		return client;
 		
 	}
+	static public DefaultHttpClient getClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		//Credentials cred=new UsernamePasswordCredentials(username,password);
+		//client.getCredentialsProvider().setCredentials(AuthScope.ANY, cred);
+		//client.getParams().setParameter(AuthPNames.CREDENTIAL_CHARSET, AuthPolicy.DIGEST);		
+		return client;
+		
+	}
 }
