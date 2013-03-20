@@ -59,13 +59,7 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		username = tvUsername.getText().toString();
 		password = tvPassword.getText().toString();
 
-		try {
-			new AsyncLoginCheck(username, password, getApplicationContext(), this).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
+		new AsyncLoginCheck(username, password, getApplicationContext(), this).execute();
 		
 		// finished
 
@@ -95,7 +89,6 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 			intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
 			this.setAccountAuthenticatorResult(intent.getExtras());
 			this.setResult(RESULT_OK, intent);
-			this.finish();
 		}
 		
 	}
