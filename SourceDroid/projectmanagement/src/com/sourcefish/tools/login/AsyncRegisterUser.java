@@ -74,5 +74,7 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		{
 			toast=Toast.makeText(context, "Registering not succesful.", Toast.LENGTH_LONG);
 		}
+		
+		toast.show();
 	}
 }
