@@ -12,5 +12,6 @@
     <string name="cancel">cancel</string>
     <string name="ok">OK</string>
     <string name="title_activity_project">ProjectActivity</string>
+    <string name="label_password_repeat">Repeat password:</string>
 
 </resources>
