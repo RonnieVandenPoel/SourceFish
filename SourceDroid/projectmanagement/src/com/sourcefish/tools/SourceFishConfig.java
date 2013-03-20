@@ -1,8 +1,11 @@
 package com.sourcefish.tools;
 
+import com.sourcefish.tools.login.SourceFishAuthenticatorActivity;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
 
 public class SourceFishConfig {
 	public static int MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;

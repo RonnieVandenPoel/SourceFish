@@ -31,11 +31,27 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 	boolean hasErrors = false;
 	String username = "";
 	String password = "";
-
+	
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		this.setContentView(R.layout.user_credentials);
+		try
+		{
+			Intent i = getIntent();
+			Bundle b = i.getExtras();
+			username = b.getString("user");
+			password = b.getString("pass");
+			
+			if(! username.equals(""))
+			{
+				logUsername();
+				finish();
+			}
+		}
+		catch(Exception e)
+		{
+		}
 	}
 	
 	public void setError()
@@ -67,14 +83,7 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		// finished		
 	}
 	
-	public void logUsername(String user, String pass)
-	{
-		if(user != null)
-			username = user;
-		
-		if(pass != null)
-			password = pass;
-		
+	public void logUsername(){
 		String accountType = this.getIntent().getStringExtra(PARAM_AUTHTOKEN_TYPE);
 		if (accountType == null)
 		{ 

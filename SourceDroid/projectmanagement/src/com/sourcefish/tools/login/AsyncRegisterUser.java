@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,14 +23,14 @@ import android.widget.Toast;
 
 public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 
-	private Context context;
+	private Activity context;
 	private String username;
 	private String password;
 	
 	
 	@Override
 	protected Boolean doInBackground(Object... params) {
-		context=(Context) params[0];
+		context=(Activity) params[0];
 		username=params[1].toString();
 		password=params[2].toString();
 		
@@ -75,7 +76,7 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 			i.putExtra("pass", password);
 			context.startActivity(i);
 			
-			
+			context.finish();
 		}
 		else
 		{
