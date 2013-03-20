@@ -2,6 +2,7 @@ package com.sourcefish.tools.login;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.sourcefish.projectmanagement.R;
@@ -24,6 +25,11 @@ public class RegisterActivity extends SherlockActivity {
 		if(passwordField.getText().equals(passwordRepeatField.getText()))
 		{
 			//register
+		}
+		else
+		{
+			Toast toast=Toast.makeText(getApplicationContext(), "Passwords not matching", Toast.LENGTH_LONG);
+			toast.show();
 		}
 	}
 	
