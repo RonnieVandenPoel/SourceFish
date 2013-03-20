@@ -1,6 +1,8 @@
 package com.sourcefish.tools.login;
 
+import com.sourcefish.projectmanagement.ProjectActivity;
 import com.sourcefish.projectmanagement.R;
+import com.sourcefish.tools.io.AsyncDataLoad;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -115,6 +117,14 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 			intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
 			this.setAccountAuthenticatorResult(intent.getExtras());
 			this.setResult(RESULT_OK, intent);
+
+		    String user = account.name;
+			
+			AsyncDataLoad load = new AsyncDataLoad(user, password, getApplicationContext());
+			load.execute("");
+			Intent i = new Intent(this, ProjectActivity.class);
+			startActivity(i);
+			finish();
 		}
 	}
 	

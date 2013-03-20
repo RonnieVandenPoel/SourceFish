@@ -44,11 +44,13 @@ public class MainActivity extends SherlockActivity{
 				
 				AsyncDataLoad load = new AsyncDataLoad(user, pass, getApplicationContext());
 				load.execute("");
+				startProjecten();
 			}
 		}
 		else
 		{
-			if(hasLoggedIn)
+			startProjecten();
+			/**if(hasLoggedIn)
 			{
 				Toast toast = Toast.makeText(getApplicationContext(), "offline mode", Toast.LENGTH_LONG);
 				toast.show();
@@ -57,8 +59,15 @@ public class MainActivity extends SherlockActivity{
 			{
 				Toast toast = Toast.makeText(getApplicationContext(), "You are not logged in and can't save your projects to the cloud! please update your settings", Toast.LENGTH_LONG);
 				toast.show();
-			}
+			}**/
 		}
+		finish();
+	}
+	
+	private void startProjecten()
+	{
+		Intent i = new Intent(this, ProjectActivity.class);
+		startActivity(i);
 	}
 	
 	private boolean isOnline()
