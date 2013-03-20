@@ -39,6 +39,7 @@ public class RegisterActivity extends SherlockActivity {
 			toast.show();
 		}
 	}
-	
+
 	
 }
+

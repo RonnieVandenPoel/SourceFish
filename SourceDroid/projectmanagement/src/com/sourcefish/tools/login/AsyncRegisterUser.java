@@ -50,7 +50,7 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		    
 		    Log.i("Resultstring",resultString);
 		    JSONObject obj=new JSONObject(resultString);
-		    if(obj.getString("OK")=="OK")
+		    if(obj.getString("OK") != null)
 		    {
 		    	return true;
 		    }
@@ -69,6 +69,8 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		if(result)
 		{
 			toast=Toast.makeText(context, "Registering succesful.", Toast.LENGTH_LONG);
+
+			
 		}
 		else
 		{
