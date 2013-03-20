@@ -32,8 +32,9 @@ $app->post('/registerUser',function() use ($app)
 		//echo $pass;
 		//$pass=str_replace("'", "''", $pass);
 		
-		$sql0="SELECT 'Username/email al in gebruik' FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$data->username') OR LOWER(email)=LOWER('$data->email')";
-		$sql1="INSERT INTO tbl_gebruiker(`uname`,`email`,`wachtwoord`,`voornaam`,`achternaam`) VALUES ('$data->username','$data->email','$pass','$data->firstname','$data->lastname')";
+		$sql0="SELECT 'Username/email al in gebruik' FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$data->username')";
+		//$sql1="INSERT INTO tbl_gebruiker(`uname`,`email`,`wachtwoord`,`voornaam`,`achternaam`) VALUES ('$data->username','$data->email','$pass','$data->firstname','$data->lastname')";
+		$sql1="INSERT INTO tbl_gebruiker(`uname`,`wachtwoord`) VALUES ('$data->username','$pass')";
 		$sql2="INSERT INTO encrypt(`eid`,`key`) VALUES ('$eid','$key')";
 		/*echo "eid:$eid, key:$key";
 		echo $sql1;

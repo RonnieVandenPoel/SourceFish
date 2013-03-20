@@ -1,5 +1,9 @@
 package com.sourcefish.tools.login;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.sourcefish.projectmanagement.R;
 
 import android.accounts.Account;
@@ -55,13 +59,19 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		username = tvUsername.getText().toString();
 		password = tvPassword.getText().toString();
 
-		new AsyncLoginCheck(username, password, getApplicationContext()).execute();
+		try {
+			new AsyncLoginCheck(username, password, getApplicationContext(), this).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 		
 		// finished
 
 		String accountType = this.getIntent().getStringExtra(PARAM_AUTHTOKEN_TYPE);
 		if (accountType == null)
-		{
+		{ 
 			accountType = "com.sourcefish.authenticator";
 		}
 
