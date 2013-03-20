@@ -46,6 +46,7 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 	public void onCancelClick(View v) {
 		Intent i = new Intent(this, RegisterActivity.class);
 		startActivity(i);
+		finish();
 	}
 
 	public void onSaveClick(View v) {
