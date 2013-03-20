@@ -16,6 +16,9 @@ $app->post('/registerUser',function() use ($app)
 {
 	$request = $app->request();
 	$body=$request->getBody();
+	
+	echo $body;
+	
 	$data=json_decode($body);
 	
 	$key=md5(microtime());
@@ -31,6 +34,9 @@ $app->post('/registerUser',function() use ($app)
 		$pass=$stmt0->fetchColumn();
 		//echo $pass;
 		//$pass=str_replace("'", "''", $pass);
+		
+		echo "email".$data->username;
+		echo "passwoord".$data->password;
 		
 		$sql0="SELECT 'Username/email al in gebruik' FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$data->username')";
 		//$sql1="INSERT INTO tbl_gebruiker(`uname`,`email`,`wachtwoord`,`voornaam`,`achternaam`) VALUES ('$data->username','$data->email','$pass','$data->firstname','$data->lastname')";
@@ -58,7 +64,7 @@ $app->post('/registerUser',function() use ($app)
 		//echo $sql2;
 		//echo "6";
 		$msg="A user account for you has been created, use your username $data->username to login!";
-		mail($data->email,"An account has been made for you, with username = $data->username!",$msg,"Registration service<registration@projecten3.eu5.org\r\n");
+		mail($data->username,"An account has been made for you, with username = $data->username!",$msg,"Registration service<registration@projecten3.eu5.org\r\n");
 		//echo json_encode($data);
 		//echo "7";		
 		$db->commit();
