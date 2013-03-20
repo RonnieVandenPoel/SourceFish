@@ -44,7 +44,8 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 	}
 
 	public void onCancelClick(View v) {
-		this.finish();
+		Intent i = new Intent(this, RegisterActivity.class);
+		startActivity(i);
 	}
 
 	public void onSaveClick(View v) {
@@ -100,4 +101,5 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 			this.setResult(RESULT_OK, intent);
 		}
 	}
+	
 }
