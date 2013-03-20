@@ -205,7 +205,7 @@ function getProjectUsers($pid,$in="")
 	}
 	else
 	{
-		$sql="SELECT tbl_gebruiker.uid as selecteduid,uname,voornaam,achternaam,email,naam,tbl_projectgebruiker.rid as rid FROM tbl_gebruiker 
+		$sql="SELECT tbl_gebruiker.uid as selecteduid,uname,voornaam,achternaam,naam,tbl_projectgebruiker.rid as rid FROM tbl_gebruiker 
 	LEFT JOIN tbl_projectgebruiker ON tbl_gebruiker.uid=tbl_projectgebruiker.uid
 	LEFT JOIN rechten ON tbl_projectgebruiker.rid=rechten.rid
 	WHERE tbl_gebruiker.uid IN (SELECT uid FROM tbl_projectgebruiker WHERE tbl_projectgebruiker.pid='$pid') AND"
@@ -220,7 +220,7 @@ function getProjectUsers($pid,$in="")
 		$i=0;
 		while($row=$statement->fetch(PDO::FETCH_ASSOC))
 		{
-			$arrResultaat[$i]=array("uid"=>$row['selecteduid'],"uname"=>$row['uname'],"voornaam"=>$row['voornaam'],"achternaam"=>$row['achternaam'],"email"=>$row['email']);	
+			$arrResultaat[$i]=array("uid"=>$row['selecteduid'],"uname"=>$row['uname'],"voornaam"=>$row['voornaam'],"achternaam"=>$row['achternaam']);	
 			if(isset($row['naam']))
 			{
 				$arrResultaat[$i]["rechten"]=$row['naam'];
@@ -272,12 +272,11 @@ $app->post('/updateUser',function() use ($app)
 		$db=getConnection();
 		$sql0="SELECT AES_ENCRYPT('$data->password',`key`) FROM encrypt WHERE `eid`='".md5(getUsername().'@S0urc3F1sh!*!')."'";
 		echo $sql0;
-		$sql="UPDATE tbl_gebruiker SET email=:email,wachtwoord=:wachtwoord,voornaam=:voornaam,achternaam=:achternaam WHERE uname='$username'";
+		$sql="UPDATE tbl_gebruiker SET wachtwoord=:wachtwoord,voornaam=:voornaam,achternaam=:achternaam WHERE uname='$username'";
 		//print_r($data);
 		$result=$db->query($sql0);
 		$cryptpass=$result->fetchColumn();
 		$statement=$db->prepare($sql);
-		$statement->bindParam("email",$data->email);
 		$statement->bindParam("wachtwoord",$cryptpass);
 		$statement->bindParam("voornaam",$data->firstname);
 		$statement->bindParam("achternaam",$data->lastname);
