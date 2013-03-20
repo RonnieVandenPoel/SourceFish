@@ -1,6 +1,8 @@
 package com.sourcefish.tools.login;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,15 +18,20 @@ public class RegisterActivity extends SherlockActivity {
 		setTheme(SourceFishConfig.MAINTHEME);
 	}
 	
-	public void Register()
+	public void Register(View view)
 	{
 		TextView emailField=(TextView) findViewById(R.id.uc_txt_registerUsername);
 		TextView passwordField=(TextView) findViewById(R.id.uc_txt_registerPassword);
 		TextView passwordRepeatField=(TextView) findViewById(R.id.uc_txt_registerPasswordrepeat);
 		
-		if(passwordField.getText().equals(passwordRepeatField.getText()))
+		Log.i("Pw1:",passwordField.getText().toString());
+		Log.i("Pw2:",passwordRepeatField.getText().toString());
+		
+		if(passwordField.getText().toString().equals(passwordRepeatField.getText().toString()))
 		{
 			//register
+			AsyncRegisterUser asynRegister=new AsyncRegisterUser();
+			asynRegister.execute(getApplicationContext(),emailField.getText(),passwordField.getText());
 		}
 		else
 		{

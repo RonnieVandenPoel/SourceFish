@@ -11,8 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -34,8 +33,9 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		HttpClient client=new DefaultHttpClient();
 		HttpPost post=new HttpPost("http://projecten3.eu5.org/register/registerUser");
 		try {
-			StringEntity entity=new StringEntity("{\"username\":\""+username+"\",password\":\""+password+"\"}");
-			entity.setContentType("application/json");
+			StringEntity entity=new StringEntity("{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
+			Log.i("jsoninput","{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
+			entity.setContentType("/application/json");
 			post.setEntity(entity);
 			
 			HttpResponse resp=client.execute(post);
