@@ -67,8 +67,14 @@ public class SourceFishAuthenticatorActivity extends AccountAuthenticatorActivit
 		// finished		
 	}
 	
-	public void logUsername()
+	public void logUsername(String user, String pass)
 	{
+		if(user != null)
+			username = user;
+		
+		if(pass != null)
+			password = pass;
+		
 		String accountType = this.getIntent().getStringExtra(PARAM_AUTHTOKEN_TYPE);
 		if (accountType == null)
 		{ 

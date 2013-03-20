@@ -50,7 +50,7 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 		}
 		
 		// if succesfull the user will be added, else restart login activity
-		parent.logUsername();
+		parent.logUsername(null, null);
 	}
 	
 	@Override
