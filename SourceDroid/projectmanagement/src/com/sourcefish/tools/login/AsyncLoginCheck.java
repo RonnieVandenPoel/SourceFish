@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -24,18 +26,36 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 	private String username;
 	private String password;
 	private Context ctx;
+	private ProgressDialog dialog;
 	
-	public AsyncLoginCheck(String username, String password, Context ctx) {
+	public AsyncLoginCheck(String username, String password, Context ctx, Activity parent) {
 		this.username = username;
 		this.password = password;
 		this.ctx = ctx;
+		dialog = new ProgressDialog(parent);
 	}
 
 	@Override
+	protected void onPreExecute() {
+        this.dialog.setMessage("Trying to log in...");
+        this.dialog.show();
+    }
+	
+	@Override
+	protected void onPostExecute(final Boolean succes)
+	{
+		if(dialog.isShowing())
+			dialog.dismiss();
+		
+		if(! succes)
+		{
+			
+		}
+	}
+	
+	@Override
 	protected Boolean doInBackground(Void... params) {
 		boolean test = false;
-		SharedPreferences prefs = ctx.getSharedPreferences(SourceFishConfig.PREFFILE, 0);
-		SharedPreferences.Editor editor = prefs.edit();
 		try
 		{
 			DefaultHttpClient client= SourceFishHttpClient.getClient(username, password);
