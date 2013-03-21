@@ -144,7 +144,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 					
 					Entry e = new Entry(start,entry.getString("notes"),u,entry.getString("trid"));
 					
-					if (!(project.isNull("end"))) {						
+					if (!(entry.isNull("end"))) {						
 						Timestamp end = Timestamp.valueOf(entry.getString("end"));
 						e.end = end;
 					}	
