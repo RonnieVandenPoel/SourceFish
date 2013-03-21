@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
@@ -30,6 +31,8 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 	private ArrayAdapter adapter;
 	private ListView list;
 	private JSONArray projectArray;
+	private ArrayList<Project> projects;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(SourceFishConfig.MAINTHEME);
@@ -58,6 +61,8 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 		 tab.setText("Edit");
 		 tab.setTag(2);
 		 getSupportActionBar().addTab(tab);
+		 
+		 projects = new ArrayList<Project>();
 		 
 		 try {
 			updateList();
