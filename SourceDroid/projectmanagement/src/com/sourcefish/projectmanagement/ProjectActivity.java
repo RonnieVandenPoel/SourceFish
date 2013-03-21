@@ -26,12 +26,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ProjectActivity extends SherlockActivity implements ActionBar.TabListener {
+public class ProjectActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 	private ArrayList<String> listItems;
 	private ArrayAdapter adapter;
 	private ListView list;
 	private JSONArray projectArray;
-	private ArrayList<Project> projects;
+	private ArrayList<JSONObject> projects;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 		 tab.setTag(2);
 		 getSupportActionBar().addTab(tab);
 		 
-		 projects = new ArrayList<Project>();
+		 projects = new ArrayList<JSONObject>();
 		 
 		 try {
 			updateList();
@@ -93,7 +93,8 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 		
 		 for (int i = 0; i < projectArray.length(); i++) {
 			 JSONObject project = projectArray.getJSONObject(i);
-			 listItems.add(project.getString("projectname"));
+			 listItems.add(project.getString("projectname"));	
+			 projects.add(project);
 			 } 
 		 	 
 		 list = (ListView)findViewById(R.id.projectListView);
@@ -102,10 +103,11 @@ public class ProjectActivity extends SherlockActivity implements ActionBar.TabLi
 		 list.setOnItemClickListener(new OnItemClickListener()
 		 {		 
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+		public void onItemClick(AdapterView<?> arg0, View arg1, int elementId,
 				long arg3) {
-			Log.i("positie", "" + arg2);
-			
+			Log.i("positie", "" + elementId);
+			JSONObject project = projects.get(elementId);
+			Log.i("positie", "" + project);
 		}
 		  });
 	}
