@@ -1,5 +1,6 @@
 package com.sourcefish.projectmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -43,7 +44,10 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		{
 			case 1:
 				Toast toast=Toast.makeText(getApplicationContext(), "Settings clicked", Toast.LENGTH_LONG);
-				toast.show();	
+				toast.show();
+				Intent i=new Intent(this,SettingsActivity.class);
+				startActivity(i);
+
 			break;
 			
 			case 2:

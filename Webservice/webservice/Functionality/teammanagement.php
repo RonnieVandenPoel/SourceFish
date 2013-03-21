@@ -290,6 +290,58 @@ $app->post('/updateUser',function() use ($app)
 		
 });
 
+$app->post('/setProfilePicture',function() use($app){
+	$userid=getUserID();
+	$data=$app->request()->getBody();
+	//var_dump($app->request());
+	//echo $data;
+	$splitdata=explode("\n", $data);
+	$correctsplitdata=array_slice($splitdata,4,count($splitdata)-2);
+	
+	$image=implode("\n",$correctsplitdata);
+	echo $image;
+	
+	
+	try{
+		$db=getConnection();
+		$sql="UPDATE tbl_gebruiker SET profielfoto=? WHERE uid=?";
+		$query=$db->prepare($sql);
+		$query->execute(array($image,$userid));
+		
+		//echo $data;
+	}
+	catch(Exception $e)
+	{
+		echo $e->getMessage();
+	}
+	
+});
+
+$app->get("/getProfilePicture/:uid",function($username) use ($app)
+{
+	$res=$app->response();
+	$res['Content-Type'] = 'image/png';
+	$res['Content-Disposition'] ='attachment; filename=' . $username.".png";
+	$res['Content-Transfer-Encoding'] = 'binary';
+    $res['Expires'] = '0';
+    $res['Cache-Control'] = 'must-revalidate';
+	try
+	{
+		$db=getConnection();
+		$sql="SELECT profielfoto FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$username')";
+		$data;
+		$statement=$db->query($sql);
+		echo $statement->fetchColumn();
+	}
+	catch(Exception $e)
+	{
+		echo $e->getMessage();
+	}
+	
+	
+});
+
+
 
 
 
