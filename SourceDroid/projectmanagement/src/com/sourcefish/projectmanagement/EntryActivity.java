@@ -35,16 +35,13 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.openentrylayout);
 
-		 getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		 
 		//to pass :
 		//   intent.putExtra("MyClass", obj);  
 
 		// to retrieve object in second Activity
-		p = (Project) getIntent().getSerializableExtra("Project");
-		
-		// TODO remove this is for testing!
-		dummyEntryGenerator();
+		p = (Project) getIntent().getSerializableExtra("project");
 		
 		if(p == null)
 		{
@@ -78,17 +75,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 
 		 getOpenEntry();
 		 setDescription();
-	}
-	
-	private void dummyEntryGenerator()
-	{
-		ArrayList<Entry> entries = new ArrayList<Entry>();
-		User u = new User("ronnie", 0);
-		Entry e1 = new Entry(new Timestamp(2013, 11, 10, 1, 1, 1, 1), "First Entry", u, "1");
-		Entry e2 = new Entry(new Timestamp(2013, 11, 10, 1, 1, 1, 1), "Second Entry", new Timestamp(1233), u, "2");
-		entries.add(e1);
-		entries.add(e2);
-		p = new Project("test", 1, "", new Timestamp(2013, 10, 2, 10, 4, 2, 5), new Timestamp(2013, 12, 2, 10, 4, 2, 5), "Test", null, entries);
 	}
 	
 	private void getOpenEntry()
@@ -170,15 +156,18 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	
 	private void setDescription()
 	{
-		TextView tv = (TextView) findViewById(R.id.open_entry_description);
-		String description = "Description: \n";
-		description += openEntry.description;
-		description += "\n\nOwner: ";
-		description += openEntry.u.username;
-		description += "\n\nStart: ";
-		Timestamp ts = openEntry.start;
-		description += ts.getDay() + "-" + ts.getMonth() + "-" + ts.getYear() + "\n" + ts.getHours() + ":" + ts.getMinutes();
-		tv.setText(description);
+		if(openEntry != null)
+		{
+			TextView tv = (TextView) findViewById(R.id.open_entry_description);
+			String description = "Description: \n";
+			description += openEntry.description;
+			description += "\n\nOwner: ";
+			description += openEntry.u.username;
+			description += "\n\nStart: ";
+			Timestamp ts = openEntry.start;
+			description += ts.toString();
+			tv.setText(description);
+		}
 	}
 	
 	public void stopEntry(View v)

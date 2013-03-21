@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.sourcefish.projectmanagement.EntryActivit"
+            android:name="com.sourcefish.projectmanagement.EntryActivity"
             android:label="@string/title_activity_entry" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
