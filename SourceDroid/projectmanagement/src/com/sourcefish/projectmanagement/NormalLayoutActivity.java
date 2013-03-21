@@ -45,7 +45,8 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			case 1:
 				Toast toast=Toast.makeText(getApplicationContext(), "Settings clicked", Toast.LENGTH_LONG);
 				toast.show();
-				
+				Intent i=new Intent(this,SettingsActivity.class);
+				startActivity(i);
 
 			break;
 			
