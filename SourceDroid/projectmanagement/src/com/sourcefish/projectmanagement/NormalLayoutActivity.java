@@ -16,15 +16,16 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		MenuItem toolsMenuItem=toolsMenu.getItem();
 		toolsMenuItem.setIcon(R.drawable.settings);
 		toolsMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		toolsMenu.add(0, 0, 0, "Settings");
+		toolsMenu.add(0, 1, 0, "Settings");
+		toolsMenu.add(0,2,0,"Set theme");
 		
 		
 		
-		SubMenu toolsMenuOld=menu.addSubMenu("Settings");
+		SubMenu toolsMenuOld=menu.addSubMenu(1,1,0,"Settings");
 		MenuItem toolsMenuOldItem=toolsMenuOld.getItem();
-		toolsMenuOldItem.setIcon(R.drawable.settings);
-		toolsMenuOldItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		toolsMenuOld.add(1,0,0,"Settings");
+		SubMenu toolsMenuOld2=menu.addSubMenu(1,2,0,"Set theme");
+		MenuItem toolsMenuOldItem2=toolsMenuOld.getItem();
+
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -42,10 +43,14 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 	{
 		switch(menuItem.getItemId())
 		{
-			case 0:
+			case 1:
 				Toast toast=Toast.makeText(getApplicationContext(), "Settings clicked", Toast.LENGTH_LONG);
-				toast.show();
-				
+				toast.show();	
+			break;
+			
+			case 2:
+				Toast toast2=Toast.makeText(getApplicationContext(), "Set theme clicked", Toast.LENGTH_LONG);
+				toast2.show();
 			break;
 		}
 		return true;
