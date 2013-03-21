@@ -1,9 +1,15 @@
 package com.sourcefish.tools;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-public class Project {	
+public class Project implements Serializable{	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6707663194519826253L;
+	
 	public String name;
 	public int id;
 	public String customer;

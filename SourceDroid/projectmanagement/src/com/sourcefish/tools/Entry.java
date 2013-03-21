@@ -21,7 +21,7 @@ public class Entry {
 		this.entryid = entryid;
 	}
 	
-public Entry(Timestamp start, String description, Timestamp end, User u, String entryid) {
+	public Entry(Timestamp start, String description, Timestamp end, User u, String entryid) {
 		this.end = end;
 		this.start =start;
 		this.description = description;
