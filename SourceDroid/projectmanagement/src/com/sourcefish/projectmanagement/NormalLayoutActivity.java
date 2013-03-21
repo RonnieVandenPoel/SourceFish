@@ -21,10 +21,8 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		
 		
 		
-		SubMenu toolsMenuOld=menu.addSubMenu(1,1,0,"Settings");
-		MenuItem toolsMenuOldItem=toolsMenuOld.getItem();
-		SubMenu toolsMenuOld2=menu.addSubMenu(1,2,0,"Set theme");
-		MenuItem toolsMenuOldItem2=toolsMenuOld.getItem();
+		menu.addSubMenu(1,1,0,"Settings");
+		menu.addSubMenu(1,2,0,"Set theme");
 
 		
 		return super.onCreateOptionsMenu(menu);
