@@ -37,10 +37,6 @@
 			<RelativeLayout android:layout_width="fill_parent"
 				android:id="@+id/relativeLayout1" android:layout_height="fill_parent"
 				android:gravity="bottom">
-			<Button android:layout_alignParentLeft="true"
-				android:onClick="onCancelClick"
-				android:layout_height="wrap_content" android:layout_width="wrap_content"
-				android:id="@+id/uc_cmd_cancel" android:text="@string/cancel"></Button>
 
 			<Button
 			    android:id="@+id/uc_cmd_ok"

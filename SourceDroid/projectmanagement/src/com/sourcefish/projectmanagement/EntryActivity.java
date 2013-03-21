@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 
@@ -35,7 +36,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		catch (Exception e)
 		{
 			// Geen project meegegeven met de intent... Error.
-			
+			Toast t = Toast.makeText(getApplicationContext(), "Geen project kunnen laden.", Toast.LENGTH_LONG);
+			t.show();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finish();
 		}
 		
 		//view tab
