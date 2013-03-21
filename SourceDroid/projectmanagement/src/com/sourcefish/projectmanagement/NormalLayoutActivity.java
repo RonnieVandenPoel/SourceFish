@@ -1,19 +1,31 @@
 package com.sourcefish.projectmanagement;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.sourcefish.tools.SourceFishConfig;
 
 public abstract class NormalLayoutActivity extends SherlockActivity  {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
-		menu.add("Settings")
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		SubMenu toolsMenu=menu.addSubMenu("Settings");
+		MenuItem toolsMenuItem=toolsMenu.getItem();
+		toolsMenuItem.setIcon(R.drawable.settings);
+		toolsMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		toolsMenu.add(0, 1, 0, "Settings");
+		toolsMenu.add(0,2,0,"Set theme");
 		
-		return true;
+		
+		
+		menu.addSubMenu(1,1,0,"Settings");
+		menu.addSubMenu(1,2,0,"Set theme");
+
+		
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
@@ -22,5 +34,23 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		setTheme(SourceFishConfig.MAINTHEME);
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem)
+	{
+		switch(menuItem.getItemId())
+		{
+			case 1:
+				Toast toast=Toast.makeText(getApplicationContext(), "Settings clicked", Toast.LENGTH_LONG);
+				toast.show();	
+			break;
+			
+			case 2:
+				Toast toast2=Toast.makeText(getApplicationContext(), "Set theme clicked", Toast.LENGTH_LONG);
+				toast2.show();
+			break;
+		}
+		return true;
 	}
 }
