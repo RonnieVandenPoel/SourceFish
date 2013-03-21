@@ -11,7 +11,7 @@
     <string name="login_btn">Log in</string>
     <string name="cancel">Register</string>
     <string name="ok">OK</string>
-    <string name="title_activity_project">ProjectActivity</string>
+    <string name="title_activity_project">Projects</string>
     <string name="label_password_repeat">Repeat password:</string>
     <string name="title_activity_entry">Entry</string>
     <string name="title_activity_specific_entry">SpecificEntryActivity</string>
