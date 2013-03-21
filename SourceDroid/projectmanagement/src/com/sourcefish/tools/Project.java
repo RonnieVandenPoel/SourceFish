@@ -18,6 +18,7 @@ public class Project implements Serializable{
 	public String description;
 	public ArrayList<User> users = new ArrayList<User>();
 	public ArrayList<Entry> entries = new ArrayList<Entry>();
+	public String owner;
 	
 	public Project() {
 		//leeg project
@@ -32,5 +33,30 @@ public class Project implements Serializable{
 		this.description = description;
 		this.users = users;
 		this.entries = entries;
+	}
+	
+	public String toString() {
+		String s = "";
+		s+= name + " ";
+		s+= customer + " ";
+		s+= id + " ";
+		s+= description + " ";
+		s+= owner + " ";
+		
+		if (!(endDate == null)) {
+			s+= endDate.toString() + " ";
+		}		
+		
+		s+= startDate.toString() + " ";
+		
+		for (User u : users) {
+			s+= u.username;
+		}
+		
+		for (Entry e : entries) {
+			s+= e.toString();
+		}
+	
+		return s;
 	}
 }
