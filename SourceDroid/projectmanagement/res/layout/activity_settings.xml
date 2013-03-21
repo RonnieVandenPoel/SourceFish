@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,9 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SettingsActivity" >
 
-    <TextView
+    <ImageView
+        android:id="@+id/imageViewUserPicture"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_height="149dp"
+        android:layout_weight="0.42"
+        android:contentDescription="Profile Picture"
+        android:onClick="changePicture"
+        android:src="@drawable/abs__ab_bottom_solid_dark_holo" />
 
-</RelativeLayout>
+</LinearLayout>
