@@ -294,19 +294,19 @@ $app->post('/setProfilePicture',function() use($app){
 	$userid=getUserID();
 	$data=$app->request()->getBody();
 	//var_dump($app->request());
-	//echo $data;
-	$splitdata=explode("\n", $data);
+	echo $data;
+	/*$splitdata=explode("\n", $data);
 	$correctsplitdata=array_slice($splitdata,4,count($splitdata)-2);
 	
 	$image=implode("\n",$correctsplitdata);
-	echo $image;
+	echo $image;*/
 	
 	
 	try{
 		$db=getConnection();
 		$sql="UPDATE tbl_gebruiker SET profielfoto=? WHERE uid=?";
 		$query=$db->prepare($sql);
-		$query->execute(array($image,$userid));
+		$query->execute(array($data,$userid));
 		
 		//echo $data;
 	}
