@@ -1,8 +1,12 @@
 package com.sourcefish.tools;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Entry {
+public class Entry implements Serializable {
+
+	private static final long serialVersionUID = 2435417523458057675L;
+	
 	public Timestamp start;
 	public Timestamp end;
 	public String description;
