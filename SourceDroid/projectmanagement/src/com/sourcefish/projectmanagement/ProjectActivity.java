@@ -21,6 +21,7 @@ import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -178,7 +179,9 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			}
 			
 			//start intent
-			
+			Intent i = new Intent(getApplicationContext(), EntryActivity.class);
+			i.putExtra("project", chosenProject);
+			startActivity(i);
 			
 		}
 		  });
