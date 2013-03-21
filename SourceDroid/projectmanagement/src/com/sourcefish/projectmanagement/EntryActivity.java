@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +22,11 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
-import com.sourcefish.tools.User;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 
 	private ArrayAdapter adapter = null;
+	private boolean hasOpenProject = false;
 	private Project p = null;
 	private Entry openEntry = null;
 	private ListView list = null;
@@ -112,7 +113,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(adapter != null)
 		{
 			list.setAdapter(adapter);
-			list.setOnItemClickListener(new OnItemClickListener() {
+			/**list.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int itemId, long arg3) {
@@ -121,7 +122,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					i.putExtra("entry", e);
 					startActivity(i);
 				}
-			});
+			});**/
 		}
 	}
 
@@ -158,6 +159,9 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		if(openEntry != null)
 		{
+			hasOpenProject = true;
+			ImageButton ib = (ImageButton) findViewById(R.id.stop_image_button);
+			ib.setImageResource(R.drawable.stop_icon);
 			TextView tv = (TextView) findViewById(R.id.open_entry_description);
 			String description = "Description: \n";
 			description += openEntry.description;
@@ -168,19 +172,28 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			description += ts.toString();
 			tv.setText(description);
 		}
+		else
+		{
+			hasOpenProject = false;
+			ImageButton ib = (ImageButton) findViewById(R.id.stop_image_button);
+			ib.setImageResource(R.drawable.start_icon);
+		}
 	}
 	
 	public void stopEntry(View v)
 	{
-		Timestamp end = new Timestamp(System.currentTimeMillis());
-		closeEntry(end);
-		Entry newEntry = openEntry;
-		newEntry.end = end;
-		p.entries.set(p.entries.indexOf(openEntry), newEntry);
-		openEntry = null;
-		Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
-		t.show();
-		getSupportActionBar().getTabAt(1).select();
+		if(hasOpenProject)
+		{
+			Timestamp end = new Timestamp(System.currentTimeMillis());
+			closeEntry(end);
+			Entry newEntry = openEntry;
+			newEntry.end = end;
+			p.entries.set(p.entries.indexOf(openEntry), newEntry);
+			openEntry = null;
+			Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
+			t.show();
+			getSupportActionBar().getTabAt(1).select();
+		}
 	}
 	
 	public StringEntity closeEntry(Timestamp end)
