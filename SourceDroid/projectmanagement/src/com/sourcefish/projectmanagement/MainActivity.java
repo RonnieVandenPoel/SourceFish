@@ -15,7 +15,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
-public class MainActivity extends SherlockActivity{
+public class MainActivity extends NormalLayoutActivity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
