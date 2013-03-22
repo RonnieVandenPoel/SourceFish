@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends NormalLayoutActivity{
@@ -22,6 +23,8 @@ public class MainActivity extends NormalLayoutActivity{
         setTheme(SourceFishConfig.MAINTHEME); //Used for theme switching in samples
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		
 
 		AccountManager am = AccountManager.get(getApplicationContext());
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");

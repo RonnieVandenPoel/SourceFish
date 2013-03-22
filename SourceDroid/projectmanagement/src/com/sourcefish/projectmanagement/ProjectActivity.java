@@ -1,10 +1,18 @@
 package com.sourcefish.projectmanagement;
 
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,11 +23,14 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.SourceFishHttpClient;
 import com.sourcefish.tools.User;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
 
 import android.os.Bundle;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +59,8 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		setTheme(SourceFishConfig.MAINTHEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project);
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
 		
 		desc = "";
@@ -192,7 +205,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			Intent i = new Intent(getApplicationContext(), EntryActivity.class);
 			i.putExtra("project", chosenProject);
 			startActivity(i);
-			finish();
+			
 			
 		}
 		  });
@@ -267,6 +280,15 @@ int tabInt = (Integer) tab.getTag();
 	}
 	
 	public void SendButton(View v) {
-	    Log.i("ok","ok");
+		EditText cust = (EditText) findViewById(R.id.customerView);
+		EditText desc = (EditText) findViewById(R.id.descriptionView);
+		EditText name = (EditText) findViewById(R.id.projectnameView);
+		
+		this.cust = cust.getText().toString();
+		this.desc = desc.getText().toString();
+		this.name = name.getText().toString();
+		
+		String json = "{\"projectname\":\"" + name + "\",\"client\":\"" + cust + "\",\"summary\":\"" + desc + "\"}";
+	        
 	}
 }
