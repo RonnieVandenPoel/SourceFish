@@ -2,18 +2,12 @@ package com.sourcefish.projectmanagement;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Currency;
 
 import org.apache.http.entity.StringEntity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -23,12 +17,17 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.MenuItem;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
+import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.Tasks;
+import com.sourcefish.tools.User;
 
-public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
+public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener, ServerListenerInterface {
 
-	private ArrayAdapter adapter = null;
+	//private ArrayAdapter adapter = null;
+	EntryAdapter entryAdapter=null;
 	private boolean hasOpenProject = false;
 	private Project p = null;
 	private Entry openEntry = null;
@@ -38,9 +37,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		if(menuItem.getItemId() == android.R.id.home)
 		{
-			Intent i = new Intent(this, ProjectActivity.class);
-			startActivity(i);
-			finish();
+			onBackPressed();
 		}
 		else
 		{
@@ -119,25 +116,32 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
-		startEntry(description, null);
+		new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null));
+		getSupportActionBar().getTabAt(0).select();
 	}
 	
 	private void fillEntryAdapter()
 	{
 		if(p != null)
 		{
-			ArrayList<String> entryTitles = new ArrayList<String>();
+			/*ArrayList<String> entryTitles = new ArrayList<String>();
 			for(Entry e : p.entries)
 			{
 				if(! e.isOpen())
 					entryTitles.add(e.toString());
 			}
 			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entryTitles);
+			*/
+			
+			entryAdapter=new EntryAdapter(this, android.R.layout.simple_expandable_list_item_1,p.entries);
+			
+			
 		}
 		list = (ListView) findViewById(R.id.entryList);
-		if(adapter != null)
-		{
-			list.setAdapter(adapter);
+		
+		//if(adapter != null)
+		//{
+			//list.setAdapter(adapter);
 			/**list.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -148,6 +152,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					startActivity(i);
 				}
 			});**/
+		//}
+		
+		if(entryAdapter!=null)
+		{
+			list.setAdapter(entryAdapter);
 		}
 	}
 
@@ -209,7 +218,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(hasOpenProject)
 		{
 			Timestamp end = new Timestamp(System.currentTimeMillis());
-			closeEntry(end);
+			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(closeEntry(end));
 			Entry newEntry = openEntry;
 			newEntry.end = end;
 			p.entries.set(p.entries.indexOf(openEntry), newEntry);
@@ -227,17 +236,20 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	public StringEntity startEntry(String description, Timestamp end)
 	{
 		StringEntity create = null;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
 		try {
 			if(end == null)
-				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
+				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
 			else
-				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
+				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
 			
 			create.setContentType("application/json");
 	    } catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
+		p.entries.add(openEntry);
 		return create;
 	}
 	
@@ -261,6 +273,12 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getServerResponse(String s) {
 		// TODO Auto-generated method stub
 		
 	}

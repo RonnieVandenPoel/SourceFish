@@ -60,4 +60,11 @@
 	    android:ems="10"
 	    android:inputType="textPersonName" />
 
+	<Button
+	    android:id="@+id/btnChangeName"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:onClick="updateName"
+	    android:text="Update name" />
+
 </LinearLayout>

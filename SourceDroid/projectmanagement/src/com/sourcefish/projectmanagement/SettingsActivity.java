@@ -1,7 +1,9 @@
 package com.sourcefish.projectmanagement;
 
 
+import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
 import android.accounts.Account;
@@ -18,6 +20,20 @@ import android.widget.ImageView;
 public class SettingsActivity extends NormalLayoutActivity {
 
 	private static final int SELECT_PICTURE = 1;
+	private static boolean loading=false;
+	
+	public boolean onOptionsItemSelected(MenuItem menuItem)
+	{
+		if(menuItem.getItemId() == android.R.id.home)
+		{
+			onBackPressed();
+		}
+		else
+		{
+			super.onOptionsItemSelected(menuItem);
+		}
+		return false;
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +45,12 @@ public class SettingsActivity extends NormalLayoutActivity {
 		AccountManager am = AccountManager.get(this);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
-		loader.DisplayImage(accounts[0].name, iv);
+		if(!loading)
+		{
+			loader.DisplayImage(accounts[0].name, iv);
+		}
+		
+		//AsyncServerPosts get=new AsyncServerPosts(this, Tasks.GETUSERDATA);
 	}
 	
 	public void changePicture(View view)
@@ -55,10 +76,16 @@ public class SettingsActivity extends NormalLayoutActivity {
 	            final String imageFilePath = cursor.getString(0);
 	            cursor.close();
 	            Log.i("imagepath",imageFilePath);
+	            loading=true;
 	            new AsyncChangePicture(this).execute(imageFilePath);
 	        }
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	public void updateName(View view)
+	{
+		
 	}
 
 
