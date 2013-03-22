@@ -24,7 +24,7 @@ import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
-public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
+public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener, ServerListenerInterface {
 
 	//private ArrayAdapter adapter = null;
 	EntryAdapter entryAdapter=null;
@@ -273,6 +273,12 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getServerResponse(String s) {
 		// TODO Auto-generated method stub
 		
 	}

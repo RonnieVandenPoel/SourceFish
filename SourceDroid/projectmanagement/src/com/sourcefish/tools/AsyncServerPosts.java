@@ -8,6 +8,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.sourcefish.projectmanagement.ServerListenerInterface;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,10 +22,12 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 	private Context ctx = null;
 	private Tasks task;
 	private ProgressDialog dialog;
+	private ServerListenerInterface parent;
 	
 	public AsyncServerPosts(Context c, Tasks t, Activity parent) {
 		ctx = c;
 		task = t;
+		this.parent = (ServerListenerInterface) parent;
 		dialog = new ProgressDialog(parent);
 	}
 	
@@ -37,6 +41,8 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 	{
 		if(dialog.isShowing())
 			dialog.dismiss();
+		
+		parent.getServerResponse(s);
 	}
 
 	@Override
