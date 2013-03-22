@@ -4,6 +4,7 @@ package com.sourcefish.projectmanagement;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,11 +21,14 @@ import org.json.JSONObject;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
+import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
+import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
 
@@ -32,7 +36,10 @@ import android.os.Bundle;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -41,12 +48,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ProjectActivity extends NormalLayoutActivity implements ActionBar.TabListener {
+public class ProjectActivity extends NormalLayoutActivity implements ActionBar.TabListener, ServerListenerInterface {
 	private ArrayList<String> listItems;
 	private ArrayAdapter adapter;
 	private ListView list;
@@ -84,11 +93,11 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		 getSupportActionBar().addTab(tab);
 		 
 		 //edit tab
-		 tab = getSupportActionBar().newTab();
+		/* tab = getSupportActionBar().newTab();
 		 tab.setTabListener(this);
 		 tab.setText("Edit");
 		 tab.setTag(2);
-		 getSupportActionBar().addTab(tab);	 
+		 getSupportActionBar().addTab(tab);	 */
 		
 		 
 		 try {
@@ -133,83 +142,138 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int elementId,
 				long arg3) {
-			Project chosenProject = new Project();
-			Log.i("positie", "" + elementId);
-			JSONObject project = projects.get(elementId);
-			Log.i("positie", "" + project);
-			
-			//users toevoegen aan project
-			ArrayList<User> users = new ArrayList<User>();
-			JSONArray userarray;
-			try {
-				userarray = project.getJSONArray("users");
-				for (int j = 0; j < userarray.length(); j++) {
-					JSONObject user = userarray.getJSONObject(j);
-					users.add(new User(user.getString("username"),user.getInt("rid")));
-				}
-				chosenProject.users = users;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			//entries toevoegen
-			ArrayList<Entry> entries = new ArrayList<Entry>();
-			JSONArray entryarray;
-			try {
-				entryarray = project.getJSONArray("entries");
-				for (int j = 0; j < entryarray.length(); j++) {
-					JSONObject entry = entryarray.getJSONObject(j);
-					User u = new User();
-					u.username = entry.getString("entryowner");
-										
-					Timestamp start = Timestamp.valueOf(entry.getString("start"));
-					
-					Entry e = new Entry(start,entry.getString("notes"),u,entry.getString("trid"));
-					
-					if (!(entry.isNull("end"))) {						
-						Timestamp end = Timestamp.valueOf(entry.getString("end"));
-						e.end = end;
-					}	
-					entries.add(e);
-				}
-				chosenProject.entries = entries;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			//strings van project data opslaan
-			try {
-				chosenProject.name = project.getString("projectname");
-				chosenProject.description = project.getString("description");
-				chosenProject.id = project.getInt("pid");
-				chosenProject.customer = project.getString("client");	
-				chosenProject.owner = project.getString("projectowner");
-				
-				if (!(project.isNull("end"))) {
-					Timestamp projectEnd = Timestamp.valueOf(project.getString("enddate"));
-					chosenProject.endDate = projectEnd;
-				}				
-				Timestamp projectStart = Timestamp.valueOf(project.getString("startdate"));
-				chosenProject.startDate = projectStart;
-				Log.i("project", chosenProject.toString());
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			//start intent
-			Intent i = new Intent(getApplicationContext(), EntryActivity.class);
-			i.putExtra("project", chosenProject);
-			startActivity(i);
+			openProject(elementId);
 			
 			
 		}
 		  });
+		 list.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+	            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+	                    int elementId, long id) {
+	            	AlertDialog alert = (AlertDialog) onCreateDialog(elementId);
+	            	alert.show();
+	    			return true;
+	            }
+	            
+	        }); 
+		 
 	}
+	
+	public Dialog onCreateDialog(final int elementId) {
+		String[] opties = {"Open","Edit","Delete"};
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle("Project");
+	    builder.setItems(opties, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+	               switch (which) {
+	               case 0:
+	            	   openProject(elementId);
+	            	   break;
+	               }
+	           }
+	    });
+	    return builder.create();
+	}
+	
+	private void openProject(int elementId) {
+		Project chosenProject = new Project();
+		Log.i("positie", "" + elementId);
+		JSONObject project = projects.get(elementId);
+		Log.i("positie", "" + project);
+		
+		//users toevoegen aan project
+		ArrayList<User> users = new ArrayList<User>();
+		JSONArray userarray;
+		try {
+			userarray = project.getJSONArray("users");
+			for (int j = 0; j < userarray.length(); j++) {
+				JSONObject user = userarray.getJSONObject(j);
+				users.add(new User(user.getString("username"),user.getInt("rid")));
+			}
+			chosenProject.users = users;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//entries toevoegen
+		ArrayList<Entry> entries = new ArrayList<Entry>();
+		JSONArray entryarray;
+		try {
+			entryarray = project.getJSONArray("entries");
+			for (int j = 0; j < entryarray.length(); j++) {
+				JSONObject entry = entryarray.getJSONObject(j);
+				User u = new User();
+				u.username = entry.getString("entryowner");
+									
+				Timestamp start = Timestamp.valueOf(entry.getString("start"));
+				
+				Entry e = new Entry(start,entry.getString("notes"),u,entry.getString("trid"));
+				
+				if (!(entry.isNull("end"))) {						
+					Timestamp end = Timestamp.valueOf(entry.getString("end"));
+					e.end = end;
+				}	
+				entries.add(e);
+			}
+			chosenProject.entries = entries;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		//strings van project data opslaan
+		try {
+			chosenProject.name = project.getString("projectname");
+			chosenProject.description = project.getString("description");
+			chosenProject.id = project.getInt("pid");
+			chosenProject.customer = project.getString("client");	
+			chosenProject.owner = project.getString("projectowner");
+			
+			if (!(project.isNull("end"))) {
+				Timestamp projectEnd = Timestamp.valueOf(project.getString("enddate"));
+				chosenProject.endDate = projectEnd;
+			}				
+			Timestamp projectStart = Timestamp.valueOf(project.getString("startdate"));
+			chosenProject.startDate = projectStart;
+			Log.i("project", chosenProject.toString());
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//start intent
+		Intent i = new Intent(getApplicationContext(), EntryActivity.class);
+		i.putExtra("project", chosenProject);
+		startActivity(i);
+	}
+	
+	/*private void stuff() {
+		Project chosenProject = new Project();
+		Log.i("positie", "" + elementId);
+		JSONObject project = projects.get(elementId);
+		Log.i("positie", "" + project);    	
+		
+		//strings van project data opslaan
+		try {
+			chosenProject.name = project.getString("projectname");
+			chosenProject.description = project.getString("description");	    				
+			chosenProject.customer = project.getString("client");		    				
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//start intent
+		Intent i = new Intent(getApplicationContext(), EntryActivity.class);
+		i.putExtra("project", chosenProject);
+		startActivity(i);
+	}
+	*/
+	
 	
 	public void setNewValues() {
 		TextView cust = (TextView) findViewById(R.id.customerView);
@@ -239,9 +303,6 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			setContentView(R.layout.projectnew);
 			setNewValues();
 			break;
-		case 2:
-			setContentView(R.layout.projectedit);
-			break;
 		}
 		
 	}
@@ -266,10 +327,8 @@ int tabInt = (Integer) tab.getTag();
 			imm.hideSoftInputFromWindow(desc.getWindowToken(), 0);
 			imm.hideSoftInputFromWindow(cust.getWindowToken(), 0);
 			break;
-		case 2:
-			
-			break;
 		}
+		
 		
 	}
 
@@ -284,11 +343,53 @@ int tabInt = (Integer) tab.getTag();
 		EditText desc = (EditText) findViewById(R.id.descriptionView);
 		EditText name = (EditText) findViewById(R.id.projectnameView);
 		
-		this.cust = cust.getText().toString();
-		this.desc = desc.getText().toString();
-		this.name = name.getText().toString();
+		if (name.getText().toString().equals("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Fill in project name.", Toast.LENGTH_LONG);
+			toast.show();			
+		}
+		else {
+			String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\"}";
+			
+			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.NEWPROJECT, this);
+			
+			StringEntity entity;
+			try {
+				entity = new StringEntity(json);
+				task.execute(entity);				
+				JSONObject result = new JSONObject(task.get());				
+				if (result.has("pid") && !(result.isNull("pid"))) {
+					this.name = "";
+					this.desc = "";
+					this.cust = "";
+					setNewValues();
+					AccountManager am = AccountManager.get(getApplicationContext());
+					Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+					String user = accounts[0].name;
+					String pass = am.getPassword(accounts[0]);
+					AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
+					task2.execute("");
+					task2.get();
+					getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
+				}
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void getServerResponse(String s) {
+		// TODO Auto-generated method stub
 		
-		String json = "{\"projectname\":\"" + name + "\",\"client\":\"" + cust + "\",\"summary\":\"" + desc + "\"}";
-	        
 	}
 }
