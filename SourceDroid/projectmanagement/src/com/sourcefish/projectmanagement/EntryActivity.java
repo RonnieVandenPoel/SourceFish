@@ -179,8 +179,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		
 	}
 	
-	
-	
 	private void setDescription()
 	{
 		if(openEntry != null)
