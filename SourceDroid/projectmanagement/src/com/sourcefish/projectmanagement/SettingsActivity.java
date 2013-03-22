@@ -18,6 +18,7 @@ import android.widget.ImageView;
 public class SettingsActivity extends NormalLayoutActivity {
 
 	private static final int SELECT_PICTURE = 1;
+	private static boolean loading=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,10 @@ public class SettingsActivity extends NormalLayoutActivity {
 		AccountManager am = AccountManager.get(this);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
-		loader.DisplayImage(accounts[0].name, iv);
+		if(!loading)
+		{
+			loader.DisplayImage(accounts[0].name, iv);
+		}
 	}
 	
 	public void changePicture(View view)
@@ -55,6 +59,7 @@ public class SettingsActivity extends NormalLayoutActivity {
 	            final String imageFilePath = cursor.getString(0);
 	            cursor.close();
 	            Log.i("imagepath",imageFilePath);
+	            loading=true;
 	            new AsyncChangePicture(this).execute(imageFilePath);
 	        }
 	    }

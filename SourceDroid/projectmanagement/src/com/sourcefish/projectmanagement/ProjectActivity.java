@@ -192,6 +192,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			Intent i = new Intent(getApplicationContext(), EntryActivity.class);
 			i.putExtra("project", chosenProject);
 			startActivity(i);
+			finish();
 			
 		}
 		  });
