@@ -7,10 +7,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.sourcefish.projectmanagement.NormalLayoutActivity;
 import com.sourcefish.projectmanagement.R;
 import com.sourcefish.tools.SourceFishConfig;
 
-public class RegisterActivity extends SherlockActivity {
+public class RegisterActivity extends NormalLayoutActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
