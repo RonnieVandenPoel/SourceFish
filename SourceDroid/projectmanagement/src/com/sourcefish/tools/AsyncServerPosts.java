@@ -8,24 +8,41 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class AsyncServerPosts extends AsyncTask<StringEntity, Void, Boolean>{
+public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 	
 	private Context ctx = null;
 	private Tasks task;
+	private ProgressDialog dialog;
 	
-	public AsyncServerPosts(Context c, Tasks t) {
+	public AsyncServerPosts(Context c, Tasks t, Activity parent) {
 		ctx = c;
 		task = t;
+		dialog = new ProgressDialog(parent);
+	}
+	
+	@Override
+	protected void onPreExecute() {
+        this.dialog.setMessage("working...");
+        this.dialog.show();
+    }
+	
+	protected void onPostExecute(String s)
+	{
+		if(dialog.isShowing())
+			dialog.dismiss();
 	}
 
 	@Override
-	protected Boolean doInBackground(StringEntity... params) {
+	protected String doInBackground(StringEntity... params) {
 		StringEntity json = params[0];
-		boolean check = false;
+		String serverResponse = "";
 		DefaultHttpClient client = SourceFishHttpClient.getClient(SourceFishConfig.getUserName(ctx), SourceFishConfig.getUserPassword(ctx));
 		HttpPost post = null;
 		if(json != null)
@@ -53,8 +70,7 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, Boolean>{
 		    	BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		    	String line;
 		    	while ((line = rd.readLine()) != null) {
-		    		Log.i("logging", line);
-		    		check = true;
+		    		serverResponse += line;
 		    	}
 			}
 		}
@@ -66,7 +82,7 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, Boolean>{
 		{
 			client.getConnectionManager().shutdown();
 		}
-		return check;
+		return serverResponse;
 	}
 	
 	

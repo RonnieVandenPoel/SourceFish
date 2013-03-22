@@ -116,7 +116,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
-		new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY).execute(startEntry(description, null));
+		new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null));
 		getSupportActionBar().getTabAt(0).select();
 	}
 	
@@ -218,7 +218,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(hasOpenProject)
 		{
 			Timestamp end = new Timestamp(System.currentTimeMillis());
-			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY).execute(closeEntry(end));
+			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(closeEntry(end));
 			Entry newEntry = openEntry;
 			newEntry.end = end;
 			p.entries.set(p.entries.indexOf(openEntry), newEntry);
