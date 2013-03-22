@@ -26,13 +26,31 @@
         android:layout_height="wrap_content"
         />
 
+	<LinearLayout
+	    android:id="@+id/startTimeContainer"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginTop="10dp"
+	    android:orientation="vertical" >
+    	
+	    <Button 
+	        android:id="@+id/setStartTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/btn_set_starting_time"
+	        android:onClick="setStartTime"
+	        />"
+	    
+	</LinearLayout>
+	
     <Button
         android:id="@+id/makeentry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:text="@string/start_new_entry" 
-        android:onClick="startEntry"/>
-
+        android:layout_marginTop="10dp"
+        android:onClick="startEntry"
+        android:text="@string/start_new_entry" />
 </LinearLayout>

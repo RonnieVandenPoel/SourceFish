@@ -4,12 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,8 +88,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 //edit tab
 		 tab = getSupportActionBar().newTab();
 		 tab.setTabListener(this);
-		 tab.setText("New Entry");
+		 tab.setText("Start New Entry");
 		 tab.setTag(2);
+		 getSupportActionBar().addTab(tab);
+		 
+		 //add manual
+		 tab = getSupportActionBar().newTab();
+		 tab.setTabListener(this);
+		 tab.setText("Manual Entry");
+		 tab.setTag(3);
 		 getSupportActionBar().addTab(tab);
 		 
 		 getOpenEntry();
@@ -182,7 +192,12 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 2:
 			setContentView(R.layout.newentrylayout);
 			getSupportActionBar().setTitle("New entry");
-			
+			break;
+		case 3:
+			setContentView(R.layout.newentrylayout);
+			LinearLayout ll = (LinearLayout) findViewById(R.id.startTimeContainer);
+			ll.setVisibility(LinearLayout.GONE);
+			getSupportActionBar().setTitle("Manual Entry");
 			break;
 		}
 		
@@ -265,6 +280,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		return create;
 	}
 
+	public void setStartTime(View v)
+	{
+		
+	}
+	
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
@@ -279,7 +299,21 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void getServerResponse(String s) {
-		// TODO Auto-generated method stub
-		
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(s);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			if(jsonObject.has("trid"))
+					openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

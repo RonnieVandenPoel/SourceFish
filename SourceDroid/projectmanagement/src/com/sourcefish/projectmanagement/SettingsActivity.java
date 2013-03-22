@@ -1,9 +1,18 @@
 package com.sourcefish.projectmanagement;
 
 
+import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
+import com.sourcefish.tools.AsyncGet;
 import com.sourcefish.tools.AsyncServerPosts;
+import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
 import android.accounts.Account;
@@ -14,10 +23,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 
-public class SettingsActivity extends NormalLayoutActivity {
+public class SettingsActivity extends NormalLayoutActivity implements ServerListenerInterface {
 
 	private static final int SELECT_PICTURE = 1;
 	private static boolean loading=false;
@@ -50,7 +60,18 @@ public class SettingsActivity extends NormalLayoutActivity {
 			loader.DisplayImage(accounts[0].name, iv);
 		}
 		
-		//AsyncServerPosts get=new AsyncServerPosts(this, Tasks.GETUSERDATA);
+		AsyncGet get=new AsyncGet(getApplicationContext());
+		try {
+			JSONObject json=new JSONObject(get.execute("http://projecten3.eu5.org/webservice/getUser/0").get());
+			
+			EditText etFirst=(EditText) findViewById(R.id.editTextSetFirstName);
+			EditText etLast=(EditText) findViewById(R.id.editTextSetLastName);
+			
+			etFirst.setText(json.getString("voornaam"));
+			etLast.setText(json.getString("achternaam"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void changePicture(View view)
@@ -85,6 +106,27 @@ public class SettingsActivity extends NormalLayoutActivity {
 	
 	public void updateName(View view)
 	{
+		EditText etFirst=(EditText) findViewById(R.id.editTextSetFirstName);
+		EditText etLast=(EditText) findViewById(R.id.editTextSetLastName);
+		
+		if(etFirst.getText().toString()!="" && etLast.getText().toString()!="")
+		{
+			AsyncServerPosts post=new AsyncServerPosts(getApplicationContext(), Tasks.UPDATEUSER, this);
+			try {
+				Log.i("debug","{'firstname':'" + etFirst.getText().toString() + "','lastname':'"
+						+ etLast.getText().toString() + "'}");
+				post.execute(new StringEntity("{\"firstname\":\"" + etFirst.getText().toString() + "\",\"lastname\":\""
+						+ etLast.getText().toString() + "\"}"));
+				Log.i("response",post.get());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void getServerResponse(String s) {
+		// TODO Auto-generated method stub
 		
 	}
 
