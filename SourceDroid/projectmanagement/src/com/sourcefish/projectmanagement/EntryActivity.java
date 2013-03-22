@@ -4,12 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,6 +195,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			break;
 		case 3:
 			setContentView(R.layout.newentrylayout);
+			LinearLayout ll = (LinearLayout) findViewById(R.id.startTimeContainer);
+			ll.setVisibility(LinearLayout.GONE);
 			getSupportActionBar().setTitle("Manual Entry");
 			break;
 		}
@@ -275,6 +280,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		return create;
 	}
 
+	public void setStartTime(View v)
+	{
+		
+	}
+	
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
@@ -289,6 +299,21 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void getServerResponse(String s) {
-		// empty class, only needed for get
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(s);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			if(jsonObject.has("trid"))
+					openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

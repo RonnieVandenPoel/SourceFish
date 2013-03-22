@@ -50,40 +50,38 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		String serverResponse = "";
 		DefaultHttpClient client = SourceFishHttpClient.getClient(SourceFishConfig.getUserName(ctx), SourceFishConfig.getUserPassword(ctx));
 		HttpPost post = null;
-		if(json != null)
-		{
-			switch (task) {
-			case NEWENTRY:
-				post = new HttpPost("http://projecten3.eu5.org/webservice/newEntry");
-				break;
-			case NEWPROJECT:
-				post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
-				break;
-			case STOPENTRY:
-				post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
-				break;
-			case UPDATEUSER:
-				post=new HttpPost("http://projecten3.eu5.org/webservice/updateUser");
-				break;
+		switch (task) {
+		case NEWENTRY:
+			post = new HttpPost("http://projecten3.eu5.org/webservice/newEntry");
+			break;
+		case NEWPROJECT:
+			post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
+			break;
+		case STOPENTRY:
+			post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
+			break;
+		case UPDATEUSER:
+			post=new HttpPost("http://projecten3.eu5.org/webservice/updateUser");
+			break;
 			
-			default:
-				break;
-			}
+		default:
+			break;
 		}
+		
 		try
 		{
 			if(post != null && json != null)
 			{
 				post.setEntity(json);
-		    	HttpResponse response = client.execute(post);
-		    	BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		    	String line;
-		    	while ((line = rd.readLine()) != null) {
-		    		// TODO delete this
-		    		Log.i("serverresponselogging", line);
-		    		serverResponse += line;
-		    	}
 			}
+		    HttpResponse response = client.execute(post);
+		    BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		    String line;
+		    while ((line = rd.readLine()) != null) {
+		    	// TODO delete this
+		    	Log.i("serverresponselogging", line);
+		    	serverResponse += line;
+		    }
 		}
 		catch(Exception e)
 		{
