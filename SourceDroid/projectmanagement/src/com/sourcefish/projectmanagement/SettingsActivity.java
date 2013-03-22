@@ -56,7 +56,13 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 			loader.DisplayImage(accounts[0].name, iv);
 		}
 		
-		//AsyncServerPosts get=new AsyncServerPosts(this, Tasks.GETUSERDATA);
+		AsyncServerPosts get=new AsyncServerPosts(getApplicationContext(), Tasks.GETUSERDATA,this);
+		try {
+			get.execute(new StringEntity(""));
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void changePicture(View view)
