@@ -28,9 +28,6 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		this.password = password;
 		this.context = context;
 	}
-	
-	
-
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Boolean test = false;
