@@ -25,6 +25,8 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.MenuItem;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
+import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.User;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 
@@ -120,6 +122,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
 		startEntry(description, null);
+		getSupportActionBar().getTabAt(0).select();
 	}
 	
 	private void fillEntryAdapter()
@@ -227,17 +230,20 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	public StringEntity startEntry(String description, Timestamp end)
 	{
 		StringEntity create = null;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
 		try {
 			if(end == null)
-				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
+				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
 			else
-				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
+				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
 			
 			create.setContentType("application/json");
 	    } catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
+		p.entries.add(openEntry);
 		return create;
 	}
 	
