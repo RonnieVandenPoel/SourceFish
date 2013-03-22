@@ -17,5 +17,7 @@
     <string name="title_activity_specific_entry">SpecificEntryActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="stopbuttontext">stopentry</string>
+    <string name="description_new_entry">Description:</string>
+    <string name="start_new_entry">Start Entry</string>
 
 </resources>
