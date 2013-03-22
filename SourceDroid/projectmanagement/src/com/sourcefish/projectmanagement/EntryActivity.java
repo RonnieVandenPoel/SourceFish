@@ -30,7 +30,8 @@ import com.sourcefish.tools.User;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 
-	private ArrayAdapter adapter = null;
+	//private ArrayAdapter adapter = null;
+	EntryAdapter entryAdapter=null;
 	private boolean hasOpenProject = false;
 	private Project p = null;
 	private Entry openEntry = null;
@@ -129,18 +130,24 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		if(p != null)
 		{
-			ArrayList<String> entryTitles = new ArrayList<String>();
+			/*ArrayList<String> entryTitles = new ArrayList<String>();
 			for(Entry e : p.entries)
 			{
 				if(! e.isOpen())
 					entryTitles.add(e.toString());
 			}
 			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entryTitles);
+			*/
+			
+			entryAdapter=new EntryAdapter(this, android.R.layout.simple_expandable_list_item_1,p.entries);
+			
+			
 		}
 		list = (ListView) findViewById(R.id.entryList);
-		if(adapter != null)
-		{
-			list.setAdapter(adapter);
+		
+		//if(adapter != null)
+		//{
+			//list.setAdapter(adapter);
 			/**list.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -151,6 +158,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					startActivity(i);
 				}
 			});**/
+		//}
+		
+		if(entryAdapter!=null)
+		{
+			list.setAdapter(entryAdapter);
 		}
 	}
 
