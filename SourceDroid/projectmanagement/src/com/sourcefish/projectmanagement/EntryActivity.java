@@ -2,18 +2,12 @@ package com.sourcefish.projectmanagement;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Currency;
 
 import org.apache.http.entity.StringEntity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -23,9 +17,11 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.MenuItem;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener {
@@ -120,7 +116,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
-		startEntry(description, null);
+		new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY).execute(startEntry(description, null));
 		getSupportActionBar().getTabAt(0).select();
 	}
 	
@@ -222,7 +218,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(hasOpenProject)
 		{
 			Timestamp end = new Timestamp(System.currentTimeMillis());
-			closeEntry(end);
+			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY).execute(closeEntry(end));
 			Entry newEntry = openEntry;
 			newEntry.end = end;
 			p.entries.set(p.entries.indexOf(openEntry), newEntry);

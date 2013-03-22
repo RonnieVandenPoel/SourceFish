@@ -10,6 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class AsyncServerPosts extends AsyncTask<StringEntity, Void, Boolean>{
 	
@@ -52,13 +53,14 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, Boolean>{
 		    	BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		    	String line;
 		    	while ((line = rd.readLine()) != null) {
+		    		Log.i("logging", line);
 		    		check = true;
 		    	}
 			}
 		}
 		catch(Exception e)
 		{
-			// TODO not so clean
+			Log.i("ERROR", e.getMessage());
 		}
 		finally
 		{
