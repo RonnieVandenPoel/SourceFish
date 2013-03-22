@@ -3,6 +3,7 @@ package com.sourcefish.projectmanagement;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
 import android.accounts.Account;
@@ -48,6 +49,8 @@ public class SettingsActivity extends NormalLayoutActivity {
 		{
 			loader.DisplayImage(accounts[0].name, iv);
 		}
+		
+		//AsyncServerPosts get=new AsyncServerPosts(this, Tasks.GETUSERDATA);
 	}
 	
 	public void changePicture(View view)
@@ -78,6 +81,11 @@ public class SettingsActivity extends NormalLayoutActivity {
 	        }
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	public void updateName(View view)
+	{
+		
 	}
 
 
