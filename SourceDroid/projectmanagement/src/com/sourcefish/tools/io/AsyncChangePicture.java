@@ -2,6 +2,7 @@ package com.sourcefish.tools.io;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -65,8 +66,28 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 		ByteArrayEntity entity;
 		try {
 			ByteArrayOutputStream stream=new ByteArrayOutputStream();
-			BitmapFactory.decodeFile(imagelocation).compress(Bitmap.CompressFormat.PNG,
+			/*BitmapFactory.decodeFile(imagelocation).compress(Bitmap.CompressFormat.PNG,
+					100, stream);*/
+			BitmapFactory.Options o = new BitmapFactory.Options();
+	        o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(new FileInputStream(imagelocation), null, o);
+			
+			
+			   //The new size we want to scale to
+	        final int REQUIRED_SIZE=70;
+
+	        //Find the correct scale value. It should be the power of 2.
+	        int scale=1;
+	        while(o.outWidth/scale/2>=REQUIRED_SIZE && o.outHeight/scale/2>=REQUIRED_SIZE)
+	            scale*=2;
+
+	        //Decode with inSampleSize
+	        BitmapFactory.Options o2 = new BitmapFactory.Options();
+	        o2.inSampleSize=scale;
+	        BitmapFactory.decodeStream(new FileInputStream(imagelocation), null, o2).compress(Bitmap.CompressFormat.PNG,
 					100, stream);
+			
+	        
 			entity = new ByteArrayEntity(stream.toByteArray());
 			entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/octetstream"));
 			post.setEntity(entity);
