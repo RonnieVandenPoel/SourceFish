@@ -1,6 +1,7 @@
 package com.sourcefish.projectmanagement;
 
 
+import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
@@ -19,6 +20,19 @@ public class SettingsActivity extends NormalLayoutActivity {
 
 	private static final int SELECT_PICTURE = 1;
 	private static boolean loading=false;
+	
+	public boolean onOptionsItemSelected(MenuItem menuItem)
+	{
+		if(menuItem.getItemId() == android.R.id.home)
+		{
+			onBackPressed();
+		}
+		else
+		{
+			super.onOptionsItemSelected(menuItem);
+		}
+		return false;
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
