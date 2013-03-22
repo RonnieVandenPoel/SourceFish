@@ -48,6 +48,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		setTheme(SourceFishConfig.MAINTHEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project);
+		getSupportActionBar().setHomeButtonEnabled(false);
 		
 		desc = "";
 		cust = "";
