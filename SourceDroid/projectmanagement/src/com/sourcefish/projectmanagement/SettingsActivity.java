@@ -2,11 +2,15 @@ package com.sourcefish.projectmanagement;
 
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
+import com.sourcefish.tools.AsyncGet;
 import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.io.AsyncChangePicture;
@@ -56,11 +60,16 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 			loader.DisplayImage(accounts[0].name, iv);
 		}
 		
-		AsyncServerPosts get=new AsyncServerPosts(getApplicationContext(), Tasks.GETUSERDATA,this);
+		AsyncGet get=new AsyncGet(getApplicationContext());
 		try {
-			get.execute(new StringEntity(""));
+			JSONObject json=new JSONObject(get.execute("http://projecten3.eu5.org/webservice/getUser/0").get());
 			
-		} catch (UnsupportedEncodingException e) {
+			EditText etFirst=(EditText) findViewById(R.id.editTextSetFirstName);
+			EditText etLast=(EditText) findViewById(R.id.editTextSetLastName);
+			
+			etFirst.setText(json.getString("voornaam"));
+			etLast.setText(json.getString("achternaam"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
