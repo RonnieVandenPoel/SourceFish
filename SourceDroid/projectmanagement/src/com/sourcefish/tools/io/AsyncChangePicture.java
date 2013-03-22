@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
@@ -21,21 +22,27 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
+import com.fedorvlasov.lazylist.ImageLoader;
+import com.sourcefish.projectmanagement.R;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 
 public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 
-	Context context;
+	Activity activity;
 	
-	public AsyncChangePicture(Context context)
+	public AsyncChangePicture(Activity activity)
 	{
-		this.context=context;
+		this.activity=activity;
 	}
 	
 	@Override
@@ -43,7 +50,7 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 		String imagedata="";
 		String imagelocation=arg0[0];
 		
-		AccountManager am = AccountManager.get(context);
+		AccountManager am = AccountManager.get(activity);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
 		DefaultHttpClient client = SourceFishHttpClient.getClient(accounts[0].name, am.getPassword(accounts[0]));
@@ -57,7 +64,10 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 		Log.i("Info","About to post!"+imagedata);
 		ByteArrayEntity entity;
 		try {
-			entity = new ByteArrayEntity(FileUtils.readFileToByteArray(new File(imagelocation)));
+			ByteArrayOutputStream stream=new ByteArrayOutputStream();
+			BitmapFactory.decodeFile(imagelocation).compress(Bitmap.CompressFormat.PNG,
+					100, stream);
+			entity = new ByteArrayEntity(stream.toByteArray());
 			entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/octetstream"));
 			post.setEntity(entity);
 		} catch (Exception e1) {
@@ -76,12 +86,26 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 				serverResult+=output;
 			};
 			
-			Log.i("Result:",""+serverResult);
+			Log.i("Result:",""+serverResult);return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
-		
-		return true;
 	}
-
+	
+	protected void onPostExecute(Boolean ok)
+	{
+		if(ok)
+		{
+			ImageView iv=(ImageView) activity.findViewById(R.id.imageViewUserPicture);
+			ImageLoader loader=new ImageLoader(activity);
+			
+			AccountManager am = AccountManager.get(activity);
+			Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+			
+			loader.DisplayImage(accounts[0].name, iv);
+		}
+	}
+	
+	
 }

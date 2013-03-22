@@ -1,14 +1,18 @@
 package com.sourcefish.projectmanagement;
 
 
+import com.fedorvlasov.lazylist.ImageLoader;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 
 public class SettingsActivity extends NormalLayoutActivity {
@@ -19,6 +23,13 @@ public class SettingsActivity extends NormalLayoutActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+		ImageView iv=(ImageView) findViewById(R.id.imageViewUserPicture);
+		ImageLoader loader=new ImageLoader(this);
+		
+		AccountManager am = AccountManager.get(this);
+		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+		
+		loader.DisplayImage(accounts[0].name, iv);
 	}
 	
 	public void changePicture(View view)

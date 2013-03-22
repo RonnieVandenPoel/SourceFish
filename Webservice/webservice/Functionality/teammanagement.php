@@ -294,7 +294,7 @@ $app->post('/setProfilePicture',function() use($app){
 	$userid=getUserID();
 	$data=$app->request()->getBody();
 	//var_dump($app->request());
-	echo $data;
+	//echo $data;
 	/*$splitdata=explode("\n", $data);
 	$correctsplitdata=array_slice($splitdata,4,count($splitdata)-2);
 	
