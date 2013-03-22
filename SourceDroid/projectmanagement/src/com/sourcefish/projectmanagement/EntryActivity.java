@@ -3,6 +3,7 @@ package com.sourcefish.projectmanagement;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Currency;
 
 import org.apache.http.entity.StringEntity;
 
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.MenuItem;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 
@@ -30,6 +33,21 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private Project p = null;
 	private Entry openEntry = null;
 	private ListView list = null;
+	
+	public boolean onOptionsItemSelected(MenuItem menuItem)
+	{
+		if(menuItem.getItemId() == android.R.id.home)
+		{
+			Intent i = new Intent(this, ProjectActivity.class);
+			startActivity(i);
+			finish();
+		}
+		else
+		{
+			super.onOptionsItemSelected(menuItem);
+		}
+		return false;
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +115,13 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 	}
 	
+	public void startEntry(View v)
+	{
+		EditText et = (EditText) findViewById(R.id.newentrydescription);
+		String description = et.getText().toString();
+		startEntry(description, null);
+	}
+	
 	private void fillEntryAdapter()
 	{
 		if(p != null)
@@ -134,14 +159,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 0:	
 			setContentView(R.layout.openentrylayout);
 			if(openEntry != null)
-			{
 				getSupportActionBar().setTitle("Entry: " + openEntry.entryid);
-				setDescription();
-			}
 			else
-			{
 				getSupportActionBar().setTitle("No open entry");
-			}
+			
+			setDescription();
 			break;
 		case 1:
 			setContentView(R.layout.entrylayout);
@@ -149,11 +171,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			fillEntryAdapter();
 			break;
 		case 2:
-			setContentView(R.layout.entrylayout);
+			setContentView(R.layout.newentrylayout);
+			getSupportActionBar().setTitle("New entry");
+			
 			break;
 		}
 		
 	}
+	
+	
 	
 	private void setDescription()
 	{
@@ -194,13 +220,34 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			t.show();
 			getSupportActionBar().getTabAt(1).select();
 		}
+		else
+		{
+			getSupportActionBar().getTabAt(2).select();
+		}
+	}
+	
+	public StringEntity startEntry(String description, Timestamp end)
+	{
+		StringEntity create = null;
+		try {
+			if(end == null)
+				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
+			else
+				create = new StringEntity("{\"begin\":\"" + new Timestamp(System.currentTimeMillis())  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
+			
+			create.setContentType("application/json");
+	    } catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return create;
 	}
 	
 	public StringEntity closeEntry(Timestamp end)
 	{
 		StringEntity create = null;
 		try {
-			create = new StringEntity("{\"eind\":\"" + end + "\",\"pid\":\"" + openEntry.entryid + "\",\"notities\":\""+ openEntry.description +"\"}");
+			create = new StringEntity("{\"eind\":\"" + end + "\",\"pid\":\"" + p.id + "\",\"notities\":\""+ openEntry.description +"\"}");
 	    	create.setContentType("application/json");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
