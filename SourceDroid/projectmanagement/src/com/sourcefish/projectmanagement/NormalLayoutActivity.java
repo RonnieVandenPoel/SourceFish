@@ -43,16 +43,13 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		switch(menuItem.getItemId())
 		{
 			case 1:
-				Toast toast=Toast.makeText(getApplicationContext(), "Settings clicked", Toast.LENGTH_LONG);
-				toast.show();
 				Intent i=new Intent(this,SettingsActivity.class);
 				startActivity(i);
 
 			break;
 			
 			case 2:
-				Toast toast2=Toast.makeText(getApplicationContext(), "Set theme clicked", Toast.LENGTH_LONG);
-				toast2.show();
+				//set theme
 			break;
 		}
 		return true;
