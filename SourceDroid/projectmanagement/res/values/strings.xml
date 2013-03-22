@@ -17,5 +17,9 @@
     <string name="title_activity_specific_entry">SpecificEntryActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="stopbuttontext">stopentry</string>
+    <string name="projectnaam">Project name:</string>
+    <string name="klant">Customer:</string>
+    <string name="Description">Description:</string>
+    <string name="New">Send</string>
 
 </resources>

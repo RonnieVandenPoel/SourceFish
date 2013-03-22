@@ -21,15 +21,19 @@ import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ProjectActivity extends NormalLayoutActivity implements ActionBar.TabListener {
 	private ArrayList<String> listItems;
@@ -37,12 +41,17 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	private ListView list;
 	private JSONArray projectArray;
 	private ArrayList<JSONObject> projects;
+	private String desc,name,cust;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(SourceFishConfig.MAINTHEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project);
+		
+		desc = "";
+		cust = "";
+		name= "";
 		
 		 getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		 
@@ -187,6 +196,15 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		  });
 	}
 	
+	public void setNewValues() {
+		TextView cust = (TextView) findViewById(R.id.customerView);
+		TextView desc = (TextView) findViewById(R.id.descriptionView);
+		TextView name = (TextView) findViewById(R.id.projectnameView);
+		
+		cust.setText(this.cust);
+		desc.setText(this.desc);
+		name.setText(this.name);
+	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {		
@@ -204,6 +222,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			break;
 		case 1:
 			setContentView(R.layout.projectnew);
+			setNewValues();
 			break;
 		case 2:
 			setContentView(R.layout.projectedit);
@@ -214,7 +233,28 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
+int tabInt = (Integer) tab.getTag();		
+		
+		switch (tabInt) {
+		case 0:				
+			break;
+		case 1:
+			EditText cust = (EditText) findViewById(R.id.customerView);
+			EditText desc = (EditText) findViewById(R.id.descriptionView);
+			EditText name = (EditText) findViewById(R.id.projectnameView);
+			
+			this.cust = cust.getText().toString();
+			this.desc = desc.getText().toString();
+			this.name = name.getText().toString();
+			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(desc.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(cust.getWindowToken(), 0);
+			break;
+		case 2:
+			
+			break;
+		}
 		
 	}
 
@@ -222,5 +262,9 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void SendButton(View v) {
+	    Log.i("ok","ok");
 	}
 }
