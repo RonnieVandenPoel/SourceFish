@@ -100,8 +100,9 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 			try {
 				Log.i("debug","{'firstname':'" + etFirst.getText().toString() + "','lastname':'"
 						+ etLast.getText().toString() + "'}");
-				post.execute(new StringEntity("{'firstname':'" + etFirst.getText().toString() + "','lastname':'"
-						+ etLast.getText().toString() + "'}"));
+				post.execute(new StringEntity("{\"firstname\":\"" + etFirst.getText().toString() + "\",\"lastname\":\""
+						+ etLast.getText().toString() + "\"}"));
+				Log.i("response",post.get());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
