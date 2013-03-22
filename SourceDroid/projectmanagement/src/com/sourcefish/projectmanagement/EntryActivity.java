@@ -40,9 +40,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		if(menuItem.getItemId() == android.R.id.home)
 		{
-			Intent i = new Intent(this, ProjectActivity.class);
-			startActivity(i);
-			finish();
+			onBackPressed();
 		}
 		else
 		{
