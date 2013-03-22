@@ -272,12 +272,12 @@ $app->post('/updateUser',function() use ($app)
 		$db=getConnection();
 		$sql0="SELECT AES_ENCRYPT('$data->password',`key`) FROM encrypt WHERE `eid`='".md5(getUsername().'@S0urc3F1sh!*!')."'";
 		echo $sql0;
-		$sql="UPDATE tbl_gebruiker SET wachtwoord=:wachtwoord,voornaam=:voornaam,achternaam=:achternaam WHERE uname='$username'";
+		$sql="UPDATE tbl_gebruiker SET voornaam=:voornaam,achternaam=:achternaam WHERE uname='$username'";
 		//print_r($data);
-		$result=$db->query($sql0);
-		$cryptpass=$result->fetchColumn();
+		//$result=$db->query($sql0);
+		//$cryptpass=$result->fetchColumn();
 		$statement=$db->prepare($sql);
-		$statement->bindParam("wachtwoord",$cryptpass);
+		//$statement->bindParam("wachtwoord",$cryptpass);
 		$statement->bindParam("voornaam",$data->firstname);
 		$statement->bindParam("achternaam",$data->lastname);
 		$statement->execute();

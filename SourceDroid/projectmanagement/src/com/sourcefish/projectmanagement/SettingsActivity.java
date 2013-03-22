@@ -1,9 +1,14 @@
 package com.sourcefish.projectmanagement;
 
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.entity.StringEntity;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.fedorvlasov.lazylist.ImageLoader;
 import com.sourcefish.tools.AsyncServerPosts;
+import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.io.AsyncChangePicture;
 
 import android.accounts.Account;
@@ -14,10 +19,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 
-public class SettingsActivity extends NormalLayoutActivity {
+public class SettingsActivity extends NormalLayoutActivity implements ServerListenerInterface {
 
 	private static final int SELECT_PICTURE = 1;
 	private static boolean loading=false;
@@ -85,6 +91,26 @@ public class SettingsActivity extends NormalLayoutActivity {
 	
 	public void updateName(View view)
 	{
+		EditText etFirst=(EditText) findViewById(R.id.editTextSetFirstName);
+		EditText etLast=(EditText) findViewById(R.id.editTextSetLastName);
+		
+		if(etFirst.getText().toString()!="" && etLast.getText().toString()!="")
+		{
+			AsyncServerPosts post=new AsyncServerPosts(getApplicationContext(), Tasks.UPDATEUSER, this);
+			try {
+				Log.i("debug","{'firstname':'" + etFirst.getText().toString() + "','lastname':'"
+						+ etLast.getText().toString() + "'}");
+				post.execute(new StringEntity("{'firstname':'" + etFirst.getText().toString() + "','lastname':'"
+						+ etLast.getText().toString() + "'}"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void getServerResponse(String s) {
+		// TODO Auto-generated method stub
 		
 	}
 
