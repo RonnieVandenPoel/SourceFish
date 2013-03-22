@@ -85,8 +85,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 //edit tab
 		 tab = getSupportActionBar().newTab();
 		 tab.setTabListener(this);
-		 tab.setText("New Entry");
+		 tab.setText("Start New Entry");
 		 tab.setTag(2);
+		 getSupportActionBar().addTab(tab);
+		 
+		 //add manual
+		 tab = getSupportActionBar().newTab();
+		 tab.setTabListener(this);
+		 tab.setText("Manual Entry");
+		 tab.setTag(3);
 		 getSupportActionBar().addTab(tab);
 		 
 		 getOpenEntry();
@@ -182,7 +189,10 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 2:
 			setContentView(R.layout.newentrylayout);
 			getSupportActionBar().setTitle("New entry");
-			
+			break;
+		case 3:
+			setContentView(R.layout.newentrylayout);
+			getSupportActionBar().setTitle("Manual Entry");
 			break;
 		}
 		
@@ -279,7 +289,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void getServerResponse(String s) {
-		// TODO Auto-generated method stub
-		
+		// empty class, only needed for get
 	}
 }

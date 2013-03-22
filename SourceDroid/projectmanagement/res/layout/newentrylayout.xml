@@ -26,13 +26,29 @@
         android:layout_height="wrap_content"
         />
 
+    
+    <LinearLayout
+        android:id="@+id/timepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+        
+	    <Button
+	        android:id="@+id/button1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Button" />
+	        
+    </LinearLayout>
+
     <Button
         android:id="@+id/makeentry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:text="@string/start_new_entry" 
-        android:onClick="startEntry"/>
+        android:layout_marginTop="10dp"
+        android:onClick="startEntry"
+        android:text="@string/start_new_entry" />
+
 
 </LinearLayout>

@@ -11,7 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.sourcefish.projectmanagement.ServerListenerInterface;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -76,6 +75,8 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		    	BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		    	String line;
 		    	while ((line = rd.readLine()) != null) {
+		    		// TODO delete this
+		    		Log.i("serverresponselogging", line);
 		    		serverResponse += line;
 		    	}
 			}
