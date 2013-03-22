@@ -33,7 +33,7 @@
 	    android:layout_marginLeft="5dp"
 	    android:layout_marginRight="5dp"
 	    android:layout_marginTop="10dp"
-	    android:orientation="vertical" >
+	    android:orientation="horizontal" >
     	
 	    <Button 
 	        android:id="@+id/setStartTime"
@@ -41,7 +41,51 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/btn_set_starting_time"
 	        android:onClick="setStartTime"
+	        />
+	    <Button 
+	        android:id="@+id/setStartDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/btn_set_start_date"
+	        android:onClick="setStartDate"
+	        />
+	    <TextView
+	        android:id="@+id/startTimeLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
 	        />"
+	    
+	</LinearLayout>
+	
+	<LinearLayout
+	    android:id="@+id/endTimeContainer"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginTop="10dp"
+	    android:orientation="horizontal" >
+    	
+	    <Button 
+	        android:id="@+id/setEndTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/btn_set_end_time"
+	        android:onClick="setEndTime"
+	        />
+	    
+	    <Button 
+	        android:id="@+id/setEndDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/btn_set_end_date"
+	        android:onClick="setEndDate"
+	        />
+	    <TextView
+	        android:id="@+id/endTimeLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        />
 	    
 	</LinearLayout>
 	

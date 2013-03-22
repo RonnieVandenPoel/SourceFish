@@ -25,6 +25,9 @@
     <string name="New">Send</string>
     <string name="description_new_entry">Description:</string>
     <string name="start_new_entry">Start Entry</string>
-    <string name="btn_set_starting_time">set starting time</string>
+    <string name="btn_set_starting_time">Set start time</string>
+    <string name="btn_set_end_time">Set end time</string>
+    <string name="btn_set_start_date">Set start date</string>
+    <string name="btn_set_end_date">Set end date</string>
 
 </resources>

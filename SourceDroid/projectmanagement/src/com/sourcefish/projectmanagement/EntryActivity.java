@@ -2,18 +2,25 @@ package com.sourcefish.projectmanagement;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TimePicker;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +41,13 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private boolean hasOpenProject = false;
 	private Project p = null;
 	private Entry openEntry = null;
+	private Entry closedEntry = null;
 	private ListView list = null;
+	
+	DateFormat formatDateTime=DateFormat.getDateTimeInstance();
+	Calendar dateTimeStart=Calendar.getInstance();
+	Calendar dateTimeEnd=Calendar.getInstance();
+	static final int DATE_DIALOG_ID = 0;
 	
 	public boolean onOptionsItemSelected(MenuItem menuItem)
 	{
@@ -124,10 +137,24 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	
 	public void startEntry(View v)
 	{
+		LinearLayout ll = (LinearLayout) findViewById(R.id.startTimeContainer);
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
-		new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null));
-		getSupportActionBar().getTabAt(0).select();
+		if(ll.getVisibility() != LinearLayout.GONE)
+		{			
+			new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(startEntry(description, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis())));
+			dateTimeEnd = Calendar.getInstance();
+			dateTimeStart = Calendar.getInstance();
+			et.setText("");
+			updateEnd(); updateStart();
+			Toast t = Toast.makeText(getApplicationContext(), "Entry added!", Toast.LENGTH_LONG);
+			t.show();
+		}
+		else
+		{
+			new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
+			getSupportActionBar().getTabAt(0).select();
+		}
 	}
 	
 	private void fillEntryAdapter()
@@ -173,6 +200,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		int tabInt = (Integer) tab.getTag();		
+		LinearLayout ll; 
 		
 		switch (tabInt) {
 		case 0:	
@@ -192,15 +220,28 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 2:
 			setContentView(R.layout.newentrylayout);
 			getSupportActionBar().setTitle("New entry");
+			ll = (LinearLayout) findViewById(R.id.startTimeContainer);
+			ll.setVisibility(LinearLayout.GONE);
+			ll = (LinearLayout) findViewById(R.id.endTimeContainer);
+			ll.setVisibility(LinearLayout.GONE);
 			break;
 		case 3:
 			setContentView(R.layout.newentrylayout);
-			LinearLayout ll = (LinearLayout) findViewById(R.id.startTimeContainer);
-			ll.setVisibility(LinearLayout.GONE);
 			getSupportActionBar().setTitle("Manual Entry");
+			ll = (LinearLayout) findViewById(R.id.startTimeContainer);
+			ll.setVisibility(LinearLayout.HORIZONTAL);
+			ll = (LinearLayout) findViewById(R.id.endTimeContainer);
+			ll.setVisibility(LinearLayout.HORIZONTAL);
+			setTime(new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
 			break;
 		}
 		
+	}
+	
+	private void setTime(Timestamp tstart, Timestamp tend)
+	{
+		updateEnd();
+		updateStart();
 	}
 	
 	private void setDescription()
@@ -248,23 +289,28 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 	}
 	
-	public StringEntity startEntry(String description, Timestamp end)
+	public StringEntity startEntry(String description, Timestamp end, Timestamp start)
 	{
 		StringEntity create = null;
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		try {
 			if(end == null)
+			{
 				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
+				openEntry = new Entry(start, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
+				p.entries.add(openEntry);
+			}
 			else
+			{
 				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
-			
+				closedEntry = new Entry(start, description, end, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
+				p.entries.add(closedEntry);
+			}
 			create.setContentType("application/json");
 	    } catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
-		p.entries.add(openEntry);
 		return create;
 	}
 	
@@ -282,7 +328,22 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	public void setStartTime(View v)
 	{
-		
+		new TimePickerDialog(EntryActivity.this, tstart, dateTimeStart.get(Calendar.HOUR_OF_DAY), dateTimeStart.get(Calendar.MINUTE), true).show();
+	}
+	
+	public void setEndTime(View v)
+	{
+		new TimePickerDialog(EntryActivity.this, tend, dateTimeEnd.get(Calendar.HOUR_OF_DAY), dateTimeEnd.get(Calendar.MINUTE), true).show();
+	}
+	
+	public void setStartDate(View v)
+	{
+		new DatePickerDialog(EntryActivity.this, dstart, dateTimeStart.get(Calendar.YEAR),dateTimeStart.get(Calendar.MONTH), dateTimeStart.get(Calendar.DAY_OF_MONTH)).show();
+	}
+	
+	public void setEndDate(View v)
+	{
+		new DatePickerDialog(EntryActivity.this, dend, dateTimeEnd.get(Calendar.YEAR),dateTimeEnd.get(Calendar.MONTH), dateTimeEnd.get(Calendar.DAY_OF_MONTH)).show();
 	}
 	
 	@Override
@@ -308,12 +369,70 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 
 		try {
-			if(jsonObject.has("trid"))
-					openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+			if(jsonObject.has("trid") && openEntry != null)
+				openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+
+			if(jsonObject.has("trid") && closedEntry != null)
+				closedEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	TimePickerDialog.OnTimeSetListener tstart = new TimePickerDialog.OnTimeSetListener() {
+		
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			dateTimeStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			dateTimeStart.set(Calendar.MINUTE, minute);
+			updateStart();
+		}
+	};
+	
+	TimePickerDialog.OnTimeSetListener tend = new TimePickerDialog.OnTimeSetListener() {
+		
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			dateTimeEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			dateTimeEnd.set(Calendar.MINUTE, minute);
+			updateEnd();
+		}
+	};
+	
+	DatePickerDialog.OnDateSetListener dstart =new DatePickerDialog.OnDateSetListener() {
+		 
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
+				dateTimeStart.set(Calendar.YEAR,year);
+				dateTimeStart.set(Calendar.MONTH, monthOfYear);
+				dateTimeStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				updateStart();
+			}
+		};
+		
+		
+	DatePickerDialog.OnDateSetListener dend =new DatePickerDialog.OnDateSetListener() {
+			 
+				@Override
+				public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
+					dateTimeEnd.set(Calendar.YEAR,year);
+					dateTimeEnd.set(Calendar.MONTH, monthOfYear);
+					dateTimeEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+					updateEnd();
+				}
+			};
+			
+	private void updateStart()
+			{
+				TextView tv = (TextView)findViewById(R.id.startTimeLabel);
+				tv.setText(formatDateTime.format(dateTimeStart.getTime()));
+			}
+			
+	private void updateEnd()
+			{
+				TextView tv = (TextView)findViewById(R.id.endTimeLabel);
+				tv.setText(formatDateTime.format(dateTimeEnd.getTime()));
+			}
 }

@@ -54,6 +54,9 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		case NEWENTRY:
 			post = new HttpPost("http://projecten3.eu5.org/webservice/newEntry");
 			break;
+		case MANUALENTRY:
+			post = new HttpPost("http://projecten3.eu5.org/webservice/manualEntry");
+			break;
 		case NEWPROJECT:
 			post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
 			break;
