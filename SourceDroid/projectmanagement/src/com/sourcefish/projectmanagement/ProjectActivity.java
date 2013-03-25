@@ -170,11 +170,18 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		try {
 			chosenProject.name = project.getString("projectname");
 			chosenProject.description = project.getString("description");	    				
-			chosenProject.customer = project.getString("client");		    				
+			chosenProject.customer = project.getString("client");	
+			
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Intent i = new Intent(getApplicationContext(), ProjectEditActivity.class);
+		i.putExtra("project", chosenProject);
+		startActivity(i);
+		
 	}
 	
 	public void deleteProject(int elementId) {
