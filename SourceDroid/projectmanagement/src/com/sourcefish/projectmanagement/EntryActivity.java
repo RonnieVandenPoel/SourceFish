@@ -120,7 +120,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 getSupportActionBar().addTab(tab);
 		 
 		 getOpenEntry();
-		 setDescription();
 	}
 	
 	private void getOpenEntry()
