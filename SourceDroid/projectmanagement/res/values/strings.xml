@@ -32,5 +32,7 @@
     <string name="editKlant">Klant:</string>
     <string name="editDesc">Descriptie:</string>
     <string name="editName">Project Name:</string>
+    <string name="title_activity_project_edit">ProjectEditActivity</string>
+    <string name="edit">Edit</string>
 
 </resources>
