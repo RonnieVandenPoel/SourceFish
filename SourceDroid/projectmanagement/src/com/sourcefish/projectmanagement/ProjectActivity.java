@@ -160,6 +160,27 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		 
 	}
 	
+	public void editProject(int elementId) {
+		Project chosenProject = new Project();
+		Log.i("positie", "" + elementId);
+		JSONObject project = projects.get(elementId);
+		Log.i("positie", "" + project);    	
+		
+		//strings van project data opslaan
+		try {
+			chosenProject.name = project.getString("projectname");
+			chosenProject.description = project.getString("description");	    				
+			chosenProject.customer = project.getString("client");		    				
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteProject(int elementId) {
+		
+	}
+	
 	public Dialog onCreateDialog(final int elementId) {
 		String[] opties = {"Open","Edit","Delete"};
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -170,7 +191,13 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	               case 0:
 	            	   openProject(elementId);
 	            	   break;
-	               }
+	               case 1:
+	            	   editProject(elementId);
+	            	   break;
+	               case 2:
+	            	   deleteProject(elementId);
+	            	   break;
+	               }	               
 	           }
 	    });
 	    return builder.create();
