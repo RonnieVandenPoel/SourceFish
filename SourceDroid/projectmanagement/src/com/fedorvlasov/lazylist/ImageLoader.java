@@ -96,8 +96,13 @@ public class ImageLoader {
     		DefaultHttpClient client = SourceFishHttpClient.getClient(accounts[0].name, am.getPassword(accounts[0]));
     		HttpGet get=new HttpGet("http://projecten3.eu5.org/webservice/getProfilePicture/"+url);
     		HttpResponse resp=client.execute(get);
-    		bitmap=BitmapFactory.decodeStream(resp.getEntity().getContent());
-            
+    		InputStream is=resp.getEntity().getContent();
+    		bitmap=BitmapFactory.decodeStream(is);
+    		
+            OutputStream os = new FileOutputStream(f);
+            Utils.CopyStream(is, os);
+            os.close();
+    		
             return bitmap;
         } catch (Throwable ex){
            ex.printStackTrace();
@@ -167,7 +172,7 @@ public class ImageLoader {
                 if(imageViewReused(photoToLoad))
                     return;
                 Bitmap bmp=getBitmap(photoToLoad.url);
-                memoryCache.put(photoToLoad.url+".png", bmp);
+                memoryCache.put(photoToLoad.url, bmp);
                 if(imageViewReused(photoToLoad))
                     return;
                 BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad);
