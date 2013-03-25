@@ -84,8 +84,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			finish();
 		}
 		
+		//project info & team management tab
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+		tab.setTabListener(this);
+		tab.setText("Overview");
+		tab.setTag(4);
+		getSupportActionBar().addTab(tab);
+		
 		//view tab
-		 ActionBar.Tab tab = getSupportActionBar().newTab();
+		 tab = getSupportActionBar().newTab();
 		 tab.setTabListener(this);		 
 		 tab.setText("Open Entry");
 		 tab.setTag(0);
@@ -233,6 +240,10 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			ll = (LinearLayout) findViewById(R.id.endTimeContainer);
 			ll.setVisibility(LinearLayout.HORIZONTAL);
 			setTime(new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+			break;
+		case 4:
+			setContentView(R.layout.projectoverviewlayout);
+			getSupportActionBar().setTitle("Overview");
 			break;
 		}
 		
