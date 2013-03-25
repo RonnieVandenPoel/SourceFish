@@ -199,7 +199,7 @@ function getProjectUsers($pid,$in="")
 	if(!$in=="")
 	{
 		$extravraag=" GROUP BY selecteduid";
-		$sql="SELECT uid as selecteduid,uname,voornaam,achternaam,email FROM tbl_gebruiker
+		$sql="SELECT uid as selecteduid,uname,voornaam,achternaam FROM tbl_gebruiker
 		WHERE uid NOT IN(SELECT uid FROM tbl_projectgebruiker where pid='$pid')
 		";
 	}

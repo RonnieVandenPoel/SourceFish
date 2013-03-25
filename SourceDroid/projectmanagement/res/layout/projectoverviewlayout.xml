@@ -15,19 +15,30 @@
             android:layout_height="wrap_content"
             android:text="Project meta data" />
     </LinearLayout>
-	
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="186dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add user:" />
+
         <Spinner
             android:id="@+id/spinnerAddUsers"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-        
+        <Button
+        android:id="@+id/buttonAddUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add" />
     </LinearLayout>
+
+    
     
     <ListView
         android:id="@+id/userListView"
