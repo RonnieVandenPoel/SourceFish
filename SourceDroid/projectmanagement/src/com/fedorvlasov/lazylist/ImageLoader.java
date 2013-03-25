@@ -50,7 +50,7 @@ public class ImageLoader {
     {
         imageViews.put(imageView, url);
         //changed
-        Bitmap bitmap=memoryCache.get(url+".png");
+        Bitmap bitmap=memoryCache.get(url);
         if(bitmap!=null)
             imageView.setImageBitmap(bitmap);
         else
