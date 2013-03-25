@@ -164,6 +164,17 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 	}
 	
+	private void fillUserAdapter()
+	{
+		
+		if(p!=null)
+		{
+			UserAdapter ua=new UserAdapter(this, android.R.layout.simple_expandable_list_item_1, p.users);
+			ListView userList=(ListView) findViewById(R.id.userListView);
+			userList.setAdapter(ua);
+		}
+	}
+	
 	private void fillEntryAdapter()
 	{
 		if(p != null)
