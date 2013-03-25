@@ -3,9 +3,13 @@ package com.sourcefish.projectmanagement;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,15 +17,14 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.widget.TextView;
@@ -30,10 +33,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.MenuItem;
+import com.sourcefish.tools.AsyncGet;
 import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.SourceFishHttpClient;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
@@ -46,6 +51,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private Entry openEntry = null;
 	private Entry closedEntry = null;
 	private ListView list = null;
+	
+	private List<String> usersOutProject;
 	
 	DateFormat formatDateTime=DateFormat.getDateTimeInstance();
 	Calendar dateTimeStart=Calendar.getInstance();
@@ -181,7 +188,18 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	{
 		if(p != null)
 		{
+			/*ArrayList<String> entryTitles = new ArrayList<String>();
+			for(Entry e : p.entries)
+			{
+				if(! e.isOpen())
+					entryTitles.add(e.toString());
+			}
+			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entryTitles);
+			*/
+			
 			entryAdapter=new EntryAdapter(this, android.R.layout.simple_expandable_list_item_1,p.entries);
+			
+			
 		}
 		list = (ListView) findViewById(R.id.entryList);
 		
@@ -203,36 +221,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(entryAdapter!=null)
 		{
 			list.setAdapter(entryAdapter);
-			list.setOnItemLongClickListener(new MyLongClickListener(this));
 		}
-	}
-	
-	private class MyLongClickListener implements OnItemLongClickListener
-	{
-		Activity a = null;
-		public MyLongClickListener(Activity a)
-		{
-			this.a = a;
-		}
-		
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-				int position, long arg3) {
-			
-			StringEntity remove;
-			try {
-				remove = new StringEntity("{\"trid\":\"" + p.entries.get(position).entryid  + "\"}");
-		    	
-		    	remove.setContentType("application/json");
-		    	new AsyncServerPosts(getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return true;
-		}
-		
 	}
 
 	@Override
@@ -283,7 +272,33 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
+			Spinner spnAddUsers=(Spinner) findViewById(R.id.spinnerAddUsers);
 			
+			AsyncGet get=new AsyncGet(this);
+			get.execute("http://projecten3.eu5.org/webservice/getUsersOutProject/"+p.id);
+			
+			if(usersOutProject==null)
+			{
+			usersOutProject=new ArrayList<String>();
+			
+			
+			try {
+				JSONObject obj=new JSONObject(get.get());
+				JSONArray arrUsers=obj.getJSONArray("users");
+				
+				for(int i=0;i<arrUsers.length();i++)
+				{
+					JSONObject user=arrUsers.getJSONObject(i);
+					usersOutProject.add(user.getString("uname"));
+				}
+				
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+			ArrayAdapter<String> au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
+			spnAddUsers.setAdapter(au);
+			}
 			break;
 		}
 		
