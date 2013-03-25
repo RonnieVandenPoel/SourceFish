@@ -29,5 +29,8 @@
     <string name="btn_set_end_time">Set end time</string>
     <string name="btn_set_start_date">Set start date</string>
     <string name="btn_set_end_date">Set end date</string>
+    <string name="editKlant">Klant:</string>
+    <string name="editDesc">Descriptie:</string>
+    <string name="editName">Project Name:</string>
 
 </resources>
