@@ -159,7 +159,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		else
 		{
 			new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
-			getSupportActionBar().getTabAt(0).select();
+			getSupportActionBar().getTabAt(1).select();
 		}
 	}
 	
@@ -302,11 +302,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			openEntry = null;
 			Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
 			t.show();
-			getSupportActionBar().getTabAt(1).select();
+			getSupportActionBar().getTabAt(2).select();
 		}
 		else
 		{
-			getSupportActionBar().getTabAt(2).select();
+			getSupportActionBar().getTabAt(3).select();
 		}
 	}
 	
@@ -318,7 +318,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			if(end == null)
 			{
 				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
-				openEntry = new Entry(start, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
+				openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
 				p.entries.add(openEntry);
 			}
 			else

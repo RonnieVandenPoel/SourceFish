@@ -57,8 +57,10 @@ function getAllUserData()
 	$userid=getUserID();
 	$con=getConnection();
 	//$sqlprojecten="SELECT pid,puid FROM tbl_projectgebruiker WHERE uid='$userid'";
-	$sqlprojectdata="SELECT pid,projectnaam,opdrachtgever,begindatum,einddatum,omschrijving,uname FROM tbl_project 
-	LEFT JOIN tbl_gebruiker ON oprichterid=uid WHERE pid IN(SELECT pid FROM tbl_projectgebruiker WHERE uid='$userid')";
+	$sqlprojectdata="SELECT DISTINCT rid,tbl_project.pid,projectnaam,opdrachtgever,begindatum,einddatum,omschrijving,uname FROM tbl_project 
+	LEFT JOIN tbl_gebruiker ON oprichterid=uid LEFT JOIN tbl_projectgebruiker ON tbl_gebruiker.uid=tbl_projectgebruiker.uid
+	WHERE tbl_project.pid IN(SELECT pid FROM tbl_projectgebruiker WHERE 
+	uid='$userid')";
 	
 	$arrData=array();
 	
@@ -69,6 +71,7 @@ function getAllUserData()
 		$i=0;
 		while($row=$statement->fetch(PDO::FETCH_ASSOC))
 		{
+			$rid=$arrData[$i]['rid']=$row['rid'];
 			$pid=$arrData[$i]['pid']=$row['pid'];
 			$arrData[$i]['projectname']=$row['projectnaam'];
 			$arrData[$i]['client']=$row['opdrachtgever'];
