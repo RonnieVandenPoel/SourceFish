@@ -3,26 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/textViewProjectmetadata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Project meta data" />
+    </LinearLayout>
+	
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
+        <Spinner
+            android:id="@+id/spinnerAddUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
         
     </LinearLayout>
     
     <ListView
         android:id="@+id/userListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:clickable="true">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.28"
+        android:clickable="true" >
     </ListView>
 
 </LinearLayout>
