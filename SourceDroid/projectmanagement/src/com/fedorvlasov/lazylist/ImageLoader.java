@@ -1,9 +1,11 @@
 package com.fedorvlasov.lazylist;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +31,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -68,15 +71,22 @@ public class ImageLoader {
     
     private Bitmap getBitmap(String url) 
     {
+    	Log.i("url:",url);
         File f=fileCache.getFile(url);
+        Log.i("File location:",f.getAbsolutePath());
+
         
         //from SD cache
         Bitmap b = decodeFile(f);
         if(b!=null)
+        {
+        	Log.i("Image:","niet leeg");
             return b;
+        }
         
         //from web
         try {
+        	Log.i("Image:","leeg");
             Bitmap bitmap=null;
             /*URL imageUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
@@ -97,10 +107,13 @@ public class ImageLoader {
     		HttpGet get=new HttpGet("http://projecten3.eu5.org/webservice/getProfilePicture/"+url);
     		HttpResponse resp=client.execute(get);
     		InputStream is=resp.getEntity().getContent();
+    		
+    		OutputStream os = new FileOutputStream(f);
+    		Utils.CopyStream(is, os);
     		bitmap=BitmapFactory.decodeStream(is);
     		
-            OutputStream os = new FileOutputStream(f);
-            Utils.CopyStream(is, os);
+            
+            
             os.close();
     		
             return bitmap;
