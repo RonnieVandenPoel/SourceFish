@@ -104,7 +104,14 @@ function getAllUserData()
 			{
 				$entries[$j]['trid']=$row2['trid'];
 				$entries[$j]['start']=$row2['begin'];
-				$entries[$j]['end']=$row2['eind'];
+				if($row2['eind']=="0000-00-00 00:00:00")
+				{
+					$entries[$j]['end']=null;
+				}
+				else{
+					$entries[$j]['end']=$row2['eind'];
+				}
+				
 				$entries[$j]['notes']=$row2['notities'];
 				$entries[$j]['entryowner']=$row2['uname'];
 				$j++;

@@ -37,7 +37,7 @@ public class EntryAdapter extends ArrayAdapter<Entry> {
 	    
 	    Entry entry=entries.get(position);
 	    
-	    if(entry!=null)
+	    if(entry!=null && !entry.isOpen())
 	    {
 	    	ImageView iv=(ImageView) v.findViewById(R.id.entryProfilePicture);
 	    	loader.DisplayImage(entry.u.username, iv);
