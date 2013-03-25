@@ -22,8 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -203,36 +207,46 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(entryAdapter!=null)
 		{
 			list.setAdapter(entryAdapter);
-			list.setOnItemLongClickListener(new MyLongClickListener(this));
+			list.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+						int position, long arg3) {
+					
+	            	AlertDialog alert = (AlertDialog) onCreateDialog(position);
+	            	alert.show();
+					return false;
+				}
+			});
 		}
 	}
 	
-	private class MyLongClickListener implements OnItemLongClickListener
-	{
-		Activity a = null;
-		public MyLongClickListener(Activity a)
-		{
-			this.a = a;
-		}
-		
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-				int position, long arg3) {
+	Activity a = this;
+	
+	public Dialog onCreateDialog(final int elementId) {
+		String[] opties = {"Delete"};
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle("Project");
+	    builder.setItems(opties, new OnClickListener() {
 			
-			StringEntity remove;
-			try {
-				remove = new StringEntity("{\"trid\":\"" + p.entries.get(position).entryid  + "\"}");
-		    	
-		    	remove.setContentType("application/json");
-		    	new AsyncServerPosts(getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				StringEntity remove;
+				try {
+					remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
+			    	
+			    	remove.setContentType("application/json");
+			    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
+			    	entryAdapter.remove(p.entries.get(elementId));
+			    	p.entries.remove(elementId);
+			    	
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
-			return true;
-		}
-		
+		});
+	    return builder.create();
 	}
 
 	@Override
