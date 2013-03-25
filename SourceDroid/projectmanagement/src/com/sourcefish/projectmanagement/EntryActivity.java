@@ -254,6 +254,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 4:
 			setContentView(R.layout.projectoverviewlayout);
 			getSupportActionBar().setTitle("Overview");
+			UserAdapter ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
+			list = (ListView) findViewById(R.id.userListView);
+			if(ua!=null)
+			{
+				list.setAdapter(ua);
+			}
+			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
+			tv.setText(p.name + " owned by:" + p.owner);
+			
 			break;
 		}
 		

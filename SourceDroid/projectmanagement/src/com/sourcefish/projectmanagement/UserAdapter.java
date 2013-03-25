@@ -44,7 +44,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 	    	loader.DisplayImage(u.username, iv);
 	    	
 	    	TextView tv=(TextView) v.findViewById(R.id.ul_userData);
-	    	tv.setText(u.username + " access level: " + u.rechten);
+	    	tv.setText("Username : " + u.username);
 	    }
 	    
 	    return v;
