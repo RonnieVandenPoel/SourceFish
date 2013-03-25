@@ -66,12 +66,6 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		case UPDATEUSER:
 			post=new HttpPost("http://projecten3.eu5.org/webservice/updateUser");
 			break;
-		case EDITPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/changeProject");
-			break;
-		case DELETEPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/deleteProject");
-			break;
 			
 		default:
 			break;
