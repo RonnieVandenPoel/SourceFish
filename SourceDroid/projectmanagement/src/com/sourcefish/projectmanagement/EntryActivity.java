@@ -245,29 +245,35 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	Activity a = this;
 	
 	public Dialog onCreateDialog(final int elementId) {
-		String[] opties = {"Delete"};
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setTitle("Project");
-	    builder.setItems(opties, new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				StringEntity remove;
-				try {
-					remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
-			    	
-			    	remove.setContentType("application/json");
-			    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
-			    	entryAdapter.remove(p.entries.get(elementId));
-			    	p.entries.remove(elementId);
-			    	
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else{
+			String[] opties = {"Delete"};
+		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle("Project");
+		    builder.setItems(opties, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					StringEntity remove;
+					try {
+						remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
+				    	
+				    	remove.setContentType("application/json");
+				    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
+				    	entryAdapter.remove(p.entries.get(elementId));
+				    	p.entries.remove(elementId);
+				    	
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-			}
-		});
-	    return builder.create();
+			});
+		    return builder.create();
+		}
 	}
 
 	@Override

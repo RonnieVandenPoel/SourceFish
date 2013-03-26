@@ -189,25 +189,32 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	}
 	
 	public Dialog onCreateDialog(final int elementId) {
-		String[] opties = {"Open","Edit","Delete"};
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setTitle("Project");
-	    builder.setItems(opties, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int which) {
-	               switch (which) {
-	               case 0:
-	            	   openProject(elementId);
-	            	   break;
-	               case 1:
-	            	   editProject(elementId);
-	            	   break;
-	               case 2:
-	            	   deleteProject(elementId);
-	            	   break;
-	               }	               
-	           }
-	    });
-	    return builder.create();
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else
+		{
+			String[] opties = {"Open","Edit","Delete"};
+		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle("Project");
+		    builder.setItems(opties, new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   openProject(elementId);
+		            	   break;
+		               case 1:
+		            	   editProject(elementId);
+		            	   break;
+		               case 2:
+		            	   deleteProject(elementId);
+		            	   break;
+		               }	               
+		           }
+		    });
+		    return builder.create();
+		}
 	}
 	
 	private void openProject(int elementId) {

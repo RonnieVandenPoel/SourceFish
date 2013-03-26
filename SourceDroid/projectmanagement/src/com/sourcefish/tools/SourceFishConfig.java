@@ -7,6 +7,7 @@ import android.content.Context;
 public class SourceFishConfig {
 	public static int MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
 	public static String PREFFILE = "SourceFishPrefs";
+	public static int THEMEDIALOG = 13234588;
 	
 	public void setTheme(int theme)
 	{

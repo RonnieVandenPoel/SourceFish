@@ -1,6 +1,14 @@
 package com.sourcefish.projectmanagement;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.entity.StringEntity;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -8,7 +16,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.Tasks;
 
 public abstract class NormalLayoutActivity extends SherlockActivity  {
 	@Override
@@ -49,9 +59,33 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			break;
 			
 			case 2:
-				//set theme
+				AlertDialog alert = (AlertDialog) onCreateDialog(SourceFishConfig.THEMEDIALOG);
+            	alert.show();
 			break;
 		}
 		return true;
+	}
+	
+	public Dialog onCreateDialog(final int elementId) {
+		String[] opties = {"Dark theme", "Light theme"};
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle("Theme");
+	    builder.setItems(opties, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch(which)
+				{
+				case 0:
+					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
+					break;
+				case 1:	
+					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme_Light;
+				}
+				finish();
+				startActivity(getIntent());
+			}
+		});
+	    return builder.create();
 	}
 }
