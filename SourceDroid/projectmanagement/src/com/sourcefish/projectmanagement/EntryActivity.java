@@ -164,7 +164,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			int i = 0;
 			while(!found && i < p.entries.size())
 			{
-				if(p.entries.get(i).isOpen())
+				Entry e = p.entries.get(i);
+				if(e.isOpen() && e.u.username == SourceFishConfig.getUserName(getApplicationContext()))
 				{
 					openEntry = p.entries.get(i);
 					found = true;
@@ -267,28 +268,37 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			return super.onCreateDialog(elementId);
 		}
 		else{
-			String[] opties = {"Delete"};
-		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setTitle("Project");
-		    builder.setItems(opties, new OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					StringEntity remove;
-					try {
-						remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
-				    	
-				    	remove.setContentType("application/json");
-				    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
-				    	entryAdapter.remove(p.entries.get(elementId));
-				    	
-					} catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+			Entry e = p.entries.get(elementId);
+			String username = SourceFishConfig.getUserName(getApplicationContext());
+			if(e.u.username.equals(username) || e.u.rechten > p.rechtenId)
+			{
+				String[] opties = {"Delete"};
+			    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			    builder.setTitle("Project");
+			    builder.setItems(opties, new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						StringEntity remove;
+						try {
+							remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
+					    	
+					    	remove.setContentType("application/json");
+					    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
+					    	entryAdapter.remove(p.entries.get(elementId));
+					    	
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-				}
-			});
-		    return builder.create();
+				});
+			    return builder.create();
+			}
+			else
+			{
+				return super.onCreateDialog(elementId);
+			}
 		}
 	}
 
@@ -522,7 +532,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(closeEntry(end));
 			Entry newEntry = openEntry;
 			newEntry.end = end;
-			p.entries.set(p.entries.indexOf(openEntry), newEntry);
+			p.entries.add(newEntry);
 			openEntry = null;
 			Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
 			t.show();
@@ -543,7 +553,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			{
 				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
 				openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
-				p.entries.add(openEntry);
 			}
 			else
 			{
