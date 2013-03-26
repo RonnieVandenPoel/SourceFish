@@ -73,7 +73,7 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 			post=new HttpPost("http://projecten3.eu5.org/webservice/addProjectUser");
 			break;
 		case DELETEPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/deleteProject");
+			post=new HttpPost("http://projecten3.eu5.org/webservice/changeProject");
 			break;
 		case EDITPROJECT:
 				post=new HttpPost("http://projecten3.eu5.org/webservice/editProject");
