@@ -1,26 +1,26 @@
 package com.sourcefish.projectmanagement;
 
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.entity.StringEntity;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
-import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.SourceFishConfig;
-import com.sourcefish.tools.Tasks;
 
 public abstract class NormalLayoutActivity extends SherlockActivity  {
+	
+	private SharedPreferences prefs;
+	private Editor e;
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		SubMenu toolsMenu=menu.addSubMenu("Settings");
@@ -74,14 +74,20 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
+				e = prefs.edit();
 				switch(which)
 				{
 				case 0:
 					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
+					e.putInt("curTheme", 0);
 					break;
 				case 1:	
 					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme_Light;
+					e.putInt("curTheme", 1);
+					break;
 				}
+				e.commit();
 				finish();
 				startActivity(getIntent());
 			}
