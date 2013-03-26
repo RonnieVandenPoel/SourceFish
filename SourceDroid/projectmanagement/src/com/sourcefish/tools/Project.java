@@ -36,6 +36,21 @@ public class Project implements Serializable{
 		this.entries = entries;
 	}
 	
+	public ArrayList<Entry> getClosedEntries()
+	{
+		ArrayList<Entry> list=new ArrayList<Entry>();
+		
+		for(Entry entry:entries)
+		{
+			if(!entry.isOpen())
+			{
+				list.add(entry);
+			}
+		}
+
+		return list;
+	}
+	
 	public String toString() {
 		String s = "";
 		s+= name + " ";

@@ -65,8 +65,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	
 	private UserAdapter ua;
 	private ArrayAdapter<String> au;
-	
-	
+
 	private List<String> usersOutProject;
 	
 	DateFormat formatDateTime=DateFormat.getDateTimeInstance();
@@ -154,6 +153,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 getSupportActionBar().addTab(tab);
 		 
 		 getOpenEntry();
+		 
 	}
 	
 	private void getOpenEntry()
@@ -222,7 +222,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entryTitles);
 			*/
 			
-			entryAdapter=new EntryAdapter(this, android.R.layout.simple_expandable_list_item_1,p.entries);
+			entryAdapter=new EntryAdapter(this, android.R.layout.simple_expandable_list_item_1,p.getClosedEntries());
 			
 			
 		}
