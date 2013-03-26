@@ -325,7 +325,33 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		}
 	
 	private void removeProject (int elementId) {
-		
+		try {
+			int pid = projects.get(elementId).getInt("pid");
+			String json = "{\"pid\":\"" + pid + "\"}";
+			StringEntity entity = new StringEntity(json);
+			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.LEAVEPROJECT, this);
+			task.execute(entity);			
+			Log.i("server remove repsons",task.get());
+			JSONObject respons = new JSONObject(task.get());
+			if (respons.has("error")) {
+				Toast toast = Toast.makeText(getApplicationContext(), "You are the creator of this project,  pass the project first before leaving!",Toast.LENGTH_LONG);
+				toast.show();
+			}
+			updateList();
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void openProject(int elementId) {
