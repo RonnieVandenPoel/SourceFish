@@ -83,6 +83,10 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		case LEAVEPROJECT:
 			post=new HttpPost("http://projecten3.eu5.org/webservice/leaveProject");
 			break;
+		case REMOVEUSERFROMPROJECT:
+			post=new HttpPost("http://projecten3.eu5.org/webservice/removeProjectUser");
+			break;
+		
 		default:
 			break;
 		}
