@@ -2,6 +2,10 @@ package com.sourcefish.tools.io;
 
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+
+import com.sourcefish.tools.SourceFishConfig;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -37,8 +41,13 @@ public class AsyncLoadServerJSON extends AsyncTask<String, Integer, String>{
 		String pass = am.getPassword(accounts[0]);
 		AsyncDataLoad task2 = new AsyncDataLoad(user,pass,context);
 		task2.execute("");
-		try {
-			task2.get();
+		try {			
+			if (task2.get()) {
+				SourceFishConfig.alert(context, "Data from server loaded succesfully!");
+			}
+			else {
+				SourceFishConfig.alert(context, "Error when retrieving data from server.");
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

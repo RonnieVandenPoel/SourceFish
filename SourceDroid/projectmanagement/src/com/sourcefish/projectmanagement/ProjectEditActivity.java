@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.actionbarsherlock.view.MenuItem;
 import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Project;
+import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
@@ -92,6 +93,12 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 				entity = new StringEntity(json);
 				task.execute(entity);				
 				JSONObject result = new JSONObject(task.get());				
+				if (result.has("error")) {
+					SourceFishConfig.alert(getApplicationContext(), "Error when editing project");
+				}
+				else {
+					SourceFishConfig.alert(getApplicationContext(), "Project edit succesful");
+				}
 				/*AccountManager am = AccountManager.get(getApplicationContext());
 				Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 				String user = accounts[0].name;

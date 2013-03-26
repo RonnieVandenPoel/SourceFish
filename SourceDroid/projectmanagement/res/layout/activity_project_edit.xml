@@ -9,70 +9,68 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ProjectEditActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/projectnaam"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="19dp" >
 
-    <EditText
-        android:id="@+id/editProjectView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:ems="10" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-        <requestFocus />
-    </EditText>
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/projectnaam"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editProjectView"
-        android:layout_below="@+id/editProjectView"
-        android:layout_marginTop="14dp"
-        android:text="@string/klant"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+            <EditText
+                android:id="@+id/editProjectView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10" />
 
-    <EditText
-        android:id="@+id/editKlantView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
-        android:ems="10" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/klant"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editKlantView"
-        android:layout_below="@+id/editKlantView"
-        android:layout_marginTop="16dp"
-        android:text="@string/Description"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+            <EditText
+                android:id="@+id/editKlantView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10" />
 
-    <EditText
-        android:id="@+id/editDescView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:ems="10"
-        android:inputType="textMultiLine" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/Description"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editDescView"
-        android:layout_below="@+id/editDescView"
-        android:text="@string/edit"
-         android:onClick="SendButton" />
+            <EditText
+                android:id="@+id/editDescView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine" 
+                android:imeOptions="actionDone"/>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="SendButton"
+                android:text="@string/edit" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

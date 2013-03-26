@@ -397,6 +397,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
 			spnAddUsers.setAdapter(au);
+			au.setNotifyOnChange(true);
 			}
 			
 			}
@@ -433,7 +434,30 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private void removeProjectUser(String username)
 	{
 		
-		
+		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.REMOVEUSERFROMPROJECT, this);
+		try {
+			String exec="{\"username\":\"" + username + "\",\"pid\":\"" + p.id+"\"}";
+			Log.i("Poststring:",exec);
+			apost.execute(new StringEntity(exec));
+			JSONObject obj=new JSONObject(apost.get());
+			if(obj.getString("msg")!=null)
+			{
+				au.add(username);
+				boolean found=false;
+				int i=0;
+				while(!found&&i<ua.getCount())
+				{
+					if(ua.getItem(i).username==username)
+					{
+						ua.remove(ua.getItem(i));
+						found=true;
+					}
+					i++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void addUserToProject(View view)
