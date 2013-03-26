@@ -13,6 +13,7 @@ import com.sourcefish.projectmanagement.ServerListenerInterface;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -30,6 +31,7 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		dialog = new ProgressDialog(parent);
 	}
 	
+
 	@Override
 	protected void onPreExecute() {
         this.dialog.setMessage("working...");
@@ -73,11 +75,18 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 			post=new HttpPost("http://projecten3.eu5.org/webservice/addProjectUser");
 			break;
 		case DELETEPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/changeProject");
+			post=new HttpPost("http://projecten3.eu5.org/webservice/deleteProject");
 			break;
 		case EDITPROJECT:
-				post=new HttpPost("http://projecten3.eu5.org/webservice/editProject");
+				post=new HttpPost("http://projecten3.eu5.org/webservice/changeProject");
 				break;
+		case LEAVEPROJECT:
+			post=new HttpPost("http://projecten3.eu5.org/webservice/leaveProject");
+			break;
+		case REMOVEUSERFROMPROJECT:
+			post=new HttpPost("http://projecten3.eu5.org/webservice/removeProjectUser");
+			break;
+		
 		default:
 			break;
 		}

@@ -493,11 +493,11 @@ function isUser_ProjectAdmin($pid,$uid=null)
 		
 		if($rid_result[0]=='1'||$rid_result[0]=='2')
 		{
-			echo "user is rid 1 of 2";
+			//echo "user is rid 1 of 2";
 			return true;
 		}
 		else {
-			echo "user is rid 3";
+			//echo "user is rid 3";
 			return false;
 		}
 	}

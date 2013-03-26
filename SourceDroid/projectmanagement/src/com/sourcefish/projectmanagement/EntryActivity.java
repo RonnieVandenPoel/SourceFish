@@ -36,6 +36,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,10 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private Entry openEntry = null;
 	private Entry closedEntry = null;
 	private ListView list = null;
+	
+	private UserAdapter ua;
+	private ArrayAdapter<String> au;
+	
 	
 	private List<String> usersOutProject;
 	
@@ -327,11 +332,25 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 4:
 			setContentView(R.layout.projectoverviewlayout);
 			getSupportActionBar().setTitle("Overview");
-			UserAdapter ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
+			ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
 			list = (ListView) findViewById(R.id.userListView);
 			if(ua!=null)
 			{
 				list.setAdapter(ua);
+				ua.setNotifyOnChange(true);
+				
+				if(p.rechtenId<3)
+				{
+					list.setOnItemLongClickListener(new OnItemLongClickListener() {
+						
+							public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int elementId,long arg3) {
+								
+								AlertDialog dg=(AlertDialog) onCreateUserDialog(elementId);
+								dg.show();
+								return true;
+							}
+					});
+				}
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
@@ -339,6 +358,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			//if(rid<3){}
 			Spinner spnAddUsers=(Spinner) findViewById(R.id.spinnerAddUsers);
+			if(p.rechtenId<3)
+			{
 			
 			AsyncGet get=new AsyncGet(this);
 			get.execute("http://projecten3.eu5.org/webservice/getUsersOutProject/"+p.id);
@@ -363,11 +384,44 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				e.printStackTrace();
 			}
 			
-			ArrayAdapter<String> au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
+			au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
 			spnAddUsers.setAdapter(au);
 			}
+			
+			}
+			
 			break;
 		}
+		
+	}
+	
+
+	public Dialog onCreateUserDialog(final int elementId) {
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else
+		{
+			String[] options={"Remove user"};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle(ua.getItem(elementId).username);
+		    builder.setItems(options, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               		case 0:removeProjectUser(ua.getItem(elementId).username);
+		               		break;
+		               }
+	               }
+		    });
+		    return builder.create();
+	               
+		}
+	}
+	
+	private void removeProjectUser(String username)
+	{
+		
 		
 	}
 	
@@ -377,7 +431,18 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.ADDUSERTOPROJECT, this);
 		try {
 			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",\"pid\":\"" + p.id+"\"}"));
-			Log.i("result:",apost.get());
+			
+			if(new JSONObject(apost.get()).getString("msg")!=null)
+			{
+				String result=spin.getSelectedItem().toString();
+				au.remove(result);
+				ua.add(new User(result, 3));
+				
+				/*finish();
+				startActivity(getIntent());*/
+			}
+			
+			//Log.i("result:",apost.get());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
