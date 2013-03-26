@@ -19,6 +19,7 @@ public class Project implements Serializable{
 	public ArrayList<User> users = new ArrayList<User>();
 	public ArrayList<Entry> entries = new ArrayList<Entry>();
 	public String owner;
+	public int rechtenId;
 	
 	public Project() {
 		//leeg project
