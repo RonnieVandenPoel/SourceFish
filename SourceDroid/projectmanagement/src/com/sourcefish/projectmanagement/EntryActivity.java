@@ -334,10 +334,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			getSupportActionBar().setTitle("Overview");
 			ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
 			list = (ListView) findViewById(R.id.userListView);
-			if(ua!=null)
-			{
-				list.setAdapter(ua);
-				ua.setNotifyOnChange(true);
+			list.setAdapter(ua);
+			ua.setNotifyOnChange(true);
 				
 				if(p.rechtenId<3)
 				{
@@ -351,7 +349,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 							}
 					});
 				}
-			}
+			
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
 			
@@ -363,9 +361,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			AsyncGet get=new AsyncGet(this);
 			get.execute("http://projecten3.eu5.org/webservice/getUsersOutProject/"+p.id);
-			
-			if(usersOutProject==null)
-			{
+
 			usersOutProject=new ArrayList<String>();
 			
 			
@@ -388,8 +384,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			spnAddUsers.setAdapter(au);
 			au.setNotifyOnChange(true);
 			}
-			
-			}
+
 			
 			break;
 		}
