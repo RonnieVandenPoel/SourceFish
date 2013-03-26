@@ -145,7 +145,8 @@ $sql="SELECT rid FROM tbl_projectgebruiker WHERE uid='".getUserId($uname)."' AND
 		$statement=$con->query($sql);
 	    $result=$statement->fetchAll();
 		$rid=$result[0][0];
-		echo json_encode(array("rid"=>$rid));
+		//echo json_encode(array("rid"=>$rid));
+		return $rid;
 	}catch(PDOException $ex)
 	{
 		echo json_encode(array("error"=>$ex->getMessage()));
