@@ -12,6 +12,7 @@ import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.io.AsyncDataLoad;
+import com.sourcefish.tools.io.AsyncLoadServerJSON;
 
 import android.os.Bundle;
 import android.accounts.Account;
@@ -38,6 +39,14 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 			super.onOptionsItemSelected(menuItem);
 		}
 		return false;
+	}
+	
+	@Override
+	public void onBackPressed() {		
+		super.onBackPressed();
+		Intent i = new Intent(getApplicationContext(), ProjectActivity.class);		
+		startActivity(i);
+		finish();
 	}
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +92,14 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 				entity = new StringEntity(json);
 				task.execute(entity);				
 				JSONObject result = new JSONObject(task.get());				
-				AccountManager am = AccountManager.get(getApplicationContext());
+				/*AccountManager am = AccountManager.get(getApplicationContext());
 				Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 				String user = accounts[0].name;
 				String pass = am.getPassword(accounts[0]);
 				AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
 				task2.execute("");
-				task2.get();
+				task2.get(); $*/
+				AsyncLoadServerJSON.reloadData(getApplicationContext());
 				Intent i = new Intent(getApplicationContext(), ProjectActivity.class);				
 				startActivity(i);
 				finish();
