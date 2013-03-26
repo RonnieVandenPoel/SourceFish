@@ -333,6 +333,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			//if(rid<3){}
 			Spinner spnAddUsers=(Spinner) findViewById(R.id.spinnerAddUsers);
+			if(p.rechtenId<3)
+			{
 			
 			AsyncGet get=new AsyncGet(this);
 			get.execute("http://projecten3.eu5.org/webservice/getUsersOutProject/"+p.id);
@@ -360,6 +362,9 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
 			spnAddUsers.setAdapter(au);
 			}
+			
+			}
+			
 			break;
 		}
 		
