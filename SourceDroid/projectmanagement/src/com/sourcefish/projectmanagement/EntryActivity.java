@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -261,7 +262,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	Activity a = this;
 	
 	public Dialog onCreateDialog(final int elementId) {
-		boolean running = false;
 		if(elementId == SourceFishConfig.THEMEDIALOG)
 		{
 			return super.onCreateDialog(elementId);
@@ -315,6 +315,17 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 2:
 			setContentView(R.layout.newentrylayout);
 			getSupportActionBar().setTitle("New entry");
+			Button btn = (Button) findViewById(R.id.makeentry);
+			if(openEntry != null)
+			{
+				Toast t = Toast.makeText(getApplicationContext(), "You can only have one active entry!", Toast.LENGTH_LONG);
+				t.show();
+				btn.setEnabled(false);
+			}
+			else
+			{
+				btn.setEnabled(true);
+			}
 			ll = (LinearLayout) findViewById(R.id.startTimeContainer);
 			ll.setVisibility(LinearLayout.GONE);
 			ll = (LinearLayout) findViewById(R.id.endTimeContainer);
