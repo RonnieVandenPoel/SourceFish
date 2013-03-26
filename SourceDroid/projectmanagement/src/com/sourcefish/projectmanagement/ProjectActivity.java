@@ -241,63 +241,62 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 				Log.i("rechten","" +rechten);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+				e.printStackTrace();
+			}
+			
 		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setTitle("Project");
 	    
-	    switch(rechten) {
-	    case 1:
-	    	String[] opties1 = {"Open","Edit","Delete"};
-		    builder.setItems(opties1, new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int which) {
-		               switch (which) {
-		               case 0:
-		            	   openProject(elementId);
-		            	   break;
-		               case 1:
-		            	   editProject(elementId);
-		            	   break;
-		               case 2:
-		            	   AlertDialog alert = (AlertDialog) onDeleteCreateDialog(elementId);
-		            	   alert.show();
-		            	   break;
-		               }	               
-		           }
-		    });
-	    	break;
-	    case 2:
-	    	String[] opties2 = {"Open","Edit"};
-		    builder.setItems(opties2, new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int which) {
-		               switch (which) {
-		               case 0:
-		            	   openProject(elementId);
-		            	   break;
-		               case 1:
-		            	   editProject(elementId);
-		            	   break;		              
-		               }	               
-		           }
-		    });
-	    	break;
-	    case 3:
-	    	String[] opties3 = {"Open"};
-		    builder.setItems(opties3, new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int which) {
-		               switch (which) {
-		               case 0:
-		            	   openProject(elementId);
-		            	   break;		               
-		               }	               
-		           }
-		    });
-	    	break;
-	    }
-	    
-	    
-	    return builder.create();
+			    switch(rechten) {
+			    case 1:
+			    	String[] opties1 = {"Open","Edit","Delete"};
+				    builder.setItems(opties1, new DialogInterface.OnClickListener() {
+				               public void onClick(DialogInterface dialog, int which) {
+				               switch (which) {
+				               case 0:
+				            	   openProject(elementId);
+				            	   break;
+				               case 1:
+				            	   editProject(elementId);
+				            	   break;
+				               case 2:
+				            	   AlertDialog alert = (AlertDialog) onDeleteCreateDialog(elementId);
+				            	   alert.show();
+				            	   break;
+				               }	               
+				           }
+				    });
+			    	break;
+			    case 2:
+			    	String[] opties2 = {"Open","Edit"};
+				    builder.setItems(opties2, new DialogInterface.OnClickListener() {
+				               public void onClick(DialogInterface dialog, int which) {
+				               switch (which) {
+				               case 0:
+				            	   openProject(elementId);
+				            	   break;
+				               case 1:
+				            	   editProject(elementId);
+				            	   break;		              
+				               }	               
+				           }
+				    });
+			    	break;
+			    case 3:
+			    	String[] opties3 = {"Open"};
+				    builder.setItems(opties3, new DialogInterface.OnClickListener() {
+				               public void onClick(DialogInterface dialog, int which) {
+				               switch (which) {
+				               case 0:
+				            	   openProject(elementId);
+				            	   break;		               
+				               }	               
+				           }
+				    });
+			    	break;
+			    }
+			return builder.create();
+		}
 	}
 	
 	public Dialog onDeleteCreateDialog(final int elementId) {	
@@ -308,7 +307,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	   
 	    	String[] opties = {"Delete","Remove From Project","Cancel"};
 		    builder.setItems(opties, new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int which) {
+		           public void onClick(DialogInterface dialog, int which) {
 		               switch (which) {
 		               case 0:
 		            	   deleteProject(elementId);
@@ -324,7 +323,6 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		    });
 		    return builder.create();
 		}
-	}
 	
 	private void removeProject (int elementId) {
 		
