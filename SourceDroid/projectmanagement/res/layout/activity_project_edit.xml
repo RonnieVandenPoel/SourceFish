@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/editDescView"
         android:layout_below="@+id/editDescView"
-        android:text="@string/edit" />
+        android:text="@string/edit"
+         android:onClick="SendButton" />
 
 </RelativeLayout>
