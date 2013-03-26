@@ -1,5 +1,6 @@
 package com.sourcefish.projectmanagement;
 
+import com.fedorvlasov.lazylist.ImageLoader;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.login.SourceFishAuthenticatorActivity;
@@ -41,6 +42,8 @@ public class MainActivity extends NormalLayoutActivity{
 		//TODO read json file from tha webz
 		if(isOnline())
 		{			
+			ImageLoader loader=new ImageLoader(this);
+			loader.clearCache();
 			// check for First time use
 			if(! hasLoggedIn)
 			{

@@ -35,6 +35,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -326,6 +327,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			if(ua!=null)
 			{
 				list.setAdapter(ua);
+				ua.setNotifyOnChange(true);
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
@@ -377,10 +379,14 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		try {
 			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",\"pid\":\"" + p.id+"\"}"));
 			
-			if(new JSONObject(apost.get()).getString("error")!=null)
+			if(new JSONObject(apost.get()).getString("msg")!=null)
 			{
-				au.remove(spin.getSelectedItem().toString());
-				ua.add(new User(spin.getSelectedItem().toString(), 3));
+				String result=spin.getSelectedItem().toString();
+				au.remove(result);
+				ua.add(new User(result, 3));
+				
+				/*finish();
+				startActivity(getIntent());*/
 			}
 			
 			//Log.i("result:",apost.get());
