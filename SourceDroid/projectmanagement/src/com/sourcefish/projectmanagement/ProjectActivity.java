@@ -229,17 +229,23 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	}
 	
 	public Dialog onCreateDialog(final int elementId) {
-		int rechten = 3;
-		try {
-			rechten = projects.get(elementId).getInt("rid");
-			Log.i("rechten","" +rechten);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else
+		{
+			int rechten = 3;
+			try {
+				rechten = projects.get(elementId).getInt("rid");
+				Log.i("rechten","" +rechten);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setTitle("Project");
+		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle("Project");
 	    
 	    switch(rechten) {
 	    case 1:
@@ -315,8 +321,9 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		            	   break;
 		               }	               
 		           }
-		    });  
-	    return builder.create();
+		    });
+		    return builder.create();
+		}
 	}
 	
 	private void removeProject (int elementId) {
