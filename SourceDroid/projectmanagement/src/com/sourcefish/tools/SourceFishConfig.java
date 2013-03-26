@@ -3,11 +3,17 @@ package com.sourcefish.tools;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.widget.Toast;
 
 public class SourceFishConfig {
 	public static int MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
 	public static String PREFFILE = "SourceFishPrefs";
 	public static int THEMEDIALOG = 13234588;
+	
+	static public void alert(Context context, String msg) {
+		Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+		toast.show();
+	}
 	
 	public void setTheme(int theme)
 	{

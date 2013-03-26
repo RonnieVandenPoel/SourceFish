@@ -58,22 +58,10 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 				saving.execute(output);
 				
 				/*
-				//saving data
-				SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);
-			    SharedPreferences.Editor editor = settings.edit();			    
-			    editor.putString("json", output);		    
-			    editor.commit();
-			    //end save data
-			    */
-				
-			    //load data voor check
-			    SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);				
-				String log = prefs.getString("json", "");
-				if (log.equals(output)) {
-					Log.i("","succes");
-				}
-				
-				
+				if (saving.get()) {
+					test = true;
+				}*/
+				test = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
