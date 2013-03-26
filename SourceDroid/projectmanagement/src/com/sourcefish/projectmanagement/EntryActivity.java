@@ -60,6 +60,10 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	private Entry closedEntry = null;
 	private ListView list = null;
 	
+	private UserAdapter ua;
+	private ArrayAdapter<String> au;
+	
+	
 	private List<String> usersOutProject;
 	
 	DateFormat formatDateTime=DateFormat.getDateTimeInstance();
@@ -317,7 +321,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		case 4:
 			setContentView(R.layout.projectoverviewlayout);
 			getSupportActionBar().setTitle("Overview");
-			UserAdapter ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
+			ua=new UserAdapter(this,android.R.layout.simple_expandable_list_item_1, p.users);
 			list = (ListView) findViewById(R.id.userListView);
 			if(ua!=null)
 			{
@@ -353,7 +357,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				e.printStackTrace();
 			}
 			
-			ArrayAdapter<String> au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
+			au=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,usersOutProject);
 			spnAddUsers.setAdapter(au);
 			}
 			break;
@@ -367,7 +371,14 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.ADDUSERTOPROJECT, this);
 		try {
 			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",\"pid\":\"" + p.id+"\"}"));
-			Log.i("result:",apost.get());
+			
+			if(new JSONObject(apost.get()).getString("error")!=null)
+			{
+				au.remove(spin.getSelectedItem().toString());
+				ua.add(new User(spin.getSelectedItem().toString(), 3));
+			}
+			
+			//Log.i("result:",apost.get());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
