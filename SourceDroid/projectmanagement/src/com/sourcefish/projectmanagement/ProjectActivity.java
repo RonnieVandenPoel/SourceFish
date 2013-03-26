@@ -109,6 +109,24 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		 
 	}
 	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if ((Integer)getSupportActionBar().getSelectedTab().getTag() == 0) {
+			try {
+				updateList();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	} 
+	
+	protected void onPause() {
+        super.onPause();
+    }
+	
 	private void updateList() throws JSONException {
 		 AsyncLoadServerJSON task = new AsyncLoadServerJSON(getApplicationContext());
 		 task.execute("");
@@ -171,7 +189,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			chosenProject.name = project.getString("projectname");
 			chosenProject.description = project.getString("description");	    				
 			chosenProject.customer = project.getString("client");	
-			
+			chosenProject.id = project.getInt("pid");
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -181,33 +199,128 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		Intent i = new Intent(getApplicationContext(), ProjectEditActivity.class);
 		i.putExtra("project", chosenProject);
 		startActivity(i);
+		//finish();
 		
 	}
 	
 	public void deleteProject(int elementId) {
-		
+		try {
+			int pid = projects.get(elementId).getInt("pid");
+			String json = "{\"pid\":\"" + pid + "\"}";
+			StringEntity entity = new StringEntity(json);
+			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.DELETEPROJECT, this);
+			task.execute(entity);			
+			Log.i("server delet repsons",task.get());
+			updateList();
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Dialog onCreateDialog(final int elementId) {
-		String[] opties = {"Open","Edit","Delete"};
+		int rechten = 3;
+		try {
+			rechten = projects.get(elementId).getInt("rid");
+			Log.i("rechten","" +rechten);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    builder.setTitle("Project");
-	    builder.setItems(opties, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int which) {
-	               switch (which) {
-	               case 0:
-	            	   openProject(elementId);
-	            	   break;
-	               case 1:
-	            	   editProject(elementId);
-	            	   break;
-	               case 2:
-	            	   deleteProject(elementId);
-	            	   break;
-	               }	               
-	           }
-	    });
+	    
+	    switch(rechten) {
+	    case 1:
+	    	String[] opties1 = {"Open","Edit","Delete"};
+		    builder.setItems(opties1, new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   openProject(elementId);
+		            	   break;
+		               case 1:
+		            	   editProject(elementId);
+		            	   break;
+		               case 2:
+		            	   AlertDialog alert = (AlertDialog) onDeleteCreateDialog(elementId);
+		            	   alert.show();
+		            	   break;
+		               }	               
+		           }
+		    });
+	    	break;
+	    case 2:
+	    	String[] opties2 = {"Open","Edit"};
+		    builder.setItems(opties2, new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   openProject(elementId);
+		            	   break;
+		               case 1:
+		            	   editProject(elementId);
+		            	   break;		              
+		               }	               
+		           }
+		    });
+	    	break;
+	    case 3:
+	    	String[] opties3 = {"Open"};
+		    builder.setItems(opties3, new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   openProject(elementId);
+		            	   break;		               
+		               }	               
+		           }
+		    });
+	    	break;
+	    }
+	    
+	    
 	    return builder.create();
+	}
+	
+	public Dialog onDeleteCreateDialog(final int elementId) {	
+		
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle("Project");
+	    
+	   
+	    	String[] opties = {"Delete","Remove From Project","Cancel"};
+		    builder.setItems(opties, new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   deleteProject(elementId);
+		            	   break;
+		               case 1:
+		            	   removeProject(elementId);
+		            	   break;
+		               case 2:
+		            	   
+		            	   break;
+		               }	               
+		           }
+		    });  
+	    return builder.create();
+	}
+	
+	private void removeProject (int elementId) {
+		
 	}
 	
 	private void openProject(int elementId) {
@@ -265,6 +378,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			chosenProject.id = project.getInt("pid");
 			chosenProject.customer = project.getString("client");	
 			chosenProject.owner = project.getString("projectowner");
+			chosenProject.rechtenId = project.getInt("rid");
 			
 			if (!(project.isNull("end"))) {
 				Timestamp projectEnd = Timestamp.valueOf(project.getString("enddate"));
