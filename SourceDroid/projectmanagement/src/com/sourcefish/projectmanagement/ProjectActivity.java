@@ -351,35 +351,62 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		    return builder.create();
 		}
 	
-	private void removeProject (int elementId) {
-		try {
-			int pid = projects.get(elementId).getInt("pid");
-			String json = "{\"pid\":\"" + pid + "\"}";
-			StringEntity entity = new StringEntity(json);
-			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.LEAVEPROJECT, this);
-			task.execute(entity);			
-			Log.i("server remove repsons",task.get());
-			JSONObject respons = new JSONObject(task.get());
-			if (respons.has("error")) {
-				Toast toast = Toast.makeText(getApplicationContext(), "You are the creator of this project,  pass the project first before leaving!",Toast.LENGTH_LONG);
-				toast.show();
-			}
-			AsyncLoadServerJSON.reloadData(getApplicationContext());
-			updateList();
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private void removeProject (final int elementId) {
+		final ProjectActivity act = this;
+		
+		
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE:	
+		        	try {
+		    			int pid = projects.get(elementId).getInt("pid");
+		    			String json = "{\"pid\":\"" + pid + "\"}";
+		    			StringEntity entity = new StringEntity(json);
+		    			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.LEAVEPROJECT, act);
+		    			task.execute(entity);			
+		    			Log.i("server remove repsons",task.get());
+		    			JSONObject respons = new JSONObject(task.get());
+		    			if (respons.has("error")) {		    				
+		    				SourceFishConfig.alert(getApplicationContext(),"You are the creator of this project,  pass the project first before leaving!");
+		    			}
+		    			else {
+		    				SourceFishConfig.alert(getApplicationContext(), "Unsubscribed from project");
+		    			}
+		    			AsyncLoadServerJSON.reloadData(getApplicationContext());
+		    			updateList();
+		    			
+		    		} catch (JSONException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		} catch (UnsupportedEncodingException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		} catch (InterruptedException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		} catch (ExecutionException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		}
+		            break;
+
+		        case DialogInterface.BUTTON_NEGATIVE:
+		            //No button clicked
+		            break;
+		        }
+		    }
+		};
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+		    .setNegativeButton("No", dialogClickListener).show();
+		
+		
+		
+		
+		
 	}
 	
 	private void openProject(int elementId) {
