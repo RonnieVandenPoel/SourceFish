@@ -328,6 +328,19 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			{
 				list.setAdapter(ua);
 				ua.setNotifyOnChange(true);
+				
+				if(p.rechtenId<3)
+				{
+					list.setOnItemLongClickListener(new OnItemLongClickListener() {
+						
+							public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int elementId,long arg3) {
+								
+								AlertDialog dg=(AlertDialog) onCreateUserDialog(elementId);
+								dg.show();
+								return true;
+							}
+					});
+				}
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
@@ -369,6 +382,36 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			break;
 		}
+		
+	}
+	
+
+	public Dialog onCreateUserDialog(final int elementId) {
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else
+		{
+			String[] options={"Remove user"};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle(ua.getItem(elementId).username);
+		    builder.setItems(options, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               		case 0:removeProjectUser(ua.getItem(elementId).username);
+		               		break;
+		               }
+	               }
+		    });
+		    return builder.create();
+	               
+		}
+	}
+	
+	private void removeProjectUser(String username)
+	{
+		
 		
 	}
 	
