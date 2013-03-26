@@ -221,7 +221,12 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		    			Log.i("delete test", "starten met deleten");
 		    			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.DELETEPROJECT, act);			
 		    			task.execute(entity);			
-		    			Log.i("server delet repsons",task.get());
+		    			String msg = task.get();
+		    			Log.i("server delet repsons",msg);
+		    			JSONObject respons = new JSONObject(msg);
+		    			if (!(respons.has("error"))) {
+		    				SourceFishConfig.alert(getApplicationContext(), "Project deleted succesfully");
+		    			}
 		    			AsyncLoadServerJSON.reloadData(getApplicationContext());
 		    			updateList();
 		    			
@@ -342,8 +347,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		               case 1:
 		            	   removeProject(elementId);
 		            	   break;
-		               case 2:
-		            	   
+		               case 2:		            	   
 		            	   break;
 		               }	               
 		           }

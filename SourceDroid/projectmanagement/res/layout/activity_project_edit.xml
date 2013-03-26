@@ -31,7 +31,8 @@
                 android:id="@+id/editProjectView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" />
+                android:ems="10" 
+                android:imeOptions="actionNext"/>
 
             <TextView
                 android:id="@+id/textView2"
@@ -45,7 +46,8 @@
                 android:id="@+id/editKlantView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" />
+                android:ems="10" 
+                android:imeOptions="actionNext"/>
 
             <TextView
                 android:id="@+id/textView3"
@@ -60,7 +62,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine" 
+                android:imeOptions="actionDone"/>
 
             <Button
                 android:id="@+id/button1"
