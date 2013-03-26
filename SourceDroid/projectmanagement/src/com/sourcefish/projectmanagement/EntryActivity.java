@@ -360,8 +360,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		Spinner spin=(Spinner) findViewById(R.id.spinnerAddUsers);
 		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.ADDUSERTOPROJECT, this);
 		try {
-			Log.i("Json output:","{\"username\":\""+ spin.getSelectedItem().toString() +"\",\"pid\":\"" + p.id+"\"}");
-			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",\"pid\":\"" + p.id+"\"}"));
+			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",pid\":" + p.id+"\"}"));
 			Log.i("result:",apost.get());
 		} catch (Exception e) {
 			e.printStackTrace();
