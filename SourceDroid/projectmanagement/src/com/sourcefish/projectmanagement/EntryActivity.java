@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -324,6 +325,9 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
+			
+			
+			//if(rid<3){}
 			Spinner spnAddUsers=(Spinner) findViewById(R.id.spinnerAddUsers);
 			
 			AsyncGet get=new AsyncGet(this);
@@ -342,6 +346,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				{
 					JSONObject user=arrUsers.getJSONObject(i);
 					usersOutProject.add(user.getString("uname"));
+					
 				}
 				
 			} catch (Exception e){
@@ -354,6 +359,18 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			break;
 		}
 		
+	}
+	
+	public void addUserToProject(View view)
+	{
+		Spinner spin=(Spinner) findViewById(R.id.spinnerAddUsers);
+		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.ADDUSERTOPROJECT, this);
+		try {
+			apost.execute(new StringEntity("{\"username\":\""+ spin.getSelectedItem().toString() +"\",pid\":" + p.id+"\"}"));
+			Log.i("result:",apost.get());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void setTime(Timestamp tstart, Timestamp tend)
