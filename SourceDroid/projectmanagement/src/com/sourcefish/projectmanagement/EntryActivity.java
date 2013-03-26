@@ -35,7 +35,9 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +49,6 @@ import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
-import com.sourcefish.tools.SourceFishHttpClient;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
@@ -86,12 +87,21 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	}
 	
 	@Override
+	public void onBackPressed() {
+		SharedPreferences prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
+		Editor e = prefs.edit();
+		e.putBoolean("pressedback", true);
+		e.commit();
+		super.onBackPressed();
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.openentrylayout);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		 
+		
 		//to pass :
 		//   intent.putExtra("MyClass", obj);  
 
@@ -251,6 +261,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	Activity a = this;
 	
 	public Dialog onCreateDialog(final int elementId) {
+		boolean running = false;
 		if(elementId == SourceFishConfig.THEMEDIALOG)
 		{
 			return super.onCreateDialog(elementId);
@@ -270,7 +281,6 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				    	remove.setContentType("application/json");
 				    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
 				    	entryAdapter.remove(p.entries.get(elementId));
-				    	p.entries.remove(elementId);
 				    	
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
@@ -328,6 +338,19 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			{
 				list.setAdapter(ua);
 				ua.setNotifyOnChange(true);
+				
+				if(p.rechtenId<3)
+				{
+					list.setOnItemLongClickListener(new OnItemLongClickListener() {
+						
+							public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int elementId,long arg3) {
+								
+								AlertDialog dg=(AlertDialog) onCreateUserDialog(elementId);
+								dg.show();
+								return true;
+							}
+					});
+				}
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
@@ -369,6 +392,36 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			
 			break;
 		}
+		
+	}
+	
+
+	public Dialog onCreateUserDialog(final int elementId) {
+		if(elementId == SourceFishConfig.THEMEDIALOG)
+		{
+			return super.onCreateDialog(elementId);
+		}
+		else
+		{
+			String[] options={"Remove user"};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    builder.setTitle(ua.getItem(elementId).username);
+		    builder.setItems(options, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               		case 0:removeProjectUser(ua.getItem(elementId).username);
+		               		break;
+		               }
+	               }
+		    });
+		    return builder.create();
+	               
+		}
+	}
+	
+	private void removeProjectUser(String username)
+	{
+		
 		
 	}
 	
@@ -514,6 +567,34 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	protected void onResume() {
+		
+		SharedPreferences prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
+		int tab = 0;
+
+		boolean isBackPress = prefs.getBoolean("pressedback", false);
+		
+		if(! isBackPress)
+		{
+			 tab = prefs.getInt("selectedentrytab", 0);
+		}
+		
+		getSupportActionBar().getTabAt(tab).select();
+		Editor e = prefs.edit();
+		e.putBoolean("pressedback", false);
+		e.commit();
+		super.onResume();
+	} 
+	
+	protected void onPause() {
+		SharedPreferences prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
+		Editor e = prefs.edit();
+		e.putInt("selectedentrytab", getSupportActionBar().getSelectedTab().getPosition());
+		e.commit();
+        super.onPause();
+    }
 
 	@Override
 	public void getServerResponse(String s) {
