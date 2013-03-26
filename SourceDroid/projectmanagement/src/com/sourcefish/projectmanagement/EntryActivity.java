@@ -318,6 +318,9 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			TextView tv=(TextView) findViewById(R.id.textViewProjectmetadata);
 			tv.setText(p.name + " owned by:" + p.owner);
+			
+			
+			//if(rid<3){}
 			Spinner spnAddUsers=(Spinner) findViewById(R.id.spinnerAddUsers);
 			
 			AsyncGet get=new AsyncGet(this);
@@ -336,6 +339,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				{
 					JSONObject user=arrUsers.getJSONObject(i);
 					usersOutProject.add(user.getString("uname"));
+					
 				}
 				
 			} catch (Exception e){
@@ -348,6 +352,12 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			break;
 		}
 		
+	}
+	
+	public void addUserToProject(View view)
+	{
+		Spinner spin=(Spinner) findViewById(R.id.spinnerAddUsers);
+		AsyncServerPosts apost=new AsyncServerPosts(this, Tasks.ADDUSERTOPROJECT, this);
 	}
 	
 	private void setTime(Timestamp tstart, Timestamp tend)
