@@ -254,7 +254,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 						int position, long arg3) {
 					
 	            	AlertDialog alert = (AlertDialog) onCreateDialog(position);
-	            	alert.show();
+	            	if(alert != null)
+	            		alert.show();
 					return false;
 				}
 			});
@@ -269,8 +270,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			return super.onCreateDialog(elementId);
 		}
 		else{
-			ArrayList<Entry> entries = p.entries;
-			Entry e = p.entries.get(elementId);
+			Entry e = p.getClosedEntries().get(elementId);
+			
 			String username = SourceFishConfig.getUserName(getApplicationContext());
 			if(e.u.username.equals(username) || e.u.rechten > p.rechtenId)
 			{
@@ -287,8 +288,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					    	
 					    	remove.setContentType("application/json");
 					    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
-					    	entryAdapter.remove(p.entries.get(elementId));
-					    	p.entries.remove(elementId);
+					    	entryAdapter.remove(p.getClosedEntries().get(elementId));
+					    	p.entries.remove(p.entries.indexOf(p.getClosedEntries().get(elementId)));
 					    	
 						} catch (UnsupportedEncodingException e) {
 							// TODO Auto-generated catch block
@@ -300,7 +301,9 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			else
 			{
-				return super.onCreateDialog(elementId);
+				Toast t = Toast.makeText(getApplicationContext(), "You can only delete your own entries", Toast.LENGTH_LONG);
+				t.show();
+				return null;
 			}
 		}
 	}
