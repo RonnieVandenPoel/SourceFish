@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.sourcefish.tools.Entry;
@@ -82,4 +84,44 @@ public class JSONConversion {
 		}
 		return chosenProject;
 	}
+	
+	static public void addEntryToSyncList(String json, Context context) {
+		final String PREFS_NAME = "data";
+		JSONObject result = new JSONObject();
+		ArrayList<String> entries = new ArrayList<String>();
+		
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);		
+		String load = prefs.getString("entriessync", "{\"entries\":[]}"); //gebrbuik .get om dit resultaat te gebruiken
+		try {
+			JSONObject opgeslagenData = new JSONObject(load);
+			JSONArray array = opgeslagenData.getJSONArray("entries");
+			
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject object = array.getJSONObject(i);
+				entries.add(object.getString("entry"));				
+			}
+			entries.add(json);
+			
+			JSONArray newSync = new JSONArray();
+			for (String e : entries) {
+				JSONObject obj = new JSONObject();
+				obj.put("entry", e);
+				newSync.put(obj);
+			}			
+			result.put("entries", newSync);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+		 SharedPreferences.Editor editor = settings.edit();
+		    
+		 editor.putString("entriessync", result.toString());
+		 //editor.remove("entriessync");
+
+		 // Commit the edits! 
+		 Log.i("saving unsycned entries",result.toString());
+		 editor.commit();
+	}
+	
 }
