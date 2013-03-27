@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -31,13 +30,12 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +91,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		Editor e = prefs.edit();
 		e.putBoolean("pressedback", true);
 		e.commit();
+		Intent i = new Intent(this, ProjectActivity.class);
+		startActivity(i);
 		super.onBackPressed();
 	}
 	
@@ -211,7 +211,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				e.printStackTrace();
 			}
 			entity.setContentType("application/json");
-			JSONConversion.addEntryToSyncList(startEntry(description, null, null), getApplicationContext());
+			JSONConversion.addNewProjectToSyncList(startEntry(description, null, null), getApplicationContext());
 			//new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
 			getSupportActionBar().getTabAt(1).select();
 		}

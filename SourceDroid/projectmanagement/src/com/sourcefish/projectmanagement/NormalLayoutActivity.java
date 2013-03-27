@@ -74,22 +74,34 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				boolean changed = false;
 				prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
 				e = prefs.edit();
 				switch(which)
 				{
 				case 0:
-					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
-					e.putInt("curTheme", 0);
+					if(SourceFishConfig.MAINTHEME != com.actionbarsherlock.R.style.Sherlock___Theme)
+					{
+						SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
+						e.putInt("curTheme", 0);
+						changed = true;
+					}
 					break;
 				case 1:	
-					SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme_Light;
-					e.putInt("curTheme", 1);
+					if(SourceFishConfig.MAINTHEME != com.actionbarsherlock.R.style.Sherlock___Theme_Light)
+					{
+						SourceFishConfig.MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme_Light;
+						e.putInt("curTheme", 1);
+						changed = true;
+					}
 					break;
 				}
-				e.commit();
-				finish();
-				startActivity(getIntent());
+				if(changed)
+				{
+					e.commit();
+					finish();
+					startActivity(getIntent());
+				}
 			}
 		});
 	    return builder.create();
