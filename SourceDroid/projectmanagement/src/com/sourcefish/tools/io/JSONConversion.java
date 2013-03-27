@@ -98,9 +98,7 @@ public class JSONConversion {
 		add("deleteentry", json, context);
 	}
 	
-	static public void addCloseEntryToSyncList(String json, Context context) {
-		add("closeentry", json, context);
-	}
+	
 	
 	static private void add(String prefnaam, String json, Context context) {
 		final String PREFS_NAME = "data";
@@ -141,21 +139,13 @@ public class JSONConversion {
 		 editor.commit();
 	}
 	
-	static public void addStartEntryToSyncList(String json, Context context) {
-		add("startentry", json, context);
-	}
 	
-	static public void addNewProjectToSyncList(String json, Context context) {
-		add("newproject", json, context);
-	}
+	
 	
 	static public void addEditProjectToSyncList(String json, Context context) {
 		add("editproject", json, context);
 	}
 	
-	static public void addDeleteProjectToSyncList(String json, Context context) {
-		add("deleteproject", json, context);
-	}
 	
 	static private ArrayList<String> get(String prefnaam,Context context) {
 		ArrayList<String> lijst = new ArrayList<String>();		
@@ -179,34 +169,25 @@ public class JSONConversion {
 			
 		
 		return lijst;
-	}
-	
-	static public ArrayList<String> getDeleteProjectSyncList(Context context) {
-		return get("deleteproject", context);
-	}
-	
-	static public ArrayList<String> getNewProjectSyncList(Context context) {
-		return get("newproject", context);
-	}
+	}	
 	
 	static public ArrayList<String> getEditProjectSyncList(Context context) {
-		return get("editproject", context);
+		ArrayList<String> f = get("editproject", context);
+		remove("editproject", context);
+		return f;
 	}
 	
 	static public ArrayList<String> getManualEntrySyncList(Context context) {
-		return get("manualentry", context);
+		ArrayList<String> f = get("manualproject", context);
+		remove("manualproject", context);
+		return f;
 	}	
 	
 	
-	static public ArrayList<String> getStartEntrySyncList(Context context) {
-		return get("startentry", context);
-	}
-	
-	static public ArrayList<String> getCloseEntrySyncList(Context context) {
-		return get("closeentry", context);
-	}
 	static public ArrayList<String> getDeleteEntrySyncList(Context context) {
-		return get("deleteentry", context);
+		ArrayList<String> f = get("deleteentry", context);
+		remove("deleteentry", context);
+		return f;
 	}
 	
 	public static void supermegaAwesomeSync(Activity activity)
