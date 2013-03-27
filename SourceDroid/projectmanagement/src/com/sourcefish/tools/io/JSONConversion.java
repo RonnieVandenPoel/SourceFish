@@ -176,31 +176,31 @@ public class JSONConversion {
 		return lijst;
 	}
 	
-	static public ArrayList<String> getDeleteProjectSyncList(String json, Context context) {
+	static public ArrayList<String> getDeleteProjectSyncList(Context context) {
 		return get("deleteproject", context);
 	}
 	
-	static public ArrayList<String> getNewProjectSyncList(String json, Context context) {
+	static public ArrayList<String> getNewProjectSyncList(Context context) {
 		return get("newproject", context);
 	}
 	
-	static public ArrayList<String> getEditProjectSyncList(String json, Context context) {
+	static public ArrayList<String> getEditProjectSyncList(Context context) {
 		return get("editproject", context);
 	}
 	
-	static public ArrayList<String> getManualEntrySyncList(String json, Context context) {
+	static public ArrayList<String> getManualEntrySyncList(Context context) {
 		return get("manualentry", context);
 	}	
 	
 	
-	static public ArrayList<String> getStartEntrySyncList(String json, Context context) {
+	static public ArrayList<String> getStartEntrySyncList(Context context) {
 		return get("startentry", context);
 	}
 	
-	static public ArrayList<String> getCloseEntrySyncList(String json, Context context) {
+	static public ArrayList<String> getCloseEntrySyncList(Context context) {
 		return get("closeentry", context);
 	}
-	static public ArrayList<String> getDeleteEntrySyncList(String json, Context context) {
+	static public ArrayList<String> getDeleteEntrySyncList(Context context) {
 		return get("deleteentry", context);
 	}
 }
