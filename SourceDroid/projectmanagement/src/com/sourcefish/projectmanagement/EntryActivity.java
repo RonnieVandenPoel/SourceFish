@@ -45,6 +45,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.MenuItem;
 import com.sourcefish.tools.AsyncGet;
 import com.sourcefish.tools.AsyncServerPosts;
+import com.sourcefish.tools.ConnectionManager;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
@@ -139,13 +140,16 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		 tab.setTag(1);
 		 getSupportActionBar().addTab(tab);
 		 
-		 //edit tab
-		 tab = getSupportActionBar().newTab();
-		 tab.setTabListener(this);
-		 tab.setText("Start New Entry");
-		 tab.setTag(2);
-		 getSupportActionBar().addTab(tab);
-		 
+		 if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+		 {
+			 //edit tab
+			 tab = getSupportActionBar().newTab();
+			 tab.setTabListener(this);
+			 tab.setText("Start New Entry");
+			 tab.setTag(2);
+			 getSupportActionBar().addTab(tab);
+		 }
+			 
 		 //add manual
 		 tab = getSupportActionBar().newTab();
 		 tab.setTabListener(this);
@@ -302,10 +306,17 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					public void onClick(DialogInterface dialog, int which) {
 						StringEntity remove;
 						try {
-							remove = new StringEntity("{\"trid\":\"" + p.getClosedEntries().get(elementId).entryid  + "\"}");
-					    	
-					    	remove.setContentType("application/json");
-					    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
+							String removestring = new String("{\"trid\":\"" + p.getClosedEntries().get(elementId).entryid  + "\"}");
+					    	if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+					    	{
+					    		remove = new StringEntity(removestring);
+					    		remove.setContentType("application/json");
+					    		new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
+					    	}
+					    	else
+					    	{
+					    		JSONConversion.addDeleteEntryToSyncList(removestring, getApplicationContext());
+					    	}
 					    	entryAdapter.remove(p.getClosedEntries().get(elementId));
 					    	p.entries.remove(p.entries.indexOf(p.getClosedEntries().get(elementId)));
 					    	
@@ -548,10 +559,25 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		if(hasOpenProject)
 		{
 			Timestamp end = new Timestamp(System.currentTimeMillis());
-			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(closeEntry(end));
+			String s = closeEntry(end);
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+			{
+				StringEntity se;
+				try {
+					se = new StringEntity(s);
+					se.setContentType("application/json");
+					new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(se);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				JSONConversion.addCloseEntryToSyncList(s, getApplicationContext());
+			}
 			Entry newEntry = openEntry;
 			newEntry.end = end;
-			ArrayList<Entry> entries = p.entries;
 			p.entries.add(newEntry);
 			openEntry = null;
 			Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
@@ -582,15 +608,11 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		return create;
 	}
 	
-	public StringEntity closeEntry(Timestamp end)
+	public String closeEntry(Timestamp end)
 	{
-		StringEntity create = null;
-		try {
-			create = new StringEntity("{\"eind\":\"" + end + "\",\"pid\":\"" + p.id + "\",\"notities\":\""+ openEntry.description +"\"}");
-	    	create.setContentType("application/json");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		String create = null;
+		create = new String("{\"eind\":\"" + end + "\",\"pid\":\"" + p.id + "\",\"notities\":\""+ openEntry.description +"\"}");
+	    	
 		return create;
 	}
 
