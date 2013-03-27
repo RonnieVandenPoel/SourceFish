@@ -215,8 +215,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				e.printStackTrace();
 			}
 			entity.setContentType("application/json");
-			JSONConversion.addNewProjectToSyncList(startEntry(description, null, null), getApplicationContext());
-			//new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
+			//JSONConversion.addNewProjectToSyncList(startEntry(description, null, null), getApplicationContext());
+			new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(entity);
 			getSupportActionBar().getTabAt(1).select();
 		}
 	}
@@ -574,7 +574,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			else
 			{
-				JSONConversion.addCloseEntryToSyncList(s, getApplicationContext());
+				//JSONConversion.addCloseEntryToSyncList(s, getApplicationContext());
 			}
 			Entry newEntry = openEntry;
 			newEntry.end = end;
