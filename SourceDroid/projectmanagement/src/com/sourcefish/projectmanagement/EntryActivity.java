@@ -165,7 +165,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			while(!found && i < p.entries.size())
 			{
 				Entry e = p.entries.get(i);
-				if(e.isOpen() && e.u.username == SourceFishConfig.getUserName(getApplicationContext()))
+				String username = SourceFishConfig.getUserName(getApplicationContext());
+				if(e.isOpen() && e.u.username.equals(username))
 				{
 					openEntry = p.entries.get(i);
 					found = true;
@@ -268,6 +269,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			return super.onCreateDialog(elementId);
 		}
 		else{
+			ArrayList<Entry> entries = p.entries;
 			Entry e = p.entries.get(elementId);
 			String username = SourceFishConfig.getUserName(getApplicationContext());
 			if(e.u.username.equals(username) || e.u.rechten > p.rechtenId)
@@ -286,6 +288,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					    	remove.setContentType("application/json");
 					    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
 					    	entryAdapter.remove(p.entries.get(elementId));
+					    	p.entries.remove(elementId);
 					    	
 						} catch (UnsupportedEncodingException e) {
 							// TODO Auto-generated catch block
@@ -527,6 +530,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			new AsyncServerPosts(getApplicationContext(), Tasks.STOPENTRY, this).execute(closeEntry(end));
 			Entry newEntry = openEntry;
 			newEntry.end = end;
+			ArrayList<Entry> entries = p.entries;
 			p.entries.add(newEntry);
 			openEntry = null;
 			Toast t = Toast.makeText(getApplicationContext(), "Entry stopped", Toast.LENGTH_LONG);
