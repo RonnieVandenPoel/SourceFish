@@ -92,7 +92,7 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 			
 			AsyncTestConnectie test = new AsyncTestConnectie();
 			test.execute("");
-			boolean server = false;
+			/*boolean server = false;
 			try {
 				server = test.get();
 			} catch (InterruptedException e1) {
@@ -103,7 +103,7 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 				e1.printStackTrace();
 			}
 			
-			if (server) {
+			if (server) {*/
 				AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.EDITPROJECT, this);
 				
 				StringEntity entity;
@@ -141,12 +141,12 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+			/*	
 			}
 			else {
 				JSONConversion.addEditProjectToSyncList(json, getApplicationContext());
 				//Project
-			}
+			}*/
 			
 			
 		}

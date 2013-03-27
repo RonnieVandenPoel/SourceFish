@@ -203,4 +203,14 @@ public class JSONConversion {
 	static public ArrayList<String> getDeleteEntrySyncList(Context context) {
 		return get("deleteentry", context);
 	}
+	
+	static private void remove(String prefnaam, Context context) {
+		final String PREFS_NAME = "data";	
+		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+		 SharedPreferences.Editor editor = settings.edit();
+		 editor.remove(prefnaam);
+		 editor.commit();
+	}
+	
+	
 }
