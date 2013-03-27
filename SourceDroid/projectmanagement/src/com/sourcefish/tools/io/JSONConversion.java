@@ -1,18 +1,23 @@
 package com.sourcefish.tools.io;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
+import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
@@ -202,5 +207,29 @@ public class JSONConversion {
 	}
 	static public ArrayList<String> getDeleteEntrySyncList(Context context) {
 		return get("deleteentry", context);
+	}
+	
+	public static void supermegaAwesomeSync(Activity activity)
+	{
+		syncSomething(activity, getManualEntrySyncList(activity), Tasks.MANUALENTRY);
+		syncSomething(activity, getDeleteEntrySyncList(activity), Tasks.DELETEENTRY);
+		syncSomething(activity, getEditProjectSyncList(activity), Tasks.EDITPROJECT);
+				
+	}
+	
+	private static void syncSomething(Activity a,ArrayList<String> syncList,Tasks task)
+	{
+		for(String syncEntry : syncList)
+		{
+			try
+			{
+				AsyncServerPosts apost=new AsyncServerPosts(a, task, a);
+				apost.execute(new StringEntity(syncEntry));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
