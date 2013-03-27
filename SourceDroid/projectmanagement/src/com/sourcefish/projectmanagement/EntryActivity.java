@@ -52,6 +52,7 @@ import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
+import com.sourcefish.tools.io.JSONConversion;
 
 public class EntryActivity extends NormalLayoutActivity implements ActionBar.TabListener, ServerListenerInterface {
 
@@ -183,8 +184,16 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		EditText et = (EditText) findViewById(R.id.newentrydescription);
 		String description = et.getText().toString();
 		if(ll.getVisibility() != LinearLayout.GONE)
-		{			
-			new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(startEntry(description, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis())));
+		{
+			StringEntity entity = null;
+			try {
+				entity = new StringEntity(startEntry(description, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis())));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			entity.setContentType("application/json");
+			new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(entity);
 			dateTimeEnd = Calendar.getInstance();
 			dateTimeStart = Calendar.getInstance();
 			et.setText("");
@@ -194,7 +203,16 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 		else
 		{
-			new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
+			StringEntity entity = null;
+			try {
+				entity = new StringEntity(startEntry(description, null, null));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			entity.setContentType("application/json");
+			JSONConversion.addEntryToSyncList(startEntry(description, null, null), getApplicationContext());
+			//new AsyncServerPosts(getApplicationContext(), Tasks.NEWENTRY, this).execute(startEntry(description, null, null));
 			getSupportActionBar().getTabAt(1).select();
 		}
 	}
@@ -546,27 +564,21 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 	}
 	
-	public StringEntity startEntry(String description, Timestamp end, Timestamp start)
+	public String startEntry(String description, Timestamp end, Timestamp start)
 	{
-		StringEntity create = null;
+		String create = null;
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		try {
 			if(end == null)
 			{
-				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
+				create = new String("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\"}");
 				openEntry = new Entry(now, description, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
 			}
 			else
 			{
-				create = new StringEntity("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
+				create = new String("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
 				closedEntry = new Entry(start, description, end, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
 				p.entries.add(closedEntry);
 			}
-			create.setContentType("application/json");
-	    } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return create;
 	}
 	
