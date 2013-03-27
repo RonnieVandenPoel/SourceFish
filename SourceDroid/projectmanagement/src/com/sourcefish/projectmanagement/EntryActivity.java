@@ -284,7 +284,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					public void onClick(DialogInterface dialog, int which) {
 						StringEntity remove;
 						try {
-							remove = new StringEntity("{\"trid\":\"" + p.entries.get(elementId).entryid  + "\"}");
+							remove = new StringEntity("{\"trid\":\"" + p.getClosedEntries().get(elementId).entryid  + "\"}");
 					    	
 					    	remove.setContentType("application/json");
 					    	new AsyncServerPosts(a.getApplicationContext(), Tasks.DELETEENTRY, a).execute(remove);
