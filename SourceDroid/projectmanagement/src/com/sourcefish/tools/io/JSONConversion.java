@@ -89,6 +89,14 @@ public class JSONConversion {
 		add("manualentry", json, context);
 	}
 	
+	static public void addDeleteEntryToSyncList(String json, Context context) {
+		add("deleteentry", json, context);
+	}
+	
+	static public void addCloseEntryToSyncList(String json, Context context) {
+		add("closeentry", json, context);
+	}
+	
 	static private void add(String prefnaam, String json, Context context) {
 		final String PREFS_NAME = "data";
 		JSONObject result = new JSONObject();
@@ -182,6 +190,17 @@ public class JSONConversion {
 	
 	static public ArrayList<String> getManualEntrySyncList(String json, Context context) {
 		return get("manualentry", context);
+	}	
+	
+	
+	static public ArrayList<String> getStartEntrySyncList(String json, Context context) {
+		return get("startentry", context);
 	}
 	
+	static public ArrayList<String> getCloseEntrySyncList(String json, Context context) {
+		return get("closeentry", context);
+	}
+	static public ArrayList<String> getDeleteEntrySyncList(String json, Context context) {
+		return get("deleteentry", context);
+	}
 }
