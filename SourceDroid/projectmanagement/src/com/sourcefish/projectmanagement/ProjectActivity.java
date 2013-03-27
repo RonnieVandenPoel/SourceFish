@@ -73,8 +73,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
 		
-		JSONConversion.addEntryToSyncList("{\"begin\":\"nu\",\"notities\":\"descriptie\",\"pid\":\"2\"}", getApplicationContext());
-		
+				
 		desc = "";
 		cust = "";
 		name= "";
@@ -428,6 +427,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		Intent i = new Intent(getApplicationContext(), EntryActivity.class);
 		i.putExtra("project", chosenProject);
 		startActivity(i);
+		finish();
 	}
 	
 	/*private void stuff() {

@@ -85,13 +85,17 @@ public class JSONConversion {
 		return chosenProject;
 	}
 	
-	static public void addEntryToSyncList(String json, Context context) {
+	static public void addManualEntryToSyncList(String json, Context context) {
+		add("manualentry", json, context);
+	}
+	
+	static private void add(String prefnaam, String json, Context context) {
 		final String PREFS_NAME = "data";
 		JSONObject result = new JSONObject();
 		ArrayList<String> entries = new ArrayList<String>();
 		
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);		
-		String load = prefs.getString("entriessync", "{\"entries\":[]}"); //gebrbuik .get om dit resultaat te gebruiken
+		String load = prefs.getString(prefnaam, "{\"entries\":[]}"); //gebrbuik .get om dit resultaat te gebruiken
 		try {
 			JSONObject opgeslagenData = new JSONObject(load);
 			JSONArray array = opgeslagenData.getJSONArray("entries");
@@ -116,12 +120,68 @@ public class JSONConversion {
 		 SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 		 SharedPreferences.Editor editor = settings.edit();
 		    
-		 editor.putString("entriessync", result.toString());
+		 editor.putString(prefnaam, result.toString());
 		 //editor.remove("entriessync");
 
 		 // Commit the edits! 
-		 Log.i("saving unsycned entries",result.toString());
+		 Log.i(prefnaam,result.toString());
 		 editor.commit();
+	}
+	
+	static public void addStartEntryToSyncList(String json, Context context) {
+		add("startentry", json, context);
+	}
+	
+	static public void addNewProjectToSyncList(String json, Context context) {
+		add("newproject", json, context);
+	}
+	
+	static public void addEditProjectToSyncList(String json, Context context) {
+		add("editproject", json, context);
+	}
+	
+	static public void addDeleteProjectToSyncList(String json, Context context) {
+		add("deleteproject", json, context);
+	}
+	
+	static private ArrayList<String> get(String prefnaam,Context context) {
+		ArrayList<String> lijst = new ArrayList<String>();		
+		final String PREFS_NAME = "data";			
+		
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);		
+		String load = prefs.getString(prefnaam, "{\"entries\":[]}"); //gebrbuik .get om dit resultaat te gebruiken
+		JSONObject opgeslagenData;
+			try {
+				opgeslagenData = new JSONObject(load);
+				JSONArray array = opgeslagenData.getJSONArray("entries");
+				
+				for (int i = 0; i < array.length(); i++) {
+					JSONObject object = array.getJSONObject(i);
+					lijst.add(object.getString("entry"));				
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
+		return lijst;
+	}
+	
+	static public ArrayList<String> getDeleteProjectSyncList(String json, Context context) {
+		return get("deleteproject", context);
+	}
+	
+	static public ArrayList<String> getNewProjectSyncList(String json, Context context) {
+		return get("newproject", context);
+	}
+	
+	static public ArrayList<String> getEditProjectSyncList(String json, Context context) {
+		return get("editproject", context);
+	}
+	
+	static public ArrayList<String> getManualEntrySyncList(String json, Context context) {
+		return get("manualentry", context);
 	}
 	
 }
