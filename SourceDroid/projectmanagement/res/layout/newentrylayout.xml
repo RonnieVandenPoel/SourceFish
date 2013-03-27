@@ -1,8 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
     <TextView
         android:id="@+id/newentrytitle"
         android:layout_marginTop="10dp"
@@ -98,3 +102,5 @@
         android:onClick="startEntry"
         android:text="@string/start_new_entry" />
 </LinearLayout>
+
+    </ScrollView>
