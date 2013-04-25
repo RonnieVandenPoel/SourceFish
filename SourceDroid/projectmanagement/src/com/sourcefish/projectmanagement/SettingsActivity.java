@@ -31,6 +31,8 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 
 	private static final int SELECT_PICTURE = 1;
 	private static boolean loading=false;
+	private ImageLoader loader;
+	private String username;
 	
 	public boolean onOptionsItemSelected(MenuItem menuItem)
 	{
@@ -50,14 +52,14 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		ImageView iv=(ImageView) findViewById(R.id.imageViewUserPicture);
-		ImageLoader loader=new ImageLoader(this);
+		loader=new ImageLoader(this);
 		
 		AccountManager am = AccountManager.get(this);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
-		
+		username=accounts[0].name;
 		if(!loading)
 		{
-			loader.DisplayImage(accounts[0].name, iv);
+			loader.DisplayImage(username, iv);
 		}
 		
 		AsyncGet get=new AsyncGet(getApplicationContext());
@@ -99,6 +101,7 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 	            Log.i("imagepath",imageFilePath);
 	            loading=true;
 	            new AsyncChangePicture(this).execute(imageFilePath);
+	            
 	        }
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
@@ -127,6 +130,8 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 	@Override
 	public void getServerResponse(String s) {
 		// TODO Auto-generated method stub
+		ImageView iv=(ImageView) findViewById(R.id.imageViewUserPicture);
+		loader.DisplayImage(username, iv);
 		
 	}
 
