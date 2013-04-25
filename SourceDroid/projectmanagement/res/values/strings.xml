@@ -34,5 +34,7 @@
     <string name="editName">Project Name:</string>
     <string name="title_activity_project_edit">ProjectEditActivity</string>
     <string name="edit">Edit</string>
+    <string name="widgetmoodtext">TODO</string>
+    <string name="widgettext">Stop Project</string>
 
 </resources>
