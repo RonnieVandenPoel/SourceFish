@@ -208,6 +208,40 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		
 	}	
 	
+	public void deleteOfflineProject(final int elementId) {
+		final ProjectActivity act = this;
+		
+		
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE:
+		            //Yes button clicked
+		        	try {
+						int id = projects.get(elementId).getInt("online");
+						JSONConversion.deleteProject(getApplicationContext(), id);		
+						AsyncLoadServerJSON.reloadData(getApplicationContext());
+		    			updateList();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		            break;
+
+		        case DialogInterface.BUTTON_NEGATIVE:
+		            //No button clicked
+		            break;
+		        }
+		    }
+		};
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+		    .setNegativeButton("No", dialogClickListener).show();
+		
+		
+	}	
 	
 	public void deleteProject(final int elementId) {
 		final ProjectActivity act = this;
@@ -285,6 +319,25 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		    builder.setTitle("Project");
 	    
 			    switch(rechten) {
+			    case 0: //offline projecten
+			    	String[] opties0 = {"Open","Edit","Delete"};
+				    builder.setItems(opties0, new DialogInterface.OnClickListener() {
+				               public void onClick(DialogInterface dialog, int which) {
+				               switch (which) {
+				               case 0:
+				            	   openProject(elementId);
+				            	   break;
+				               case 1:
+				            	   editProject(elementId);
+				            	   break;
+				               case 2:
+				            	   AlertDialog alert = (AlertDialog) onOfflineDeleteCreateDialog(elementId);
+				            	   alert.show();
+				            	   break;
+				               }	               
+				           }
+				    });
+			    	break;
 			    case 1:
 			    	String[] opties1 = {"Open","Edit","Delete"};
 				    builder.setItems(opties1, new DialogInterface.OnClickListener() {
@@ -335,6 +388,27 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			return builder.create();
 		}
 	}
+	
+public Dialog onOfflineDeleteCreateDialog(final int elementId) {	
+		
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle("Project");
+	    
+	   
+	    	String[] opties = {"Delete","Cancel"};
+		    builder.setItems(opties, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int which) {
+		               switch (which) {
+		               case 0:
+		            	   deleteOfflineProject(elementId);
+		            	   break;
+		               case 1:		            	   
+		            	   break;		               
+		               }	               
+		           }
+		    });
+		    return builder.create();
+		}
 	
 	public Dialog onDeleteCreateDialog(final int elementId) {	
 		
@@ -411,11 +485,6 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
 		    .setNegativeButton("No", dialogClickListener).show();
-		
-		
-		
-		
-		
 	}
 	
 	private void openProject(int elementId) {
@@ -583,6 +652,7 @@ int tabInt = (Integer) tab.getTag();
 					offlineobject.put("description", desc.getText().toString());
 					offlineobject.put("client", cust.getText().toString());
 					offlineobject.put("online", projs.size());
+					offlineobject.put("rid", 0);
 					JSONConversion.addProject(getApplicationContext(), offlineobject);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

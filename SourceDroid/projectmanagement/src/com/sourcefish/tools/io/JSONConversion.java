@@ -21,6 +21,34 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
+	static public void deleteProject(Context context, int id) throws JSONException {
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
+		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
+		for (int i =0; i < array.length(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+			if (obj.getInt("online")!=id) {				
+				if (obj.getInt("online")>id) {
+					int temp = obj.getInt("online")-1;
+					obj.remove("online");
+					obj.put("online", temp);
+				}
+				objecten.add(obj);
+			}
+		}
+		JSONArray removedArray = new JSONArray();
+		for (JSONObject obj : objecten) {
+			removedArray.put(obj);
+		}
+		 SharedPreferences settings = context.getSharedPreferences("data", 0);
+		 SharedPreferences.Editor editor = settings.edit();
+		    
+		    editor.putString("json", removedArray.toString());
+		    //editor.remove(json);
+		      // Commit the edits! 
+		    editor.commit();
+	}
+	
 	static public void addProject(Context context,JSONObject json) throws JSONException {
 		SharedPreferences prefs = context.getSharedPreferences("data", 0);
 		
