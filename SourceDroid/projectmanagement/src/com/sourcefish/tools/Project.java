@@ -20,6 +20,7 @@ public class Project implements Serializable{
 	public ArrayList<Entry> entries = new ArrayList<Entry>();
 	public String owner;
 	public int rechtenId;
+	public int offlineId;
 	
 	public Project() {
 		//leeg project

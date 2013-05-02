@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.sourcefish.tools.AsyncServerPosts;
+import com.sourcefish.tools.ConnectionManager;
 import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
@@ -33,6 +34,7 @@ import com.sourcefish.tools.io.AsyncLoadServerJSON;
 import com.sourcefish.tools.io.JSONConversion;
 
 
+
 import android.os.Bundle;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -42,6 +44,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -529,39 +532,68 @@ int tabInt = (Integer) tab.getTag();
 		else {
 			String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\"}";
 			
-			AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.NEWPROJECT, this);
-			
-			StringEntity entity;
-			try {
-				entity = new StringEntity(json);
-				task.execute(entity);				
-				JSONObject result = new JSONObject(task.get());				
-				if (result.has("pid") && !(result.isNull("pid"))) {
-					this.name = "";
-					this.desc = "";
-					this.cust = "";
-					setNewValues();
-					AccountManager am = AccountManager.get(getApplicationContext());
-					Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
-					String user = accounts[0].name;
-					String pass = am.getPassword(accounts[0]);
-					AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
-					task2.execute("");
-					task2.get();
-					getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+	    	{
+				AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.NEWPROJECT, this);
+				
+				StringEntity entity;
+				try {
+					entity = new StringEntity(json);
+					task.execute(entity);				
+					JSONObject result = new JSONObject(task.get());				
+					if (result.has("pid") && !(result.isNull("pid"))) {
+						this.name = "";
+						this.desc = "";
+						this.cust = "";
+						setNewValues();
+						/*AccountManager am = AccountManager.get(getApplicationContext());
+						Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+						String user = accounts[0].name;
+						String pass = am.getPassword(accounts[0]);
+						AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
+						task2.execute("");
+						task2.get();*/
+						AsyncLoadServerJSON.reloadData(getApplicationContext());
+						getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
+					}
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	    	}
+			else {
+				String saved;
+				SharedPreferences prefs = getApplicationContext().getSharedPreferences("data", 0);
+				// then you use				
+				saved = prefs.getString("json", "[]");
+				ArrayList<JSONObject> projs = JSONConversion.getOfflineProjects(saved);					
+				JSONObject offlineobject = new JSONObject();
+				
+				try {
+					offlineobject.put("projectname", name.getText().toString());
+					offlineobject.put("description", desc.getText().toString());
+					offlineobject.put("client", cust.getText().toString());
+					offlineobject.put("online", projs.size());
+					JSONConversion.addProject(getApplicationContext(), offlineobject);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.name = "";
+				this.desc = "";
+				this.cust = "";
+				setNewValues();
+				AsyncLoadServerJSON.reloadData(getApplicationContext());
+				getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
 			}
 		}
 	}

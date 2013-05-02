@@ -315,7 +315,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					    	}
 					    	else
 					    	{
-					    		JSONConversion.addDeleteEntryToSyncList(removestring, getApplicationContext());
+					    		//offline
 					    	}
 					    	entryAdapter.remove(p.getClosedEntries().get(elementId));
 					    	p.entries.remove(p.entries.indexOf(p.getClosedEntries().get(elementId)));

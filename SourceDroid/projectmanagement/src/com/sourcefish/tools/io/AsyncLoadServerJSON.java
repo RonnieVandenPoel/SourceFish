@@ -26,7 +26,11 @@ public class AsyncLoadServerJSON extends AsyncTask<String, Integer, String>{
 	protected String doInBackground(String... params) {
 		String json;
 		
-		
+		/*
+		SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.remove("json");
+	    editor.commit();*/
 		
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		// then you use
