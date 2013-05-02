@@ -148,7 +148,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			e.printStackTrace();
 		}
 		
-		 Log.i("json", json);
+		// Log.i("json", json);
 		 projectArray = new JSONArray(json);
 		
 		 for (int i = 0; i < projectArray.length(); i++) {
@@ -187,13 +187,15 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		Project chosenProject = new Project();
 		Log.i("positie", "" + elementId);
 		JSONObject project = projects.get(elementId);
-		Log.i("positie", "" + project);    	
+		//Log.i("positie", "" + project);    	
 		
 		//strings van project data opslaan
 		try {
 			chosenProject.name = project.getString("projectname");
 			chosenProject.description = project.getString("description");	    				
 			chosenProject.customer = project.getString("client");	
+			chosenProject.offlineId = project.getInt("online");
+			chosenProject.listId = elementId;
 			chosenProject.id = project.getInt("pid");
 			
 		} catch (JSONException e) {
@@ -317,7 +319,10 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			
 		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setTitle("Project");
-	    
+		    if(!(ConnectionManager.getInstance(getApplicationContext()).isOnline()) && rechten == 1)
+	    	{
+		    	rechten = 2;
+	    	}
 			    switch(rechten) {
 			    case 0: //offline projecten
 			    	String[] opties0 = {"Open","Edit","Delete"};
@@ -491,7 +496,7 @@ public Dialog onOfflineDeleteCreateDialog(final int elementId) {
 		Project chosenProject;
 		Log.i("positie", "" + elementId);
 		JSONObject project = projects.get(elementId);
-		Log.i("positie", "" + project);
+		//Log.i("positie", "" + project);
 		
 		chosenProject = JSONConversion.getFilledProject(project);
 		

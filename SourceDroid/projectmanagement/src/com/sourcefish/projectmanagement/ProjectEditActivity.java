@@ -88,67 +88,65 @@ public class ProjectEditActivity extends NormalLayoutActivity implements ServerL
 			toast.show();			
 		}
 		else {
-			String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\",\"pid\":\"" + project.id + "\"}";
-			
-			AsyncTestConnectie test = new AsyncTestConnectie();
-			test.execute("");
-			/*boolean server = false;
-			try {
-				server = test.get();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ExecutionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-			if (server) {*/
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline() && this.project.offlineId == -1)
+	    	{
+				String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\",\"pid\":\"" + project.id + "\"}";
 				AsyncServerPosts task = new AsyncServerPosts(getApplicationContext(), Tasks.EDITPROJECT, this);
-				
-				StringEntity entity;
+					StringEntity entity;
+					try {
+						entity = new StringEntity(json);
+						task.execute(entity);				
+						JSONObject result = new JSONObject(task.get());				
+						if (result.has("error")) {
+							SourceFishConfig.alert(getApplicationContext(), "Error when editing project");
+						}
+						else {
+							SourceFishConfig.alert(getApplicationContext(), "Project edit succesful");
+						}
+						/*AccountManager am = AccountManager.get(getApplicationContext());
+						Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+						String user = accounts[0].name;
+						String pass = am.getPassword(accounts[0]);
+						AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
+						task2.execute("");
+						task2.get(); $*/
+						AsyncLoadServerJSON.reloadData(getApplicationContext());
+						Intent i = new Intent(getApplicationContext(), ProjectActivity.class);				
+						startActivity(i);
+						finish();
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				/*	
+				}
+				else {
+					JSONConversion.addEditProjectToSyncList(json, getApplicationContext());
+					//Project
+				}*/
+	    	}
+			else {
 				try {
-					entity = new StringEntity(json);
-					task.execute(entity);				
-					JSONObject result = new JSONObject(task.get());				
-					if (result.has("error")) {
-						SourceFishConfig.alert(getApplicationContext(), "Error when editing project");
-					}
-					else {
-						SourceFishConfig.alert(getApplicationContext(), "Project edit succesful");
-					}
-					/*AccountManager am = AccountManager.get(getApplicationContext());
-					Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
-					String user = accounts[0].name;
-					String pass = am.getPassword(accounts[0]);
-					AsyncDataLoad task2 = new AsyncDataLoad(user,pass,getApplicationContext());
-					task2.execute("");
-					task2.get(); $*/
-					AsyncLoadServerJSON.reloadData(getApplicationContext());
-					Intent i = new Intent(getApplicationContext(), ProjectActivity.class);				
-					startActivity(i);
-					finish();
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					JSONConversion.editProject(getApplicationContext(), this.project.listId, name.getText().toString(), cust.getText().toString(), desc.getText().toString());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			/*	
+				
+				AsyncLoadServerJSON.reloadData(getApplicationContext());
+				Intent i = new Intent(getApplicationContext(), ProjectActivity.class);				
+				startActivity(i);
+				finish();
 			}
-			else {
-				JSONConversion.addEditProjectToSyncList(json, getApplicationContext());
-				//Project
-			}*/
-			
-			
 		}
 	}
 
