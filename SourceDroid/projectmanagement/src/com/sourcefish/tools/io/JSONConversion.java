@@ -3,6 +3,7 @@ package com.sourcefish.tools.io;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -21,6 +22,82 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
+	static private void pushToServer(Context context, Activity activity) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
+		//eerste nieuwe projecten, daarna edits, daarna entries .get checks voor async voor elke functie, vergeet niet de juiste pid op te slaan
+		
+		
+		ArrayList<String> newEntryStrings = new ArrayList<String>();
+		ArrayList<String> editStrings = new ArrayList<String>();
+		
+		//String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\"}";
+		String json;
+		
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
+		for (int i =0; i < array.length(); i++) {		
+			JSONObject object = array.getJSONObject(i);
+			if (object.getInt("online")>=0) {
+				json = "{\"projectname\":\"" + object.getString("projectname") + "\",\"client\":\"" + object.getString("client") + "\",\"summary\":\"" + object.getString("description") + "\"}";
+				AsyncServerPosts task = new AsyncServerPosts(context, Tasks.NEWPROJECT, activity);
+				StringEntity entity = new StringEntity(json);
+				task.execute(entity);
+				JSONObject result = new JSONObject(task.get());				
+				if (result.has("pid") && !(result.isNull("pid"))) {
+					// maak string entity met entries en slaag op in array
+				}
+				else {
+					Log.i("syncerror", "error bij maken nieuw project");
+					return;
+				}
+			} else if (object.has("edit")) {
+				json = "{\"projectname\":\"" + object.getString("projectname") + "\",\"client\":\"" + object.getString("client") + "\",\"summary\":\"" + object.getString("description") + "\"}";
+				StringEntity entity = new StringEntity(json);
+				AsyncServerPosts task = new AsyncServerPosts(context, Tasks.EDITPROJECT, activity);
+				task.execute(entity);
+				JSONObject result = new JSONObject(task.get());	
+				if (result.has("error")) {
+					Log.i("errorsynceditis",result.getString("error"));
+					return;
+				}
+			}
+			
+			//entries pushen die in neiuwe offline projecten zaten
+		}
+		
+		deleteDataNaSync(context);
+	}
+	
+	static private void deleteDataNaSync(Context context) {
+		SharedPreferences settings = context.getSharedPreferences("data", 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.remove("json");	    
+	    editor.commit();
+	    AsyncLoadServerJSON.reloadData(context);
+	}
+	
+	static public boolean checkSync(Context context) throws JSONException { //DEZE FUNCTIE MOET NOG WORDEN GE UPDATE
+		boolean allesIsGescynt = true;
+		
+		//check of er nieuwe projecten zijn
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
+		for (int i =0; i < array.length(); i++) {
+			JSONObject object = array.getJSONObject(i);
+			if (object.getInt("online") >= 0) {
+				allesIsGescynt = false;
+				return allesIsGescynt;
+			}
+			else if (object.has("edit")) {
+				allesIsGescynt = false;
+				return allesIsGescynt;
+			}		
+			/*else if () { ENTRY CHECK CODE VOOR ONLINE PROJECTEN
+				
+			}*/
+		}
+		return allesIsGescynt;
+	}
+	
 	static public void editProject(Context context, int id, String naam, String klant, String desc) throws JSONException {
 		SharedPreferences prefs = context.getSharedPreferences("data", 0);
 		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
