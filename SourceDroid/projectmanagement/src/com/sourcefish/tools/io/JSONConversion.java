@@ -22,6 +22,13 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
+	static private void addOfflineEntry(String notities,int offlineId,Timestamp now, Timestamp end) {
+		
+	}
+	static private void addOnlineEntry(String notities,int projectId,Timestamp now, Timestamp end) {
+		
+	}
+	
 	static private void pushToServer(Context context, Activity activity) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
 		//eerste nieuwe projecten, daarna edits, daarna entries .get checks voor async voor elke functie, vergeet niet de juiste pid op te slaan
 		

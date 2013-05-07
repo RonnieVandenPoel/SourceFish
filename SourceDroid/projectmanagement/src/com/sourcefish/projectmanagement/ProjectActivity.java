@@ -668,6 +668,7 @@ int tabInt = (Integer) tab.getTag();
 				this.cust = "";
 				setNewValues();
 				AsyncLoadServerJSON.reloadData(getApplicationContext());
+				Log.i("debug","lol");
 				getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
 			}
 		}
