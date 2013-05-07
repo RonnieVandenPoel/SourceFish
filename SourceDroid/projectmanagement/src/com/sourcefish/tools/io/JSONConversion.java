@@ -22,10 +22,10 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
-	static private void addOfflineEntry(String notities,int offlineId,Timestamp now, Timestamp end) {
+	static public void addOfflineEntry(String notities,int offlineId,Timestamp now, Timestamp end) {
 		
 	}
-	static private void addOnlineEntry(String notities,int projectId,Timestamp now, Timestamp end) {
+	static public void addOnlineEntry(String notities,int projectId,Timestamp now, Timestamp end) {
 		
 	}
 	

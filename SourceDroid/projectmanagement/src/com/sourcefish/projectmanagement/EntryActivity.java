@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TooManyListenersException;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -197,7 +198,19 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 				e.printStackTrace();
 			}
 			entity.setContentType("application/json");
-			new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(entity);
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+			{
+				new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(entity);
+			}
+			else
+			{
+				if(p.offlineId < 0) //online
+					JSONConversion.addOnlineEntry(description, p.id, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
+					//new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(entity);
+				else //offline
+					JSONConversion.addOfflineEntry(description, p.offlineId, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
+					//TODO
+			}
 			dateTimeEnd = Calendar.getInstance();
 			dateTimeStart = Calendar.getInstance();
 			et.setText("");
@@ -601,7 +614,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			}
 			else
 			{
-				create = new String("{\"begin\":\"" + now  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
+				create = new String("{\"begin\":\"" + start  + "\",\"notities\":\"" + description + "\",\"pid\":\"" + p.id + "\",\"eind\":\"" + end + "\"}");
 				closedEntry = new Entry(start, description, end, new User(SourceFishConfig.getUserName(getApplicationContext()), 0), "20");
 				p.entries.add(closedEntry);
 			}
