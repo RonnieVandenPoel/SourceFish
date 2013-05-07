@@ -31,6 +31,7 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
+import com.sourcefish.tools.io.AsyncReloadData;
 import com.sourcefish.tools.io.JSONConversion;
 
 
@@ -666,9 +667,22 @@ int tabInt = (Integer) tab.getTag();
 				this.name = "";
 				this.desc = "";
 				this.cust = "";
+				Log.i("debug","lol1");
 				setNewValues();
+				Log.i("debug","lol2");
 				AsyncLoadServerJSON.reloadData(getApplicationContext());
-				Log.i("debug","lol");
+				/*AsyncReloadData taak = new AsyncReloadData();
+				taak.execute(getApplicationContext());
+				try {
+					taak.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				Log.i("debug","lol3");
 				getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
 			}
 		}
