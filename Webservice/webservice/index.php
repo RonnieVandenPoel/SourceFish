@@ -21,7 +21,7 @@ try{
 	
 	foreach($result as $value)
 	{
-		$arrAuthentication[$value[0]]=$value[1];	
+		$arrAuthentication[$value[0]]=$value[1];
 	}
 }
 

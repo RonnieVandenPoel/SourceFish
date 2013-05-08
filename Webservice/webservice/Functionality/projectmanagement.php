@@ -80,9 +80,15 @@ $app->post("/changeProject",function() use($app)
 	//pid,name,customer,description
 	if($rid=="1")
 	{
-		$sql="UPDATE tbl_project SET projectnaam='$data->projectname', opdrachtgever='$data->client', omschrijving='$data->summary' 
+		$sql="UPDATE tbl_project SET projectnaam='$data->projectname', opdrachtgever='$data->client', omschrijving='".mysql_real_escape_string($data->summary)."'
 		WHERE pid='$data->pid'";
-		
+
+        /*
+         * echo $sql="UPDATE tbl_project SET projectnaam='".mysql_real_escape_string(stripslashes($data->projectname))."', opdrachtgever='".
+            mysql_real_escape_string(stripslashes($data->client))
+            ."', omschrijving='".mysql_real_escape_string(stripslashes($data->summary))."'WHERE pid='$data->pid'";
+         */
+
 		try{
 			$db=getConnection();
 			$statement=$db->prepare($sql);

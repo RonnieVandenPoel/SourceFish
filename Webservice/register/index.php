@@ -118,10 +118,10 @@ function tryConnect()
 function getConnection()
 {
 	
-	$dbhost='localhost';
-	$user='189356';
+	$dbhost='maartendr.be.mysql';
+	$user='maartendr_be';
 	$pw='S0urcef1sh';
-	$dbname='189356';
+	$dbname='maartendr_be';
 	$dbh=new PDO("mysql:host=$dbhost;dbname=$dbname",$user,$pw);
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;
