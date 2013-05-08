@@ -49,7 +49,7 @@ public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.i("online data", array.toString());
+		//Log.i("online data", array.toString());
 		// We need an Editor object to make preference changes.
 	    // All objects are from android.context.Context
 	    SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);

@@ -21,6 +21,7 @@ public class Project implements Serializable{
 	public String owner;
 	public int rechtenId;
 	public int offlineId;
+	public int listId;
 	
 	public Project() {
 		//leeg project

@@ -31,6 +31,7 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
+import com.sourcefish.tools.io.AsyncReloadData;
 import com.sourcefish.tools.io.JSONConversion;
 
 
@@ -148,7 +149,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			e.printStackTrace();
 		}
 		
-		 Log.i("json", json);
+		// Log.i("json", json);
 		 projectArray = new JSONArray(json);
 		
 		 for (int i = 0; i < projectArray.length(); i++) {
@@ -187,13 +188,15 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		Project chosenProject = new Project();
 		Log.i("positie", "" + elementId);
 		JSONObject project = projects.get(elementId);
-		Log.i("positie", "" + project);    	
+		//Log.i("positie", "" + project);    	
 		
 		//strings van project data opslaan
 		try {
 			chosenProject.name = project.getString("projectname");
 			chosenProject.description = project.getString("description");	    				
 			chosenProject.customer = project.getString("client");	
+			chosenProject.offlineId = project.getInt("online");
+			chosenProject.listId = elementId;
 			chosenProject.id = project.getInt("pid");
 			
 		} catch (JSONException e) {
@@ -317,7 +320,10 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			
 		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setTitle("Project");
-	    
+		    if(!(ConnectionManager.getInstance(getApplicationContext()).isOnline()) && rechten == 1)
+	    	{
+		    	rechten = 2;
+	    	}
 			    switch(rechten) {
 			    case 0: //offline projecten
 			    	String[] opties0 = {"Open","Edit","Delete"};
@@ -491,7 +497,7 @@ public Dialog onOfflineDeleteCreateDialog(final int elementId) {
 		Project chosenProject;
 		Log.i("positie", "" + elementId);
 		JSONObject project = projects.get(elementId);
-		Log.i("positie", "" + project);
+		//Log.i("positie", "" + project);
 		
 		chosenProject = JSONConversion.getFilledProject(project);
 		
@@ -661,8 +667,22 @@ int tabInt = (Integer) tab.getTag();
 				this.name = "";
 				this.desc = "";
 				this.cust = "";
+				Log.i("debug","lol1");
 				setNewValues();
+				Log.i("debug","lol2");
 				AsyncLoadServerJSON.reloadData(getApplicationContext());
+				/*AsyncReloadData taak = new AsyncReloadData();
+				taak.execute(getApplicationContext());
+				try {
+					taak.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				Log.i("debug","lol3");
 				getSupportActionBar().selectTab(getSupportActionBar().getTabAt(0));
 			}
 		}
