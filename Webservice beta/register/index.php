@@ -12,6 +12,17 @@ $app= new \Slim\Slim();
 
 $app->contentType("application/json");
 $app->get('/tryConnect','tryConnect');
+
+function unique_salt()
+{
+    return substr(sha1(mt_rand()),0,22);
+}
+
+function goodhash($password)
+{
+    return crypt($password,'$2a$10$'.unique_salt());
+}
+
 $app->post('/registerUser',function() use ($app)
 {
 	$request = $app->request();
@@ -21,30 +32,18 @@ $app->post('/registerUser',function() use ($app)
 	
 	$data=json_decode($body);
 	
-	$key=md5(microtime());
+	/*$key=md5(microtime());
 	$eid=md5($data->username . "@S0urc3F1sh!*!");
-	$sql0="SELECT AES_ENCRYPT('$data->password','$key') AS crypt";
-	
+	$sql0="SELECT AES_ENCRYPT('$data->password','$key') AS crypt";*/
+
 	//echo $sql0;
 	$db=getConnection();
 	//echo "- 1 -";
 	try{
-		
-		$stmt0=$db->query($sql0);
-		$pass=$stmt0->fetchColumn();
-		//echo $pass;
-		//$pass=str_replace("'", "''", $pass);
-		
-		echo "email".$data->username;
-		echo "passwoord".$data->password;
-		
+
 		$sql0="SELECT 'Username/email al in gebruik' FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$data->username')";
-		//$sql1="INSERT INTO tbl_gebruiker(`uname`,`email`,`wachtwoord`,`voornaam`,`achternaam`) VALUES ('$data->username','$data->email','$pass','$data->firstname','$data->lastname')";
-		$sql1="INSERT INTO tbl_gebruiker(`uname`,`wachtwoord`) VALUES ('$data->username','$pass')";
-		$sql2="INSERT INTO encrypt(`eid`,`key`) VALUES ('$eid','$key')";
-		/*echo "eid:$eid, key:$key";
-		echo $sql1;
-		echo "2";*/
+		$sql1="INSERT INTO tbl_gebruiker(`uname`,`wachtwoord`) VALUES ('$data->username','".goodhash($data->password)."')";
+
 		
 		$result=$db->query($sql0)->fetchColumn();
 		
@@ -60,11 +59,11 @@ $app->post('/registerUser',function() use ($app)
 		echo "4";*/
 		$db->exec($sql1);
 		//echo "5";
-		$db->exec($sql2);
+		//$db->exec($sql2);
 		//echo $sql2;
 		//echo "6";
-		$msg="A user account for you has been created, use your username $data->username to login!";
-		mail($data->username,"An account has been made for you, with username = $data->username!",$msg,"Registration service<registration@projecten3.eu5.org\r\n");
+		//$msg="A user account for you has been created, use your username $data->username to login!";
+		//mail($data->username,"An account has been made for you, with username = $data->username!",$msg,"Registration service<registration@projecten3.eu5.org\r\n");
 		//echo json_encode($data);
 		//echo "7";		
 		$db->commit();
@@ -118,10 +117,10 @@ function tryConnect()
 function getConnection()
 {
 	
-	$dbhost='maartendr.be.mysql';
-	$user='maartendr_be';
+	$dbhost='localhost';
+	$user='root';
 	$pw='S0urcef1sh';
-	$dbname='maartendr_be';
+	$dbname='projecten';
 	$dbh=new PDO("mysql:host=$dbhost;dbname=$dbname",$user,$pw);
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;

@@ -7,34 +7,76 @@ require 'Slim/Middleware/HttpDigestAuth.php';
 
 $app=new \Slim\Slim();
 
-include 'Functionality/helper.php';
 //authentication
 $arrAuthentication=array();
 //get authentication from database
+
+function check_password($hash, $password) {
+
+    $full_salt = substr($hash, 0, 29);
+
+    $new_hash = crypt($password, $full_salt);
+
+    return ($hash == $new_hash);
+
+}
+
+function getUserIdFromCredentials($username,$password)
+{
 try{
 	$db=getConnection();
-	$query="SELECT LOWER(uname), AES_DECRYPT( wachtwoord,  `key` ) 
-	FROM tbl_gebruiker, encrypt
-	WHERE eid = MD5( CONCAT( uname,  '@S0urc3F1sh!*!' ) ) ";
+	$query="SELECT wachtwoord
+	FROM tbl_gebruiker WHERE lower(uname)=lower('$username')";
 	$statement=$db->query($query);
-	$result=$statement->fetchAll();
-	
-	foreach($result as $value)
-	{
-		$arrAuthentication[$value[0]]=$value[1];
-	}
+	$hash=$statement->fetchColumn();
+
+    if(check_password($hash,$password))
+    {
+        $userid=$username;
+    }
+
 }
 
 catch(PDOException  $ex)
 {
 	echo json_encode(array("error"=>$ex->getMessage()));
 }
+    return $userid;
+}
 
 
-$app->add(new HttpDigestAuth($arrAuthentication));
+$authenticateFromCredentials = function () use ($app) {
+    return function ($route) use ($app) {
 
-$app->get('/tryLogin','tryLogin');
-$app->get('/getData','getAllUserData');
+        $username = $app->request()->headers('PHP_AUTH_USER');
+        $password = $app->request()->headers('PHP_AUTH_PW');
+
+        if (!isset($username) || !isset($password)) {
+            $app->response()->header('WWW-Authenticate', 'Basic realm="User specific Area"');
+            $app->halt(401, "No crendentials supplied!");
+        }
+
+        $userId = getUserIdFromCredentials($username, $password);
+
+        if ($userId === FALSE) {
+            $app->response()->header('WWW-Authenticate', 'Basic realm="User specific Area"');
+            $app->halt(401, "Invalid login");
+        }
+
+        $routeParams = $route->getParams();
+
+        if (!is_array($routeParams)) {
+            $routeParams = array();
+        }
+
+        array_push($routeParams, $userId);  // <== could load the user object from the DB (or cache)
+
+        $route->setParams($routeParams);
+    };
+};
+
+$app->get('/tryLogin',$authenticateFromCredentials(),'tryLogin');
+$app->get('/getData',$authenticateFromCredentials(),'getAllUserData');
 
 
 $app->contentType("application/json");
@@ -51,6 +93,12 @@ function tryLogin()
 		echo json_encode(array("error"=>$ex->getMessage()));
 	}
 }
+
+function getUsername()
+{
+
+        return $_SERVER['PHP_AUTH_USER'];
+};
 
 function getAllUserData()
 {
@@ -132,6 +180,185 @@ function getAllUserData()
 	}
 	
 	
+}
+
+//helper methods
+
+//helper methods
+function getConnection()
+{
+
+    $dbhost='localhost';
+    $user='root';
+    $pw='S0urcef1sh';
+    $dbname='projecten';
+    $dbh=new PDO("mysql:host=$dbhost;dbname=$dbname",$user,$pw);
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $dbh;
+}
+
+function pidExists($pid)
+{
+    $sql="SELECT 'OK' FROM tbl_project WHERE pid='$pid'";
+    $db=getConnection();
+
+    try{
+        if($db->query($sql)->fetchColumn()=='OK'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>"problem checking if project excists"));
+    }
+}
+
+function uidExists($uid)
+{
+    $sql="SELECT 'OK' FROM tbl_gebruiker where uid='$uid'";
+
+    $db=getConnection();
+
+    try{
+        $statement=$db->query($sql);
+        if($statement->fetchColumn()=='OK'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>"problem checking if uid excists"));
+        //echo json_encode(array("error"=>$ex->getMessage()));
+    }
+}
+
+
+function unameExists($uname)
+{
+    $sql="SELECT 'OK' FROM tbl_gebruiker where uname='$uname'";
+
+    $db=getConnection();
+
+    try{
+        if($db->query($sql)->fetchColumn()=='OK'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>"problem checking if uid excists"));
+    }
+}
+
+function getUserID($username=null)
+{
+    if($username==null)
+        $username=getUsername();
+
+    $sql="SELECT uid FROM tbl_gebruiker WHERE LOWER(uname)=LOWER('$username')";
+    $db=getConnection();
+
+    try
+    {
+        $statement=$db->query($sql);
+        $uid_result=$statement->fetch(PDO::FETCH_NUM);
+        return $uid_result[0];
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+    }
+}
+
+
+function isUser_inProject($pid,$uid=null,$direct=null)
+{
+    $db=getConnection();
+    $sql="SELECT rid FROM tbl_projectgebruiker WHERE uid='" . (!$uid ? getUserID() : $uid) . "' AND pid='$pid'";
+
+    try{
+        $statement=$db->query($sql);
+        $rid_result=$statement->fetch(PDO::FETCH_NUM);
+        if($direct==1)
+            echo json_encode(array("result"=>$rid_result[0]));
+        else
+            return isset($rid_result[0]);
+    }
+    catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+        return false;
+    }
+}
+
+function getPUID_AND_RID($pid)
+{
+    $uid=getUserID();
+    $sql="SELECT rid,puid FROM tbl_projectgebruiker WHERE uid='".$uid."' AND pid='$pid'";
+    $con=getConnection();
+    try{
+        $statement=$con->query($sql);
+        $result=$statement->fetchAll();
+        $rid=$result[0][0];
+        $puid=$result[0][1];
+        return array($puid,$rid);
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+    }
+}
+
+function getRid($pid,$uname)
+{
+    $sql="SELECT rid FROM tbl_projectgebruiker WHERE uid='".getUserId($uname)."' AND pid='$pid'";
+    $con=getConnection();
+    try{
+        $statement=$con->query($sql);
+        $result=$statement->fetchAll();
+        $rid=$result[0][0];
+        //echo json_encode(array("rid"=>$rid));
+        return $rid;
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+    }
+
+}
+
+function getPUID_AND_RID_byUser($pid,$uid)
+{
+    $sql="SELECT rid,puid FROM tbl_projectgebruiker WHERE uid='".$uid."' AND pid='$pid'";
+    $con=getConnection();
+    try{
+        $statement=$con->query($sql);
+        $result=$statement->fetchAll();
+        $rid=$result[0][0];
+        $puid=$result[0][1];
+        return array($puid,$rid);
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+    }
+}
+
+function getIsClosed($pid)
+{
+    $sql="SELECT pid FROM tbl_project WHERE pid='$pid' AND einddatum IS NOT NULL";
+    $db=getConnection();
+
+    try{
+        $statement=$db->prepare($sql);
+        $statement->execute();
+        return $statement->rowCount()>0;
+    }catch(PDOException $ex)
+    {
+        echo json_encode(array("error"=>$ex->getMessage()));
+    }
 }
 
 include 'Functionality/rapportage.php';

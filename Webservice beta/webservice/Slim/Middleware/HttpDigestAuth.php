@@ -1,4 +1,5 @@
 <?php
+//modified!
 /**
  * HTTP Digest Authentication
 *
@@ -58,7 +59,10 @@ class HttpDigestAuth extends Middleware {
 	 * @param   string  $realm      The HTTP Authentication realm
 	 * @return  void
 	 */
-	public function __construct( $credentials, $realm = 'Protected Area' ) {
+
+
+
+    public function __construct( $credentials, $realm = 'Protected Area' ) {
 
 
 		$this->credentials = $credentials;
