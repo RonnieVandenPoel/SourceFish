@@ -36,6 +36,7 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		
 		HttpClient client=new DefaultHttpClient();
 		HttpPost post=new HttpPost("http://projecten3.eu5.org/register/registerUser");
+		//HttpPost post=new HttpPost("http://projecten3.eu5.org/register/registerUser");
 		try {
 			StringEntity entity=new StringEntity("{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
 			Log.i("jsoninput","{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
