@@ -691,24 +691,33 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 
 	@Override
 	public void getServerResponse(String s) {
-		JSONObject jsonObject = null;
-		try {
-			jsonObject = new JSONObject(s);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		
+		if(ConnectionManager.getInstance(getApplicationContext()).isOnline())
+		{
+			JSONObject jsonObject = null;
+			try {
+				jsonObject = new JSONObject(s);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	
+			try {
+				if(jsonObject.has("trid") && openEntry != null)
+					openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+	
+				if(jsonObject.has("trid") && closedEntry != null)
+					closedEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
-		try {
-			if(jsonObject.has("trid") && openEntry != null)
-				openEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
-
-			if(jsonObject.has("trid") && closedEntry != null)
-				closedEntry.entryid = Integer.toString(jsonObject.getInt("trid"));
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		else
+		{
+			Toast toast=Toast.makeText(this, "No connectivity", Toast.LENGTH_LONG);
+			toast.show();
 		}
 	}
 
