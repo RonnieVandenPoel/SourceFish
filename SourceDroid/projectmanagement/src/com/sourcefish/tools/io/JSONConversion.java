@@ -28,13 +28,52 @@ public class JSONConversion {
 		entry.put("edit", 1);
 		entry.put("start",now.toString());
 		entry.put("start",end.toString());
+		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
+		JSONObject teSavenObject = new JSONObject();
 		
 		SharedPreferences prefs = context.getSharedPreferences("data", 0);
 		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
 		
-	}
-	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) {
+		for (int i =0; i < array.length(); i++) {		
+			JSONObject object = array.getJSONObject(i);
+			if (object.getInt("online")==offlineId) {
+				JSONArray entries = object.getJSONArray("entries");
+				entries.put(entry);
+				teSavenObject.put("description", object.get("description"));
+				teSavenObject.put("projectname", object.get("projectname"));
+				teSavenObject.put("client", object.get("client"));
+				teSavenObject.put("rid", 0);
+				teSavenObject.put("offlineid", offlineId);
+				teSavenObject.put("entries", entries);
+				objecten.add(teSavenObject);
+			}
+			else {
+				objecten.add(object);
+			}
+		}
 		
+		JSONArray newJson = new JSONArray();
+		for (JSONObject obj : objecten) {
+			newJson.put(obj);
+		}
+		
+		
+		SharedPreferences settings = context.getSharedPreferences("data", 0);
+		SharedPreferences.Editor editor = settings.edit();
+	    
+	    editor.putString("json", newJson.toString());
+	   
+	      // Commit the edits! 
+	    editor.commit();
+	}
+	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) throws JSONException {
+		JSONObject entry = new JSONObject();
+		entry.put("notes", notities);
+		entry.put("edit", 1);
+		entry.put("start",now.toString());
+		entry.put("start",end.toString());
+		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
+		JSONObject teSavenObject = new JSONObject();
 	}
 	
 	static private void pushToServer(Context context, Activity activity) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
