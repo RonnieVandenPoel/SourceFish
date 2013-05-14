@@ -1,5 +1,7 @@
 package com.sourcefish.projectmanagement;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -64,6 +66,21 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			break;
 		}
 		return true;
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		//test
+				AccountManager am = AccountManager.get(getApplicationContext());
+				Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+				if(accounts==null||accounts.length==0||accounts[0]==null)
+				{
+					Intent i=new Intent(getApplicationContext(),MainActivity.class);
+					startActivity(i);
+					this.finish();
+				}
+				super.onResume();
 	}
 	
 	public Dialog onCreateDialog(final int elementId) {
