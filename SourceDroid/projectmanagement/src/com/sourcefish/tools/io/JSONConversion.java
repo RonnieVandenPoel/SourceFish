@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,11 +25,15 @@ import com.sourcefish.tools.User;
 
 public class JSONConversion {
 	static public void addOfflineEntry(Context context,String notities,int offlineId,Timestamp now, Timestamp end) throws JSONException {
+		AccountManager am = AccountManager.get(context);
+		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		JSONObject entry = new JSONObject();
 		entry.put("notes", notities);
 		entry.put("edit", 1);
 		entry.put("start",now.toString());
 		entry.put("end",end.toString());
+		entry.put("entryowner",accounts[0].name);
+		entry.put("trid", 1);
 		Log.i("single entry", entry.toString());
 		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
 		JSONObject teSavenObject = new JSONObject();
@@ -46,7 +52,7 @@ public class JSONConversion {
 				teSavenObject.put("client", object.get("client"));
 				teSavenObject.put("rid", 0);
 				teSavenObject.put("online", offlineId);
-				teSavenObject.put("entries", entries);
+				teSavenObject.put("entries", entries);				
 				Log.i("te svaen obj",teSavenObject.toString());
 				objecten.add(teSavenObject);
 			}
@@ -70,13 +76,7 @@ public class JSONConversion {
 	    editor.commit();
 	}
 	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) throws JSONException {
-		JSONObject entry = new JSONObject();
-		entry.put("notes", notities);
-		entry.put("edit", 1);
-		entry.put("start",now.toString());
-		entry.put("start",end.toString());
-		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
-		JSONObject teSavenObject = new JSONObject();
+		
 	}
 	
 	static private void pushToServer(Context context, Activity activity) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
