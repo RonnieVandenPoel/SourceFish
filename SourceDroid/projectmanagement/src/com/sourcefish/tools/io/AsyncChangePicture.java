@@ -25,6 +25,7 @@ import org.apache.http.protocol.HTTP;
 
 import com.fedorvlasov.lazylist.ImageLoader;
 import com.sourcefish.projectmanagement.R;
+import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.accounts.Account;
@@ -55,7 +56,7 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
 		DefaultHttpClient client = SourceFishHttpClient.getClient(accounts[0].name, am.getPassword(accounts[0]));
-		HttpPost post=new HttpPost("http://projecten3.eu5.org/webservice/setProfilePicture");
+		HttpPost post=new HttpPost(SourceFishConfig.getBaseURL()+"/setProfilePicture");
 		//MultipartEntity entity= new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 		//File image=new File(imagelocation);
 		//entity.addPart("image", new FileBody(image));

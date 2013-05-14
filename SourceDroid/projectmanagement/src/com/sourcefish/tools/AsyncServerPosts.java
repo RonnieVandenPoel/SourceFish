@@ -54,37 +54,37 @@ public class AsyncServerPosts extends AsyncTask<StringEntity, Void, String>{
 		HttpPost post = null;
 		switch (task) {
 		case NEWENTRY:
-			post = new HttpPost("http://projecten3.eu5.org/webservice/newEntry");
+			post = new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/newEntry");
 			break;
 		case MANUALENTRY:
-			post = new HttpPost("http://projecten3.eu5.org/webservice/manualEntry");
+			post = new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/manualEntry");
 			break;
 		case NEWPROJECT:
-			post = new HttpPost("http://projecten3.eu5.org/webservice/addProject");
+			post = new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/addProject");
 			break;
 		case STOPENTRY:
-			post = new HttpPost("http://projecten3.eu5.org/webservice/closeEntry");
+			post = new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/closeEntry");
 			break;
 		case DELETEENTRY:
-			post = new HttpPost("http://projecten3.eu5.org/webservice/deleteEntry");
+			post = new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/deleteEntry");
 			break;
 		case UPDATEUSER:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/updateUser");
+			post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/updateUser");
 			break;
 		case ADDUSERTOPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/addProjectUser");
+			post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/addProjectUser");
 			break;
 		case DELETEPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/deleteProject");
+			post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/deleteProject");
 			break;
 		case EDITPROJECT:
-				post=new HttpPost("http://projecten3.eu5.org/webservice/changeProject");
+				post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/changeProject");
 				break;
 		case LEAVEPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/leaveProject");
+			post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/leaveProject");
 			break;
 		case REMOVEUSERFROMPROJECT:
-			post=new HttpPost("http://projecten3.eu5.org/webservice/removeProjectUser");
+			post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/removeProjectUser");
 			break;
 		
 		default:

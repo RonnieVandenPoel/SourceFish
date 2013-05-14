@@ -20,7 +20,7 @@ public class AsyncTestConnectie extends AsyncTask<String, Integer, Boolean>{
 			
 			DefaultHttpClient client=new DefaultHttpClient();
 			HttpGet getRequest = new HttpGet(
-					"http://projecten3.eu5.org/register/tryConnect");
+					SourceFishConfig.getBaseURL()+"/tryConnect");
 			
 			HttpResponse resp = null;
 			try {

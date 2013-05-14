@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.content.Context;
@@ -34,7 +35,7 @@ public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
 		DefaultHttpClient client = SourceFishHttpClient.getClient(username, password);
 		
 		HttpGet getRequest = new HttpGet(
-				"http://projecten3.eu5.org/webservice/getData");
+				SourceFishConfig.getBaseURL()+"/webservice/getData");
 		try{
 		HttpResponse resp = client.execute(getRequest);
 		

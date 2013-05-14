@@ -9,6 +9,9 @@ public class SourceFishConfig {
 	public static int MAINTHEME = com.actionbarsherlock.R.style.Sherlock___Theme;
 	public static String PREFFILE = "SourceFishPrefs";
 	public static int THEMEDIALOG = 13234588;
+	private static String BASE_URL="http://projecten3.eu5.org";
+	
+	
 	
 	static public void alert(Context context, String msg) {
 		Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
@@ -60,4 +63,11 @@ public class SourceFishConfig {
 		}
 		return null;
 	}
+	
+	public static String getBaseURL()
+	{
+		return BASE_URL;
+	}
+	
+	
 }

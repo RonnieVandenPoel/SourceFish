@@ -11,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.app.ProgressDialog;
@@ -61,7 +62,7 @@ public class AsyncLoginCheck extends AsyncTask<Void, Void, Boolean>{
 			DefaultHttpClient client= SourceFishHttpClient.getClient(username, password);
 			
 			//Do not use localhost, because that would be the localhost of your phone. Use your IP!
-			HttpGet httpget = new HttpGet("http://projecten3.eu5.org/webservice/tryLogin");
+			HttpGet httpget = new HttpGet(SourceFishConfig.getBaseURL()+"/webservice/tryLogin");
 			// Execute HTTP Post Request
 			HttpResponse response = client.execute(httpget);
 
