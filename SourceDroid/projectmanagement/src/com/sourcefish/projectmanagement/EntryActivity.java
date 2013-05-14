@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -668,6 +670,8 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 	
 	@Override
 	protected void onResume() {
+		
+		
 		
 		SharedPreferences prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
 		int tab = 0;
