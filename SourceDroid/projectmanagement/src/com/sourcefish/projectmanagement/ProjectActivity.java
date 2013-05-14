@@ -658,6 +658,8 @@ int tabInt = (Integer) tab.getTag();
 					offlineobject.put("description", desc.getText().toString());
 					offlineobject.put("client", cust.getText().toString());
 					offlineobject.put("online", projs.size());
+					JSONArray array = new JSONArray();
+					offlineobject.put("entries", array);
 					offlineobject.put("rid", 0);
 					JSONConversion.addProject(getApplicationContext(), offlineobject);
 				} catch (JSONException e) {
