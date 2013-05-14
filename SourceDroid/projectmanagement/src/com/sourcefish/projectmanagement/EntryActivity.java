@@ -205,10 +205,15 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 			else
 			{
 				if(p.offlineId < 0) //online
-					JSONConversion.addOnlineEntry(description, p.id, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
+					JSONConversion.addOnlineEntry(getApplicationContext(),description, p.id, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
 					//new AsyncServerPosts(getApplicationContext(), Tasks.MANUALENTRY, this).execute(entity);
-				else //offline
-					JSONConversion.addOfflineEntry(description, p.offlineId, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
+				else
+					try {
+						JSONConversion.addOfflineEntry(getApplicationContext(),description, p.offlineId, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					//TODO
 			}
 			dateTimeEnd = Calendar.getInstance();

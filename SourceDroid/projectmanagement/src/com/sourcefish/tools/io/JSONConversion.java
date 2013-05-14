@@ -22,10 +22,18 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
-	static public void addOfflineEntry(String notities,int offlineId,Timestamp now, Timestamp end) {
+	static public void addOfflineEntry(Context context,String notities,int offlineId,Timestamp now, Timestamp end) throws JSONException {
+		JSONObject entry = new JSONObject();
+		entry.put("notes", notities);
+		entry.put("edit", 1);
+		entry.put("start",now.toString());
+		entry.put("start",end.toString());
+		
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
 		
 	}
-	static public void addOnlineEntry(String notities,int projectId,Timestamp now, Timestamp end) {
+	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) {
 		
 	}
 	
