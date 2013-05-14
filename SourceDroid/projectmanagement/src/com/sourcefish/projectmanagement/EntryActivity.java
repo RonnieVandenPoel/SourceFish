@@ -213,6 +213,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 					}
 				else
 					try {
+						Log.i("offlineid", "" + p.offlineId);
 						JSONConversion.addOfflineEntry(getApplicationContext(),description, p.offlineId, new Timestamp(dateTimeStart.getTimeInMillis()), new Timestamp(dateTimeEnd.getTimeInMillis()));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block

@@ -27,7 +27,8 @@ public class JSONConversion {
 		entry.put("notes", notities);
 		entry.put("edit", 1);
 		entry.put("start",now.toString());
-		entry.put("start",end.toString());
+		entry.put("end",end.toString());
+		Log.i("single entry", entry.toString());
 		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
 		JSONObject teSavenObject = new JSONObject();
 		
@@ -36,6 +37,7 @@ public class JSONConversion {
 		
 		for (int i =0; i < array.length(); i++) {		
 			JSONObject object = array.getJSONObject(i);
+			Log.i("online",object.getString("online"));
 			if (object.getInt("online")==offlineId) {
 				JSONArray entries = object.getJSONArray("entries");
 				entries.put(entry);
@@ -43,8 +45,9 @@ public class JSONConversion {
 				teSavenObject.put("projectname", object.get("projectname"));
 				teSavenObject.put("client", object.get("client"));
 				teSavenObject.put("rid", 0);
-				teSavenObject.put("offlineid", offlineId);
+				teSavenObject.put("online", offlineId);
 				teSavenObject.put("entries", entries);
+				Log.i("te svaen obj",teSavenObject.toString());
 				objecten.add(teSavenObject);
 			}
 			else {
@@ -57,7 +60,7 @@ public class JSONConversion {
 			newJson.put(obj);
 		}
 		
-		
+		Log.i("te svaen obj",newJson.toString());
 		SharedPreferences settings = context.getSharedPreferences("data", 0);
 		SharedPreferences.Editor editor = settings.edit();
 	    
@@ -273,40 +276,80 @@ public class JSONConversion {
 
 		//entries toevoegen
 		ArrayList<Entry> entries = new ArrayList<Entry>();
-		JSONArray entryarray;
-		try {
-			entryarray = project.getJSONArray("entries");
+		JSONArray entryarray = new JSONArray();
+		
+			try {
+				entryarray = project.getJSONArray("entries");
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			for (int j = 0; j < entryarray.length(); j++) {
-				JSONObject entry = entryarray.getJSONObject(j);
+				JSONObject entry = null;
+				try {
+					entry = entryarray.getJSONObject(j);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				User u = new User();
-				u.username = entry.getString("entryowner");
+				try {
+					u.username = entry.getString("entryowner");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-				Timestamp start = Timestamp.valueOf(entry.getString("start"));
+				Timestamp start = new Timestamp(0);
+				try {
+					start = Timestamp.valueOf(entry.getString("start"));
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-				Entry e = new Entry(start,entry.getString("notes"),u,entry.getString("trid"));
+				Entry e = new Entry();
+				try {
+					e = new Entry(start,entry.getString("notes"),u,entry.getString("trid"));
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				if (!(entry.isNull("end"))) {						
-					Timestamp end = Timestamp.valueOf(entry.getString("end"));
+					Timestamp end = null;
+					try {
+						end = Timestamp.valueOf(entry.getString("end"));
+					} catch (IllegalArgumentException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					e.end = end;
 				}	
 				entries.add(e);
 			}
 			chosenProject.entries = entries;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
 
 		//strings van project data opslaan
 		try {
-			chosenProject.name = project.getString("projectname");
-			chosenProject.description = project.getString("description");
-			chosenProject.id = project.getInt("pid");
-			chosenProject.customer = project.getString("client");	
-			chosenProject.owner = project.getString("projectowner");
-			chosenProject.rechtenId = project.getInt("rid");
 			chosenProject.offlineId = project.getInt("online");
+			Log.i("chosen project id", "" +chosenProject.offlineId);
+			chosenProject.name = project.getString("projectname");
+			chosenProject.description = project.getString("description");			
+			chosenProject.customer = project.getString("client");				
+			chosenProject.rechtenId = project.getInt("rid");
+			chosenProject.owner = project.getString("projectowner");
+			chosenProject.id = project.getInt("pid");
+			
+			
 
 			if (!(project.isNull("end"))) {
 				Timestamp projectEnd = Timestamp.valueOf(project.getString("enddate"));

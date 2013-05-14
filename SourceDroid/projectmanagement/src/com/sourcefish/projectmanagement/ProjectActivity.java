@@ -196,6 +196,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			chosenProject.description = project.getString("description");	    				
 			chosenProject.customer = project.getString("client");	
 			chosenProject.offlineId = project.getInt("online");
+			Log.i("chosen project id", "" +chosenProject.offlineId);
 			chosenProject.listId = elementId;
 			chosenProject.id = project.getInt("pid");
 			
@@ -660,6 +661,7 @@ int tabInt = (Integer) tab.getTag();
 					offlineobject.put("online", projs.size());
 					JSONArray array = new JSONArray();
 					offlineobject.put("entries", array);
+					offlineobject.put("users",array);
 					offlineobject.put("rid", 0);
 					JSONConversion.addProject(getApplicationContext(), offlineobject);
 				} catch (JSONException e) {
