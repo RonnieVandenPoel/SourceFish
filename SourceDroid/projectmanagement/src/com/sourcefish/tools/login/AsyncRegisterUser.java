@@ -13,6 +13,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import com.sourcefish.tools.SourceFishConfig;
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,8 +37,7 @@ public class AsyncRegisterUser extends AsyncTask<Object, Integer, Boolean> {
 		password=params[2].toString();
 		
 		HttpClient client=new DefaultHttpClient();
-		HttpPost post=new HttpPost("http://projecten3.eu5.org/register/registerUser");
-		//HttpPost post=new HttpPost("http://projecten3.eu5.org/register/registerUser");
+		HttpPost post=new HttpPost(SourceFishConfig.getBaseURL()+"/register/registerUser");
 		try {
 			StringEntity entity=new StringEntity("{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
 			Log.i("jsoninput","{\"username\":\""+username+"\",\"password\":\""+password+"\"}");
