@@ -40,6 +40,7 @@ public class RegisterActivity extends NormalLayoutActivity {
 			toast.show();
 		}
 	}
+
 	
 }
 
