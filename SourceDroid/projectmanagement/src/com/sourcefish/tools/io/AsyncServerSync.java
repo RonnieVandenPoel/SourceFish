@@ -23,18 +23,18 @@ import android.util.Log;
 public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	Activity activity;
 	Context context;
-	private ProgressDialog dialog;
-	private ServerListenerInterface parent;
+	//private ProgressDialog dialog;
+	//private ServerListenerInterface parent;
 	int teSyncen;
 	public AsyncServerSync(Activity activity, Context context, int teSyncen) {
 		this.activity = activity;
 		this.context = context;
-		this.parent = (ServerListenerInterface) activity;
-		dialog = new ProgressDialog(activity);
+		//this.parent = (ServerListenerInterface) activity;
+		//dialog = new ProgressDialog(activity);
 		this.teSyncen = teSyncen;
 	}
 	
-	@Override
+	/*@Override
 	protected void onPreExecute() {
         this.dialog.setMessage("Sync...");
         this.dialog.show();
@@ -46,6 +46,71 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 			dialog.dismiss();
 		
 		parent.getServerResponse(s);
+	}*/
+	
+	public String syncen() {
+		String message = "";
+		JSONArray json = null;
+		boolean succes1 = true;
+		boolean succes2 = true;
+		boolean succes3 = true;
+		try {
+		
+			SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		
+			json = new JSONArray(prefs.getString("json", "[]"));
+		
+			switch (teSyncen) {
+			case 0:
+				succes1 = false;
+				succes2 = false;
+				succes3 = false;
+			case 1: //nieuwe projecten die offlien zijn gemaakt + hun entries
+				succes1 = nieuweProjecten(getNieuweProjecten(json));
+				break;
+			case 2: //bestaande projcten die edits hebben
+				succes2 = editProjecten(getEditProjecten(json));
+				break;
+			case 3: // nieuwe projecten die offlien zijn gemaakt + hun entries &  bestaande projcten die edits hebben
+				succes1 = nieuweProjecten(getNieuweProjecten(json));
+				succes2 = editProjecten(getEditProjecten(json));
+				break;
+			case 4: // bestaande projecten met nieuwe entries
+				succes3 = entryProjecten(getEntries(json));
+				break;
+			case 5: // bestaande projecten met nieuwe entries &  nieuwe projecten die offlien zijn gemaakt + hun entries
+				succes1 = nieuweProjecten(getNieuweProjecten(json));
+				succes3 = entryProjecten(getEntries(json));
+				break;
+			case 6: //  bestaande projcten die edits hebben & bestaande projecten met nieuwe entries
+				succes2 = editProjecten(getEditProjecten(json));
+				succes3 = entryProjecten(getEntries(json));
+				break;
+			case 7: //ALLEEEEUUUUUSSSS
+				succes1 = nieuweProjecten(getNieuweProjecten(json));
+				succes2 = editProjecten(getEditProjecten(json));
+				succes3 = entryProjecten(getEntries(json));
+				break;				
+			}		
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (succes1 && succes2 & succes3) {
+			JSONConversion.deleteDataNaSync(context);
+		}
+		
+		return message;
 	}
 	
 	@Override
@@ -139,64 +204,7 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	protected void onProgressUpdate(Integer... values) {
 		// TODO Auto-generated method stub
 		super.onProgressUpdate(values); */	
-		String message = "";
-		JSONArray json = null;
-		boolean succes1 = true;
-		boolean succes2 = true;
-		boolean succes3 = true;
-		try {
-		
-			SharedPreferences prefs = context.getSharedPreferences("data", 0);
-		
-			json = new JSONArray(prefs.getString("json", "[]"));
-		
-			switch (teSyncen) {
-			case 1: //nieuwe projecten die offlien zijn gemaakt + hun entries
-				succes1 = nieuweProjecten(getNieuweProjecten(json));
-				break;
-			case 2: //bestaande projcten die edits hebben
-				succes2 = editProjecten(getEditProjecten(json));
-				break;
-			case 3: // nieuwe projecten die offlien zijn gemaakt + hun entries &  bestaande projcten die edits hebben
-				succes1 = nieuweProjecten(getNieuweProjecten(json));
-				succes2 = editProjecten(getEditProjecten(json));
-				break;
-			case 4: // bestaande projecten met nieuwe entries
-				succes3 = entryProjecten(getEntries(json));
-				break;
-			case 5: // bestaande projecten met nieuwe entries &  nieuwe projecten die offlien zijn gemaakt + hun entries
-				succes1 = nieuweProjecten(getNieuweProjecten(json));
-				succes3 = entryProjecten(getEntries(json));
-				break;
-			case 6: //  bestaande projcten die edits hebben & bestaande projecten met nieuwe entries
-				succes2 = editProjecten(getEditProjecten(json));
-				succes3 = entryProjecten(getEntries(json));
-				break;
-			case 7: //ALLEEEEUUUUUSSSS
-				succes1 = nieuweProjecten(getNieuweProjecten(json));
-				succes2 = editProjecten(getEditProjecten(json));
-				succes3 = entryProjecten(getEntries(json));
-				break;				
-			}		
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if (succes1 && succes2 & succes3) {
-			JSONConversion.deleteDataNaSync(context);
-		}
-		
-		return message;
+		return null;
 	}
 	
 	private boolean nieuweProjecten(ArrayList<JSONObject> projecten) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {

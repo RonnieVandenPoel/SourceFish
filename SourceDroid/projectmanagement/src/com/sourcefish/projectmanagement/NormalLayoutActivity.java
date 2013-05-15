@@ -1,5 +1,7 @@
 package com.sourcefish.projectmanagement;
 
+import org.json.JSONException;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -18,6 +20,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.io.AsyncServerSync;
+import com.sourcefish.tools.io.JSONConversion;
 import com.sourcefish.tools.login.RegisterActivity;
 
 public abstract class NormalLayoutActivity extends SherlockActivity  {
@@ -33,6 +37,7 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		toolsMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		toolsMenu.add(0, 1, 0, "Settings");
 		toolsMenu.add(0,2,0,"Set theme");
+		toolsMenu.add(0,3,0,"SYNC");
 		
 		
 		
@@ -65,6 +70,16 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 			case 2:
 				AlertDialog alert = (AlertDialog) onCreateDialog(SourceFishConfig.THEMEDIALOG);
             	alert.show();
+			break;
+			case 3:
+				
+			try {
+				AsyncServerSync task = new AsyncServerSync(this, getApplicationContext(), JSONConversion.checkSync(getApplicationContext()));
+				task.syncen();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		}
 		return true;

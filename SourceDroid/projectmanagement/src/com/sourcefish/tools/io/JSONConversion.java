@@ -27,7 +27,9 @@ import com.sourcefish.tools.User;
 public class JSONConversion {
 	static public int checkSync(Context context) throws JSONException { //return getal als er nog iets gesynced meot worden
 		int result = 0;
-		
+		boolean test1 = true;
+		boolean test2= true;
+		boolean test3= true;
 		AccountManager am = AccountManager.get(context);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		SharedPreferences prefs = context.getSharedPreferences("data", 0);
@@ -35,20 +37,30 @@ public class JSONConversion {
 		for (int i = 0; i < array.length(); i++) {			
 			JSONObject object = array.getJSONObject(i);				
 			if (object.getInt("online")>=0) {
-				result += 1;
-				Log.i("result voor sync", ""+result);
+				if (test1) {
+					result += 1;
+					Log.i("result voor sync", ""+result);
+					test1=false;
+				}
+				
 			}
 			else if (object.has("edit")) {
-				result += 2;
-				Log.i("result voor sync", ""+result);
+				if (test2) {
+					result += 2;
+					Log.i("result voor sync", ""+result);
+					test2 = false;
+				}				
 			}
-			else {
+			if (object.getInt("online")==-1){
 				JSONArray entryarray = object.getJSONArray("entries");
 				for (int y = 0; y < entryarray.length(); y++) {
 					JSONObject obj = entryarray.getJSONObject(y);
 					if (obj.has("edit")) {
-						Log.i("result voor sync", ""+result);
-						result += 4;
+						if (test3) {
+							Log.i("result voor sync", ""+result);
+							result += 4;
+							test3=false;
+						}						
 					}
 				}
 			}
@@ -108,6 +120,7 @@ public class JSONConversion {
 	    editor.commit();
 	}
 	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) throws JSONException {
+		Log.i("addonliennetry","" + notities + projectId + now + end);
 		AccountManager am = AccountManager.get(context);
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		JSONObject entry = new JSONObject();
@@ -125,21 +138,26 @@ public class JSONConversion {
 		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
 		
 		for (int i =0; i < array.length(); i++) {		
-			JSONObject object = array.getJSONObject(i);
-			Log.i("pid",object.getString("pid"));
-			if (object.getInt("pid")==projectId) {
-				JSONArray entries = object.getJSONArray("entries");
-				entries.put(entry);
-				teSavenObject.put("description", object.get("description"));
-				teSavenObject.put("projectname", object.get("projectname"));
-				teSavenObject.put("client", object.get("client"));
-				teSavenObject.put("rid", 0);
-				teSavenObject.put("online", -1);
-				teSavenObject.put("entries", entries);
-				teSavenObject.put("pid", projectId);
-				Log.i("te svaen obj",teSavenObject.toString());
-				objecten.add(teSavenObject);
-			}
+			JSONObject object = array.getJSONObject(i);			
+			if (object.has("pid")) {
+				Log.i("pid",object.getString("pid"));
+				if (object.getInt("pid")==projectId) {
+					JSONArray entries = object.getJSONArray("entries");
+					entries.put(entry);
+					teSavenObject.put("description", object.get("description"));
+					teSavenObject.put("projectname", object.get("projectname"));
+					teSavenObject.put("client", object.get("client"));
+					teSavenObject.put("rid", 0);
+					teSavenObject.put("online", -1);
+					teSavenObject.put("entries", entries);
+					teSavenObject.put("pid", projectId);
+					Log.i("te svaen obj",teSavenObject.toString());
+					objecten.add(teSavenObject);
+				}
+				else {
+					objecten.add(object);
+				}
+			}			
 			else {
 				objecten.add(object);
 			}
