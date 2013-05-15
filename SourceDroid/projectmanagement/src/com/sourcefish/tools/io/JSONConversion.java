@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.jar.JarOutputStream;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -76,15 +77,60 @@ public class JSONConversion {
 	    editor.commit();
 	}
 	static public void addOnlineEntry(Context context,String notities,int projectId,Timestamp now, Timestamp end) throws JSONException {
+		AccountManager am = AccountManager.get(context);
+		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+		JSONObject entry = new JSONObject();
+		entry.put("notes", notities);
+		entry.put("edit", 1);
+		entry.put("start",now.toString());
+		entry.put("end",end.toString());
+		entry.put("entryowner",accounts[0].name);
+		entry.put("trid", 1);
+		Log.i("single entry", entry.toString());
+		ArrayList<JSONObject> objecten = new ArrayList<JSONObject>();
+		JSONObject teSavenObject = new JSONObject();
 		
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		JSONArray array = new JSONArray(prefs.getString("json", "[]"));
+		
+		for (int i =0; i < array.length(); i++) {		
+			JSONObject object = array.getJSONObject(i);
+			Log.i("pid",object.getString("pid"));
+			if (object.getInt("pid")==projectId) {
+				JSONArray entries = object.getJSONArray("entries");
+				entries.put(entry);
+				teSavenObject.put("description", object.get("description"));
+				teSavenObject.put("projectname", object.get("projectname"));
+				teSavenObject.put("client", object.get("client"));
+				teSavenObject.put("rid", 0);
+				teSavenObject.put("online", -1);
+				teSavenObject.put("entries", entries);
+				teSavenObject.put("pid", projectId);
+				Log.i("te svaen obj",teSavenObject.toString());
+				objecten.add(teSavenObject);
+			}
+			else {
+				objecten.add(object);
+			}
+		}
+		
+		JSONArray newJson = new JSONArray();
+		for (JSONObject obj : objecten) {
+			newJson.put(obj);
+		}
+		
+		Log.i("te svaen obj",newJson.toString());
+		SharedPreferences settings = context.getSharedPreferences("data", 0);
+		SharedPreferences.Editor editor = settings.edit();
+	    
+	    editor.putString("json", newJson.toString());
+	   
+	      // Commit the edits! 
+	    editor.commit();
 	}
 	
 	static private void pushToServer(Context context, Activity activity) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
 		//eerste nieuwe projecten, daarna edits, daarna entries .get checks voor async voor elke functie, vergeet niet de juiste pid op te slaan
-		
-		
-		ArrayList<String> newEntryStrings = new ArrayList<String>();
-		ArrayList<String> editStrings = new ArrayList<String>();
 		
 		//String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\"}";
 		String json;
@@ -100,14 +146,28 @@ public class JSONConversion {
 				task.execute(entity);
 				JSONObject result = new JSONObject(task.get());				
 				if (result.has("pid") && !(result.isNull("pid"))) {
+					int pid = result.getInt("pid");
 					// maak string entity met entries en slaag op in array
+					//slaag alle entry objecten op in een arraylist
+					ArrayList<JSONObject> entries = new ArrayList<JSONObject>();
+					//zet json om in json array met entries
+					JSONArray entryarray = object.getJSONArray("entries");
+					for (int y = 0; y < entryarray.length(); y++ ) {
+						entries.add(entryarray.getJSONObject(y)); // add entries in in lijst
+					}
+					for (JSONObject obj : entries) {
+						json = new String("{\"begin\":\"" + obj.getString("start")  + "\",\"notities\":\"" + obj.getString("notes") + "\",\"pid\":\"" + pid + "\",\"eind\":\"" + obj.getString("end") + "\"}");
+						AsyncServerPosts taak = new AsyncServerPosts(context, Tasks.MANUALENTRY, activity);
+						StringEntity entitystring = new StringEntity(json);
+						task.execute(entitystring);
+					}
 				}
 				else {
 					Log.i("syncerror", "error bij maken nieuw project");
 					return;
 				}
 			} else if (object.has("edit")) {
-				json = "{\"projectname\":\"" + object.getString("projectname") + "\",\"client\":\"" + object.getString("client") + "\",\"summary\":\"" + object.getString("description") + "\"}";
+				json = "{\"projectname\":\"" + object.getString("projectname") + "\",\"client\":\"" + object.getString("client") + "\",\"summary\":\"" + object.getString("description") + "\",\"pid\":\"" + object.getInt("pid") + "\"}";
 				StringEntity entity = new StringEntity(json);
 				AsyncServerPosts task = new AsyncServerPosts(context, Tasks.EDITPROJECT, activity);
 				task.execute(entity);
@@ -117,10 +177,25 @@ public class JSONConversion {
 					return;
 				}
 			}
-			
-			//entries pushen die in neiuwe offline projecten zaten
-		}
-		
+			int pid = -1;
+			if (object.has("pid")) {
+				pid = object.getInt("pid");
+			}
+			JSONArray entryarray = object.getJSONArray("entries");
+			ArrayList<JSONObject> entries = new ArrayList<JSONObject>();
+			for (int y = 0; y < entryarray.length();y++) {
+				JSONObject obj = entryarray.getJSONObject(y);
+				if (obj.has("edit")) {
+					entries.add(obj);
+				}				
+			}
+			for (JSONObject obju : entries) {
+				json = new String("{\"begin\":\"" + obju.getString("start")  + "\",\"notities\":\"" + obju.getString("notes") + "\",\"pid\":\"" + pid + "\",\"eind\":\"" + obju.getString("end") + "\"}");
+				AsyncServerPosts taak = new AsyncServerPosts(context, Tasks.MANUALENTRY, activity);
+				StringEntity entitystring = new StringEntity(json);
+				taak.execute(entitystring);
+			}
+		}		
 		deleteDataNaSync(context);
 	}
 	
