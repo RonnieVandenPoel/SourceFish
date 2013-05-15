@@ -19,6 +19,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
+import com.sourcefish.tools.ConnectionManager;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.io.AsyncServerSync;
 import com.sourcefish.tools.io.JSONConversion;
@@ -37,7 +38,7 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 		toolsMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		toolsMenu.add(0, 1, 0, "Settings");
 		toolsMenu.add(0,2,0,"Set theme");
-		toolsMenu.add(0,3,0,"SYNC");
+		toolsMenu.add(0,3,0,"Sync");
 		
 		
 		
@@ -51,6 +52,15 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		try {
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline() && JSONConversion.checkSync(getApplicationContext()) != 0) {
+				AsyncServerSync task = new AsyncServerSync(this, getApplicationContext(), JSONConversion.checkSync(getApplicationContext()));
+				task.syncen();				
+			}			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setTheme(SourceFishConfig.MAINTHEME);
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,6 +113,15 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 					this.finish();
 				}
 		}		
+		try {
+			if(ConnectionManager.getInstance(getApplicationContext()).isOnline() && JSONConversion.checkSync(getApplicationContext()) != 0) {
+				AsyncServerSync task = new AsyncServerSync(this, getApplicationContext(), JSONConversion.checkSync(getApplicationContext()));
+				task.syncen();				
+			}			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				super.onResume();
 	}
 	

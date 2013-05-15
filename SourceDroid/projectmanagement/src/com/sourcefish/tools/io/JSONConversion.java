@@ -60,7 +60,8 @@ public class JSONConversion {
 							Log.i("result voor sync", ""+result);
 							result += 4;
 							test3=false;
-						}						
+						}
+						
 					}
 				}
 			}
