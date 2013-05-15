@@ -25,11 +25,13 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	Context context;
 	private ProgressDialog dialog;
 	private ServerListenerInterface parent;
-	public AsyncServerSync(Activity activity, Context context) {
+	int teSyncen;
+	public AsyncServerSync(Activity activity, Context context, int teSyncen) {
 		this.activity = activity;
 		this.context = context;
 		this.parent = (ServerListenerInterface) activity;
 		dialog = new ProgressDialog(activity);
+		this.teSyncen = teSyncen;
 	}
 	
 	@Override
@@ -48,6 +50,7 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
+		/*
 		//eerste nieuwe projecten, daarna edits, daarna entries .get checks voor async voor elke functie, vergeet niet de juiste pid op te slaan
 		try {
 				//String json = "{\"projectname\":\"" + name.getText().toString() + "\",\"client\":\"" + cust.getText().toString() + "\",\"summary\":\"" + desc.getText().toString() + "\"}";
@@ -135,7 +138,69 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		// TODO Auto-generated method stub
-		super.onProgressUpdate(values);
+		super.onProgressUpdate(values); */		
+		String message = "";
+		JSONArray json = null;
+		SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		try {
+			json = new JSONArray(prefs.getString("json", "[]"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		switch (teSyncen) {
+		case 1: //nieuwe projecten die offlien zijn gemaakt + hun entries
+			nieuweProjecten(getNieuweProjecten(json));
+			break;
+		case 2: //bestaande projcten die edits hebben
+			editProjecten(getEditProjecten(json));
+			break;
+		case 3: // nieuwe projecten die offlien zijn gemaakt + hun entries &  bestaande projcten die edits hebben
+			nieuweProjecten(getNieuweProjecten(json));
+			editProjecten(getEditProjecten(json));
+			break;
+		case 4: // bestaande projecten met nieuwe entries
+			entryProjecten(getEntries(json));
+			break;
+		case 5: // bestaande projecten met nieuwe entries &  nieuwe projecten die offlien zijn gemaakt + hun entries
+			nieuweProjecten(getNieuweProjecten(json));
+			entryProjecten(getEntries(json));
+			break;
+		case 6: //  bestaande projcten die edits hebben & bestaande projecten met nieuwe entries
+			editProjecten(getEditProjecten(json));
+			entryProjecten(getEntries(json));
+			break;
+		case 7: //ALLEEEEUUUUUSSSS
+			nieuweProjecten(getNieuweProjecten(json));
+			editProjecten(getEditProjecten(json));
+			entryProjecten(getEntries(json));
+			break;				
+		}
+		return message;
+	}
+	
+	private void nieuweProjecten(ArrayList<JSONObject> projecten) {
+		
+	}
+	
+	private void editProjecten(ArrayList<JSONObject> projecten) {
+		
+	}
+	
+	private void entryProjecten(ArrayList<JSONObject> entries) {
+		
+	}
+	
+	private ArrayList<JSONObject> getNieuweProjecten(JSONArray json) {
+		return null;
+	}
+	
+	private ArrayList<JSONObject> getEditProjecten(JSONArray json) {
+		return null;
+	}
+	
+	private ArrayList<JSONObject> getEntries(JSONArray json) {
+		return null;
 	}
 
 }
