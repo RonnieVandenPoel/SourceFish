@@ -138,69 +138,123 @@ public class AsyncServerSync extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		// TODO Auto-generated method stub
-		super.onProgressUpdate(values); */		
+		super.onProgressUpdate(values); */	
 		String message = "";
 		JSONArray json = null;
-		SharedPreferences prefs = context.getSharedPreferences("data", 0);
 		try {
+		
+			SharedPreferences prefs = context.getSharedPreferences("data", 0);
+		
 			json = new JSONArray(prefs.getString("json", "[]"));
+		
+			switch (teSyncen) {
+			case 1: //nieuwe projecten die offlien zijn gemaakt + hun entries
+				nieuweProjecten(getNieuweProjecten(json));
+				break;
+			case 2: //bestaande projcten die edits hebben
+				editProjecten(getEditProjecten(json));
+				break;
+			case 3: // nieuwe projecten die offlien zijn gemaakt + hun entries &  bestaande projcten die edits hebben
+				nieuweProjecten(getNieuweProjecten(json));
+				editProjecten(getEditProjecten(json));
+				break;
+			case 4: // bestaande projecten met nieuwe entries
+				entryProjecten(getEntries(json));
+				break;
+			case 5: // bestaande projecten met nieuwe entries &  nieuwe projecten die offlien zijn gemaakt + hun entries
+				nieuweProjecten(getNieuweProjecten(json));
+				entryProjecten(getEntries(json));
+				break;
+			case 6: //  bestaande projcten die edits hebben & bestaande projecten met nieuwe entries
+				editProjecten(getEditProjecten(json));
+				entryProjecten(getEntries(json));
+				break;
+			case 7: //ALLEEEEUUUUUSSSS
+				nieuweProjecten(getNieuweProjecten(json));
+				editProjecten(getEditProjecten(json));
+				entryProjecten(getEntries(json));
+				break;				
+			}		
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		switch (teSyncen) {
-		case 1: //nieuwe projecten die offlien zijn gemaakt + hun entries
-			nieuweProjecten(getNieuweProjecten(json));
-			break;
-		case 2: //bestaande projcten die edits hebben
-			editProjecten(getEditProjecten(json));
-			break;
-		case 3: // nieuwe projecten die offlien zijn gemaakt + hun entries &  bestaande projcten die edits hebben
-			nieuweProjecten(getNieuweProjecten(json));
-			editProjecten(getEditProjecten(json));
-			break;
-		case 4: // bestaande projecten met nieuwe entries
-			entryProjecten(getEntries(json));
-			break;
-		case 5: // bestaande projecten met nieuwe entries &  nieuwe projecten die offlien zijn gemaakt + hun entries
-			nieuweProjecten(getNieuweProjecten(json));
-			entryProjecten(getEntries(json));
-			break;
-		case 6: //  bestaande projcten die edits hebben & bestaande projecten met nieuwe entries
-			editProjecten(getEditProjecten(json));
-			entryProjecten(getEntries(json));
-			break;
-		case 7: //ALLEEEEUUUUUSSSS
-			nieuweProjecten(getNieuweProjecten(json));
-			editProjecten(getEditProjecten(json));
-			entryProjecten(getEntries(json));
-			break;				
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return message;
 	}
 	
-	private void nieuweProjecten(ArrayList<JSONObject> projecten) {
+	private void nieuweProjecten(ArrayList<JSONObject> projecten) throws JSONException, UnsupportedEncodingException, InterruptedException, ExecutionException {
+		for (JSONObject project : projecten) {
+			String json = "{\"projectname\":\"" + project.getString("projectname") + "\",\"client\":\"" + project.getString("client") + "\",\"summary\":\"" + project.getString("description") + "\"}";
+			AsyncServerPosts task = new AsyncServerPosts(context, Tasks.NEWPROJECT, activity);
+			StringEntity entity = new StringEntity(json);
+			task.execute(entity);
+			JSONObject result = new JSONObject(task.get());		
+		}
+	}
+	
+	private void editProjecten(ArrayList<JSONObject> projecten) throws JSONException{
 		
 	}
 	
-	private void editProjecten(ArrayList<JSONObject> projecten) {
+	private void entryProjecten(ArrayList<JSONObject> entries) throws JSONException{
 		
 	}
 	
-	private void entryProjecten(ArrayList<JSONObject> entries) {
+	private ArrayList<JSONObject> getNieuweProjecten(JSONArray json) throws JSONException {
+		ArrayList<JSONObject> nieuweprojecten = new ArrayList<JSONObject>();
 		
+		for (int i = 0; i < json.length();i++) {
+			JSONObject project = json.getJSONObject(i);
+			if (project.getInt("online") >= 0) {
+				nieuweprojecten.add(project);
+				Log.i("nieuw project ", project.toString());
+			}
+		}
+		
+		return nieuweprojecten;
 	}
 	
-	private ArrayList<JSONObject> getNieuweProjecten(JSONArray json) {
-		return null;
+	private ArrayList<JSONObject> getEditProjecten(JSONArray json) throws JSONException {
+		ArrayList<JSONObject> editprojecten = new ArrayList<JSONObject>();
+		
+		for (int i = 0; i < json.length();i++) {
+			JSONObject project = json.getJSONObject(i);
+			if (project.has("edit")) {
+				editprojecten.add(project);
+				Log.i("edit project ", project.toString());
+			}
+		}
+		
+		return editprojecten;
 	}
 	
-	private ArrayList<JSONObject> getEditProjecten(JSONArray json) {
-		return null;
-	}
-	
-	private ArrayList<JSONObject> getEntries(JSONArray json) {
-		return null;
+	private ArrayList<JSONObject> getEntries(JSONArray json) throws JSONException {
+		ArrayList<JSONObject> entrieslijst = new ArrayList<JSONObject>();
+		
+		for (int i = 0; i < json.length();i++) {
+			JSONObject project = json.getJSONObject(i);
+			if (project.getInt("online") == -1) {
+				JSONArray entries = project.getJSONArray("entries");
+				for (int y = 0; y < entries.length(); y++) {
+					JSONObject entry = entries.getJSONObject(y); 
+					if (entry.has("edit")) {
+						entrieslijst.add(entry);
+						Log.i("syncentry ", entry.toString());
+					}
+				}
+			}
+		}
+		
+		return entrieslijst;
 	}
 
 }

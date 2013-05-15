@@ -25,7 +25,7 @@ import com.sourcefish.tools.Tasks;
 import com.sourcefish.tools.User;
 
 public class JSONConversion {
-	static public int checkSync(Context context) throws JSONException { //return true als er nog iets gesynced meot worden
+	static public int checkSync(Context context) throws JSONException { //return getal als er nog iets gesynced meot worden
 		int result = 0;
 		
 		AccountManager am = AccountManager.get(context);
@@ -36,15 +36,18 @@ public class JSONConversion {
 			JSONObject object = array.getJSONObject(i);				
 			if (object.getInt("online")>=0) {
 				result += 1;
+				Log.i("result voor sync", ""+result);
 			}
 			else if (object.has("edit")) {
 				result += 2;
+				Log.i("result voor sync", ""+result);
 			}
 			else {
 				JSONArray entryarray = object.getJSONArray("entries");
 				for (int y = 0; y < entryarray.length(); y++) {
 					JSONObject obj = entryarray.getJSONObject(y);
 					if (obj.has("edit")) {
+						Log.i("result voor sync", ""+result);
 						result += 4;
 					}
 				}
