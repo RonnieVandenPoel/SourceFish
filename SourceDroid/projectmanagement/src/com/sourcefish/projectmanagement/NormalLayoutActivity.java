@@ -11,12 +11,14 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.provider.CalendarContract.Instances;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.sourcefish.tools.SourceFishConfig;
+import com.sourcefish.tools.login.RegisterActivity;
 
 public abstract class NormalLayoutActivity extends SherlockActivity  {
 	
@@ -72,6 +74,9 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 	protected void onResume()
 	{
 		//test
+		
+		if(!(this instanceof RegisterActivity))
+		{
 				AccountManager am = AccountManager.get(getApplicationContext());
 				Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 				if(accounts==null||accounts.length==0||accounts[0]==null)
@@ -82,6 +87,7 @@ public abstract class NormalLayoutActivity extends SherlockActivity  {
 					startActivity(i);
 					this.finish();
 				}
+		}		
 				super.onResume();
 	}
 	
