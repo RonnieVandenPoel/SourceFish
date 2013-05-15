@@ -199,7 +199,7 @@ public class JSONConversion {
 		deleteDataNaSync(context);
 	}
 	
-	static private void deleteDataNaSync(Context context) {
+	static public void deleteDataNaSync(Context context) {
 		SharedPreferences settings = context.getSharedPreferences("data", 0);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.remove("json");	    
