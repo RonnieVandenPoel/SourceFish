@@ -26,10 +26,10 @@ public class AsyncReloadData extends AsyncTask<Context, Integer, String>{
 		try {			
 			if (task2.get()) {
 				Log.i("dbug","3");
-				SourceFishConfig.alert(arg0[0], "Data from server loaded succesfully!");
+				//SourceFishConfig.alert(arg0[0], "Data from server loaded succesfully!");
 			}
 			else {
-				SourceFishConfig.alert(arg0[0], "Error when retrieving data from server.");
+				//SourceFishConfig.alert(arg0[0], "Error when retrieving data from server.");
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
