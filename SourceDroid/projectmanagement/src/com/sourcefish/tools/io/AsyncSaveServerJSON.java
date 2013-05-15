@@ -1,17 +1,12 @@
 package com.sourcefish.tools.io;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sourcefish.tools.Project;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 
 public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
@@ -25,8 +20,8 @@ public class AsyncSaveServerJSON extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		String saved;
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		//String saved;
+		//SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		// then you use
 		/*
 		saved = prefs.getString("json", "[]");

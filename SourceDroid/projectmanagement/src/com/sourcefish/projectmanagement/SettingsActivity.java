@@ -1,11 +1,7 @@
 package com.sourcefish.projectmanagement;
 
 
-import java.io.UnsupportedEncodingException;
-import java.util.concurrent.ExecutionException;
-
 import org.apache.http.entity.StringEntity;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -129,7 +125,6 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 
 	@Override
 	public void getServerResponse(String s) {
-		// TODO Auto-generated method stub
 		ImageView iv=(ImageView) findViewById(R.id.imageViewUserPicture);
 		loader.DisplayImage(username, iv);
 		

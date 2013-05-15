@@ -3,28 +3,21 @@ package com.sourcefish.projectmanagement;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.http.conn.params.ConnConnectionParamBean;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.sourcefish.tools.AsyncServerPosts;
-import com.sourcefish.tools.AsyncTestConnectie;
 import com.sourcefish.tools.ConnectionManager;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.Tasks;
-import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
 import com.sourcefish.tools.io.JSONConversion;
 
 import android.os.Bundle;
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;

@@ -6,15 +6,12 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TooManyListenersException;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -246,6 +243,7 @@ public class EntryActivity extends NormalLayoutActivity implements ActionBar.Tab
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void fillUserAdapter()
 	{
 		

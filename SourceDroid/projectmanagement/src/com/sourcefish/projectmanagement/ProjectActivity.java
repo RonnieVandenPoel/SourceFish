@@ -1,45 +1,29 @@
 package com.sourcefish.projectmanagement;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.io.UnsupportedEncodingException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.sourcefish.tools.AsyncServerPosts;
 import com.sourcefish.tools.ConnectionManager;
-import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.Project;
 import com.sourcefish.tools.SourceFishConfig;
-import com.sourcefish.tools.SourceFishHttpClient;
 import com.sourcefish.tools.Tasks;
-import com.sourcefish.tools.User;
-import com.sourcefish.tools.io.AsyncDataLoad;
 import com.sourcefish.tools.io.AsyncLoadServerJSON;
-import com.sourcefish.tools.io.AsyncReloadData;
 import com.sourcefish.tools.io.JSONConversion;
 
 
 
 import android.os.Bundle;
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -48,7 +32,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -62,6 +45,7 @@ import android.widget.Toast;
 
 public class ProjectActivity extends NormalLayoutActivity implements ActionBar.TabListener, ServerListenerInterface {
 	private ArrayList<String> listItems;
+	@SuppressWarnings("rawtypes")
 	private ArrayAdapter adapter;
 	private ListView list;
 	private JSONArray projectArray;
@@ -123,7 +107,6 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 			try {
 				updateList();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -142,10 +125,8 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 		 try {
 			json = task.get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -213,7 +194,7 @@ public class ProjectActivity extends NormalLayoutActivity implements ActionBar.T
 	}	
 	
 	public void deleteOfflineProject(final int elementId) {
-		final ProjectActivity act = this;
+		//final ProjectActivity act = this;
 		
 		
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

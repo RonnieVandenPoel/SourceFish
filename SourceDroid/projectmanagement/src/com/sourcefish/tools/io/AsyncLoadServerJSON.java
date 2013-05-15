@@ -2,7 +2,6 @@ package com.sourcefish.tools.io;
 
 import java.util.concurrent.ExecutionException;
 
-import org.json.JSONObject;
 
 import com.sourcefish.tools.SourceFishConfig;
 
@@ -11,7 +10,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class AsyncLoadServerJSON extends AsyncTask<String, Integer, String>{
@@ -25,7 +23,7 @@ public class AsyncLoadServerJSON extends AsyncTask<String, Integer, String>{
 	
 	@Override
 	protected String doInBackground(String... params) {
-		String json;
+		//String json;
 		
 		/*
 		SharedPreferences settings = this.context.getSharedPreferences(PREFS_NAME, 0);

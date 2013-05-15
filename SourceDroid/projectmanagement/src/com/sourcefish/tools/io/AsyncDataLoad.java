@@ -8,19 +8,16 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 
 import com.sourcefish.tools.SourceFishConfig;
 import com.sourcefish.tools.SourceFishHttpClient;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 public class AsyncDataLoad extends AsyncTask<String, Integer, Boolean> {
-	private static final String PREFS_NAME = "data";
+	//private static final String PREFS_NAME = "data";
 	private String username, password;
 	private Context context;
 	

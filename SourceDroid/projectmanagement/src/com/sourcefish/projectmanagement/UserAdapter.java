@@ -3,7 +3,6 @@ package com.sourcefish.projectmanagement;
 import java.util.List;
 
 import com.fedorvlasov.lazylist.ImageLoader;
-import com.sourcefish.tools.Entry;
 import com.sourcefish.tools.User;
 
 import android.content.Context;

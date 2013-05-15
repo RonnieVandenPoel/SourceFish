@@ -6,7 +6,7 @@ import android.os.IBinder;
 
 public class SourceFishAuthenticationService extends Service {
 
-	private static final String TAG = "AccountAuthenticatorService";
+	//private static final String TAG = "AccountAuthenticatorService";
 	private static SourceFishAccountAuthenticator sAccountAuthenticator = null;
 
 	public SourceFishAuthenticationService() {
