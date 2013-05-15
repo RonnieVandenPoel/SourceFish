@@ -26,11 +26,8 @@ public class MainActivity extends NormalLayoutActivity{
 		setContentView(R.layout.activity_main);
 		
 		prefs = getSharedPreferences("projectmanagement", Activity.MODE_PRIVATE);
-
-		AccountManager am = AccountManager.get(getApplicationContext());
-		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
-		boolean hasLoggedIn = (accounts.length > 0);
+		boolean hasLoggedIn=hasLoggedIn();
 		
 		int i = prefs.getInt("curTheme", 0);
 		if(i == 0)
@@ -51,6 +48,9 @@ public class MainActivity extends NormalLayoutActivity{
 			// user has logged in before, get current projects.
 			else
 			{
+				AccountManager am = AccountManager.get(getApplicationContext());
+				Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+				
 			    String user = accounts[0].name;
 				String pass = am.getPassword(accounts[0]);
 				
@@ -61,7 +61,14 @@ public class MainActivity extends NormalLayoutActivity{
 		}
 		else
 		{
-			startProjecten();
+			if(hasLoggedIn())
+			{
+				startProjecten();
+			}
+			else
+			{
+				firstRun();
+			}
 			/**if(hasLoggedIn)
 			{
 				Toast toast = Toast.makeText(getApplicationContext(), "offline mode", Toast.LENGTH_LONG);
@@ -74,6 +81,24 @@ public class MainActivity extends NormalLayoutActivity{
 			}**/
 		}
 		finish();
+	}
+	
+	private boolean hasLoggedIn()
+	{
+
+		AccountManager am = AccountManager.get(getApplicationContext());
+		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
+		
+		return accounts.length > 0;
+	}
+	
+	@Override 
+	protected void onResume()
+	{
+		if(!hasLoggedIn())
+		{
+			firstRun();
+		}
 	}
 	
 	private void startProjecten()
