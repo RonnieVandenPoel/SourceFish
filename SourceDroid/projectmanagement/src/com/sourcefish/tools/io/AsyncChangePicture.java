@@ -48,7 +48,7 @@ public class AsyncChangePicture extends AsyncTask<String, Integer, Boolean> {
 		Account[] accounts = am.getAccountsByType("com.sourcefish.authenticator");
 		
 		DefaultHttpClient client = SourceFishHttpClient.getClient(accounts[0].name, am.getPassword(accounts[0]));
-		HttpPost post=new HttpPost(SourceFishConfig.getBaseURL()+"/setProfilePicture");
+		HttpPost post=new HttpPost(SourceFishConfig.getBaseURL()+"/webservice/setProfilePicture");
 		//MultipartEntity entity= new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 		//File image=new File(imagelocation);
 		//entity.addPart("image", new FileBody(image));
