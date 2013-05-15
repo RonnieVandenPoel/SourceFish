@@ -30,6 +30,11 @@ public class SettingsActivity extends NormalLayoutActivity implements ServerList
 	private ImageLoader loader;
 	private String username;
 	
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem menuItem)
 	{
 		if(menuItem.getItemId() == android.R.id.home)
